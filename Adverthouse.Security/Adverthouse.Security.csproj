@@ -2,6 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <RepositoryUrl>https://github.com/adverthouse/Adverthouse.Utilities/tree/master/Adverthouse.Security</RepositoryUrl>
+    <PackageTags>C#,Security,Utility</PackageTags>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
 </Project>
