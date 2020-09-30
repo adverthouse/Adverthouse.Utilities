@@ -6,6 +6,7 @@ namespace Adverthouse.Utility
     {
         public void Log(string text)
         {
+            Console.WriteLine("test");
             Console.WriteLine(text);
         }
     }
