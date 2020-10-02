@@ -11,7 +11,7 @@
     <NeutralLanguage>en</NeutralLanguage>
     <PackageIcon>pattern.jpg</PackageIcon>
     <RepositoryUrl>https://github.com/adverthouse/Adverthouse.Utilities/tree/master/Adverthouse.Utility</RepositoryUrl>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
