@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adverthouse.Utility", "Adverthouse.Utility\Adverthouse.Utility.csproj", "{733DC530-2596-40DC-B266-7F06CAD638AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Adverthouse.Utility", "Adverthouse.Utility\Adverthouse.Utility.csproj", "{733DC530-2596-40DC-B266-7F06CAD638AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adverthouse.Security", "Adverthouse.Security\Adverthouse.Security.csproj", "{DDE18ECE-659A-4FC9-A56F-BA34B3C88D9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Adverthouse.Security", "Adverthouse.Security\Adverthouse.Security.csproj", "{DDE18ECE-659A-4FC9-A56F-BA34B3C88D9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adverthouse.Common", "Adverthouse.Common\Adverthouse.Common.csproj", "{AEE01F26-147C-427B-BBB0-9DEE88D2EDE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{DDE18ECE-659A-4FC9-A56F-BA34B3C88D9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDE18ECE-659A-4FC9-A56F-BA34B3C88D9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDE18ECE-659A-4FC9-A56F-BA34B3C88D9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEE01F26-147C-427B-BBB0-9DEE88D2EDE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEE01F26-147C-427B-BBB0-9DEE88D2EDE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEE01F26-147C-427B-BBB0-9DEE88D2EDE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEE01F26-147C-427B-BBB0-9DEE88D2EDE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
