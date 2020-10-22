@@ -12,6 +12,9 @@ namespace Adverthouse.Common.Interfaces
             IQueryable<TEntity> GetResult();
             ListingResult<TEntity, PSF> GetResult(PSF psfInfo, IQueryable<TEntity> preQuery);
             ListingResult<TEntity, PSF> GetResult(PSF psfInfo);
+            List<int> SelectIDs(Expression<Func<TEntity, int?>> selectExp);
+            List<int> SelectIDs(Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, int?>> selectExp);
+            List<int> SelectIDs(PSF psfInfo, Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, int?>> selectExp);
             void Add(TEntity entity);
             void AddIfNotExists(Expression<Func<TEntity, bool>> predicate, TEntity entity);
             void AddRange(IEnumerable<TEntity> entities);

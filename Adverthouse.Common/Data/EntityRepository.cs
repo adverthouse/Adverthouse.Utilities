@@ -5,8 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using System.Linq.Dynamic.Core;
-
+using System.Linq.Dynamic.Core; 
 namespace Adverthouse.Common.Data
 {
     public class EntityRepository<TEntity, PSF> : IRepository<TEntity, PSF> where TEntity : class, IEntity where PSF : IPSFBase
@@ -54,6 +53,26 @@ namespace Adverthouse.Common.Data
                 filteredQuery = filteredQuery.Where(predicate);
             return filteredQuery.ToList();
         }
+
+        public List<int> SelectIDs(Expression<Func<TEntity, int?>> selectExp)
+        {
+            return _db.Set<TEntity>().Select(selectExp).Distinct().Where(x => x != null).Cast<int>().ToList();
+        }
+        public List<int> SelectIDs(Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, int?>> selectExp)
+        {
+            return _db.Set<TEntity>().Where(whereExp).Select(selectExp).Distinct().Where(x => x != null).Cast<int>().ToList();
+        }
+        public List<int> SelectIDs(PSF psfInfo, Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, int?>> selectExp)
+        {
+            var result = _db.Set<TEntity>().AsQueryable();
+
+            if (whereExp != null) result = result.Where(whereExp);
+
+            return result.OrderBy(psfInfo.SortExpression)
+                             .Skip((psfInfo.CurrentPage - 1) * psfInfo.ItemPerPage)
+                             .Take(psfInfo.ItemPerPage).Select(selectExp).Distinct().Where(x => x != null).Cast<int>().ToList();
+        }
+
         public virtual void Add(TEntity entity)
         {
             _db.Set<TEntity>().Add(entity);
@@ -99,6 +118,7 @@ namespace Adverthouse.Common.Data
             _db.Entry(entity).State = EntityState.Deleted;
             _db.SaveChanges();
         }
+
 
     }
 }
