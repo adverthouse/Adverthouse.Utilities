@@ -9,7 +9,7 @@ using System.Linq.Dynamic.Core;
 
 namespace Adverthouse.Common.Data
 {
-    public abstract class EntityRepository<TEntity> : IRepository<TEntity> where TEntity : class, IEntity 
+    public class EntityRepository<TEntity, PSF> : IRepository<TEntity, PSF> where TEntity : class, IEntity where PSF : IPSFBase
     {
         protected readonly DbContext _db;
         public EntityRepository(DbContext db)
@@ -18,15 +18,16 @@ namespace Adverthouse.Common.Data
         }
         public IQueryable<TEntity> GetResult()
         {
-            return _db.Set<TEntity>();          
+            return _db.Set<TEntity>();
         }
-        public virtual ListingResult<TEntity, IPSFBase> GetResult(IPSFBase psfInfo, IQueryable<TEntity> preQuery)
+
+        public virtual ListingResult<TEntity, PSF> GetResult(PSF psfInfo, IQueryable<TEntity> preQuery)
         {
-            ListingResult<TEntity, IPSFBase> opRes = new ListingResult<TEntity, IPSFBase>();
+            ListingResult<TEntity, PSF> opRes = new ListingResult<TEntity, PSF>();
             IQueryable<TEntity> filteredQuery = preQuery;
 
             if (psfInfo != null)
-            { 
+            {
                 opRes.PagingInfo = psfInfo;
                 if (psfInfo.SetPageNumbers)
                 {
@@ -40,7 +41,7 @@ namespace Adverthouse.Common.Data
 
             return opRes;
         }
-        public virtual ListingResult<TEntity, IPSFBase> GetResult(IPSFBase psfInfo)
+        public virtual ListingResult<TEntity, PSF> GetResult(PSF psfInfo)
         {
             IQueryable<TEntity> filteredQuery = _db.Set<TEntity>();
             var opRes = GetResult(psfInfo, filteredQuery);
@@ -91,7 +92,7 @@ namespace Adverthouse.Common.Data
         public int Count()
         {
             return _db.Set<TEntity>().Count();
-        }        
+        }
         public void Delete(Expression<Func<TEntity, bool>> criteria)
         {
             TEntity entity = FindBy(criteria);

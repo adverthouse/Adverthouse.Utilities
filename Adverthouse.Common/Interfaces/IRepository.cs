@@ -7,19 +7,19 @@ using System.Text;
 
 namespace Adverthouse.Common.Interfaces
 {
-    public interface IRepository<TEntity> where TEntity : class, IEntity 
+    public interface IRepository<TEntity, PSF> where TEntity : class, IEntity where PSF : IPSFBase
     {
-        IQueryable<TEntity> GetResult();
-        ListingResult<TEntity, IPSFBase> GetResult(IPSFBase psfInfo, IQueryable<TEntity> preQuery);
-        ListingResult<TEntity, IPSFBase> GetResult(IPSFBase psfInfo);
-        void Add(TEntity entity);
-        void AddIfNotExists(Expression<Func<TEntity, bool>> predicate, TEntity entity);
-        void AddRange(IEnumerable<TEntity> entities);
-        void Update(TEntity entity);
-        TEntity FindBy(Expression<Func<TEntity, bool>> predicate);
-        TEntity FindBy(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEntity>> include);
-        int Count(Expression<Func<TEntity, bool>> predicate);
-        int Count();        
-        void Delete(Expression<Func<TEntity, bool>> criteria);
+            IQueryable<TEntity> GetResult();
+            ListingResult<TEntity, PSF> GetResult(PSF psfInfo, IQueryable<TEntity> preQuery);
+            ListingResult<TEntity, PSF> GetResult(PSF psfInfo);
+            void Add(TEntity entity);
+            void AddIfNotExists(Expression<Func<TEntity, bool>> predicate, TEntity entity);
+            void AddRange(IEnumerable<TEntity> entities);
+            void Update(TEntity entity);
+            TEntity FindBy(Expression<Func<TEntity, bool>> predicate);
+            TEntity FindBy(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEntity>> include);
+            int Count(Expression<Func<TEntity, bool>> predicate);
+            int Count();
+            void Delete(Expression<Func<TEntity, bool>> criteria);
+        }
     }
-}
