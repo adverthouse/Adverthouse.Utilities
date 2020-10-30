@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Linq.Dynamic.Core; 
+
 namespace Adverthouse.Common.Data
 {
     public class EntityRepository<TEntity> : IRepository<TEntity> where TEntity : class, IEntity 
