@@ -8,7 +8,7 @@ using System.Text;
 using System.Linq.Dynamic.Core; 
 namespace Adverthouse.Common.Data
 {
-    public class EntityRepository<TEntity, PSF> : IRepository<TEntity, PSF> where TEntity : class, IEntity where PSF : IPSFBase
+    public class EntityRepository<TEntity> : IRepository<TEntity> where TEntity : class, IEntity 
     {
         protected readonly DbContext _db;
         public EntityRepository(DbContext db)
@@ -20,7 +20,7 @@ namespace Adverthouse.Common.Data
             return _db.Set<TEntity>();
         }
 
-        public virtual ListingResult<TEntity, PSF> GetResult(PSF psfInfo, IQueryable<TEntity> preQuery)
+        public virtual ListingResult<TEntity, PSF> GetResult<PSF>(PSF psfInfo, IQueryable<TEntity> preQuery) where PSF : IPSFBase 
         {
             ListingResult<TEntity, PSF> opRes = new ListingResult<TEntity, PSF>();
             IQueryable<TEntity> filteredQuery = preQuery;
@@ -40,7 +40,7 @@ namespace Adverthouse.Common.Data
 
             return opRes;
         }
-        public virtual ListingResult<TEntity, PSF> GetResult(PSF psfInfo)
+        public virtual ListingResult<TEntity, PSF> GetResult<PSF>(PSF psfInfo) where PSF : IPSFBase
         {
             IQueryable<TEntity> filteredQuery = _db.Set<TEntity>();
             var opRes = GetResult(psfInfo, filteredQuery);
@@ -62,7 +62,7 @@ namespace Adverthouse.Common.Data
         {
             return _db.Set<TEntity>().Where(whereExp).Select(selectExp).Distinct().Where(x => x != null).Cast<int>().ToList();
         }
-        public List<int> SelectIDs(PSF psfInfo, Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, int?>> selectExp)
+        public List<int> SelectIDs<PSF>(PSF psfInfo, Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, int?>> selectExp) where PSF : IPSFBase
         {
             var result = _db.Set<TEntity>().AsQueryable();
 
