@@ -147,7 +147,12 @@ namespace Adverthouse.Common.Data.MongoDB
             var filter = Builders<TDocument>.Filter.Eq("_id", id);
             _collection.FindOneAndDelete(filter);
         }
-
+        public void DeleteById<TFieldValue>(string collectionName, TFieldValue id)
+        {
+            ChangeCollection(collectionName);
+            var filter = Builders<TDocument>.Filter.Eq("_id", id);
+            _collection.FindOneAndDelete(filter);
+        }
         public Task DeleteByIdAsync<TFieldValue>(TFieldValue id)
         {
             return Task.Run(() =>

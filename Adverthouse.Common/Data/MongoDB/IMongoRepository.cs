@@ -43,7 +43,7 @@ namespace Adverthouse.Common.Data.MongoDB
         Task DeleteOneAsync(Expression<Func<TDocument, bool>> filterExpression);
 
         void DeleteById<TFieldValue>(TFieldValue id);
-
+        void DeleteById<TFieldValue>(string collectionName, TFieldValue id);
         Task DeleteByIdAsync<TFieldValue>(TFieldValue id);
 
         void DeleteMany(Expression<Func<TDocument, bool>> filterExpression);
