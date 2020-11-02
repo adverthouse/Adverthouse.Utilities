@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Newtonsoft.Json;
 
 namespace Adverthouse.Core.Configuration
 {
     public interface IConfig
     {
+        [JsonIgnore]
+        string Name => GetType().Name;
     }
 }

@@ -12,8 +12,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.35" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.9" />
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.4" />
+    <PackageReference Include="MongoDB.Driver" Version="2.11.3" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Adverthouse.Core\Adverthouse.Core.csproj" />
   </ItemGroup>
 
 </Project>
