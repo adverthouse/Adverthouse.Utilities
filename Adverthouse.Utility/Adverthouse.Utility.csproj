@@ -9,13 +9,13 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>C#, Utility</PackageTags>
     <NeutralLanguage>en</NeutralLanguage>
-    <PackageIcon>pattern.jpg</PackageIcon>
+    <PackageIcon> </PackageIcon>
     <RepositoryUrl>https://github.com/adverthouse/Adverthouse.Utilities/tree/master/Adverthouse.Utility</RepositoryUrl>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\..\Desktop\pattern.jpg">
+    <None Include=" ">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
