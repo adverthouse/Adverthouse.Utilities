@@ -12,25 +12,28 @@ namespace Adverthouse.Common.Data.MongoDB
     {
         private IMongoCollection<TDocument> _collection;
         private readonly IMongoDatabase _database;
-        public MongoRepository(MongoDBConfig mongoDBConfig,string collectionName)
+        private readonly MongoDBConfig _mongoDBConfig;
+        public MongoRepository(AppSettings appSettings)
         {
+            _mongoDBConfig = appSettings.MongoDBConfig;
 
             MongoClientSettings _clientSettings = new MongoClientSettings()
             {
-                Server = new MongoServerAddress(mongoDBConfig.Host, 27017)
+                Server = new MongoServerAddress(_mongoDBConfig.Host, 27017)
             };
             
-            if (mongoDBConfig.HasCredential)
+            if (_mongoDBConfig.HasCredential)
             {
                 _clientSettings.Credentials = new List<MongoCredential>() {
                     MongoCredential.CreateMongoCRCredential(
-                        mongoDBConfig.UserDB,
-                        mongoDBConfig.Username,
-                        mongoDBConfig.Password) };
+                        _mongoDBConfig.UserDB,
+                        _mongoDBConfig.Username,
+                        _mongoDBConfig.Password) };
             }
 
-            _database = new MongoClient(_clientSettings).GetDatabase(mongoDBConfig.DBName);
-            _collection = _database.GetCollection<TDocument>(collectionName);
+            _database = new MongoClient(_clientSettings).GetDatabase(_mongoDBConfig.DBName);
+            _collection = _database.GetCollection<TDocument>(GetCollectionName(typeof(TDocument)));
+
         }
         private protected string GetCollectionName(Type documentType)
         {
@@ -43,7 +46,6 @@ namespace Adverthouse.Common.Data.MongoDB
         private void ChangeCollection(string collectionName) {
             _collection = _database.GetCollection<TDocument>(collectionName);
         }
-
         public virtual IQueryable<TDocument> AsQueryable()
         {
             return _collection.AsQueryable();

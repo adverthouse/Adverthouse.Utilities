@@ -8,7 +8,7 @@ namespace Adverthouse.Core.Configuration
     public class SMTPConfig : IConfig
     {
         public bool IsAuthenticationEnabled { get; set; } = false;
-        public SmtpDeliveryMethod Deliverymethod { get; set; } = SmtpDeliveryMethod.Network;
+        public string Deliverymethod { get; set; } = "Network";
         public bool EnableSSL { get; set; } = false;
         public string Encoding { get; set; } = "utf-8";        
         public int SMTPPort { get; set; } = 587;

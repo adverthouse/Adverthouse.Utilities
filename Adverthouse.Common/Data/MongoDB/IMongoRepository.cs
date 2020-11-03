@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Adverthouse.Common.Data.MongoDB
 {
     public interface IMongoRepository<TDocument> where TDocument  : IDocument
-    { 
+    {
         IQueryable<TDocument> AsQueryable();
 
         IEnumerable<TDocument> FilterBy(
@@ -49,5 +49,6 @@ namespace Adverthouse.Common.Data.MongoDB
         void DeleteMany(Expression<Func<TDocument, bool>> filterExpression);
 
         Task DeleteManyAsync(Expression<Func<TDocument, bool>> filterExpression);
+        void DropCollection(string collectionName);
     }
 }

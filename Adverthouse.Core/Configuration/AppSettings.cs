@@ -6,7 +6,7 @@ namespace Adverthouse.Core.Configuration
 {
     public class AppSettings
     {
-        public MongoDBConfig MongoConfig { get; set; } = new MongoDBConfig();
+        public MongoDBConfig MongoDBConfig { get; set; } = new MongoDBConfig();
         public SMTPConfig SMTPConfig { get; set; } = new SMTPConfig();
         public reCAPTCHAConfig reCAPTCHAConfig { get; set; } = new reCAPTCHAConfig();
         public RedisConfig RedisConfig { get; set; } = new RedisConfig();
