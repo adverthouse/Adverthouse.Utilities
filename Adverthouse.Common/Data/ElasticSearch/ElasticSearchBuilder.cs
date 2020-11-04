@@ -22,32 +22,51 @@ namespace Adverthouse.Common.Data.ElasticSearch
 
             IndexName = indexName;
         }
-        public void Prefilter_AddMust(string field, double? value)
+        public void Prefilter_AddMust<TValue>(string field, TValue value)
         {
-            queryPreFilter &= new TermQuery()
+            if (value != null)
             {
-                Field = field,
-                Value = value
-            };
+                queryPreFilter &= new TermQuery()
+                {
+                    Field = field,
+                    Value = value
+                };
+            }
         }
-        public void Prefilter_AddMustNot(string field, object value)
+        public void Prefilter_AddMustNot<TValue>(string field, TValue value) 
         {
-            queryPreFilter = !new TermQuery()
+            if (value != null)
             {
-                Field = field,
-                Value = value
-            }; 
+                queryPreFilter = !new TermQuery()
+                {
+                    Field = field,
+                    Value = value
+                };
+            }
         }
 
         public void Prefilter_AddMustGreaterEqual(string field, double? value)
         {
-            queryPreFilter &= new NumericRangeQuery()
+            if (value != null)
             {
-                Field = field,
-                GreaterThanOrEqualTo = value
-            };
+                queryPreFilter &= new NumericRangeQuery()
+                {
+                    Field = field,
+                    GreaterThanOrEqualTo = value
+                };
+            }
+        }
+        public void Prefilter_AddMustQuery(string fields, string query)
+        {
+            if (!String.IsNullOrWhiteSpace(query))
+            {
+                queryPreFilter &= new QueryStringQuery()
+                {
+                    Fields = fields,
+                    Query = query
+                };
+            }
         }
 
-      
     }
 }

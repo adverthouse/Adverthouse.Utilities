@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Adverthouse.Common.Interfaces
+namespace Adverthouse.Common
 {
     public enum SortDirection
     {
-        asc,
-        desc
+        asc = 0,
+        desc = 1
     }
 }
