@@ -6,7 +6,5 @@ using System.Text;
 
 namespace Adverthouse.Common.Data.MongoDB
 {
-    public interface IDocument
-    { 
-    }
+    public interface IDocument {  }
 }
