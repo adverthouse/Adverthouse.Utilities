@@ -1,7 +1,10 @@
-﻿using Adverthouse.Common.NoSQL;
+﻿using Adverthouse.Common.Interfaces;
+using Adverthouse.Common.NoSQL;
 using Adverthouse.Core.Configuration;
 using ServiceStack.Redis;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace Adverthouse.Common.Data.Redis
 {
@@ -9,11 +12,13 @@ namespace Adverthouse.Common.Data.Redis
     {
         private readonly RedisEndpoint _redisEndpoint;
         private readonly IRedisClient _rc;
-
+        private Core.Configuration.RedisConfig _redisConfig;
         public RedisCacheManager(AppSettings appSettings)
         {
-            var host = appSettings.RedisConfig.RedisHost;
-            var port = Convert.ToInt32(appSettings.RedisConfig.RedisPort);
+            _redisConfig = appSettings.RedisConfig;
+          
+            var host = _redisConfig.RedisHost;
+            var port = Convert.ToInt32(_redisConfig.RedisPort);
             _redisEndpoint = new RedisEndpoint()
             {
                 Host = host,
@@ -40,11 +45,24 @@ namespace Adverthouse.Common.Data.Redis
         {
             _rc.Set(key.Key, value, timeout);
         }
-        public T GetValue<T>(RedisKey key)
-        {
-            return _rc.Get<T>(key.Key);
-        }
 
+        public T Get<T>(RedisKey key,Func<T> acquire)
+        {
+            if (IsKeyExist(key))
+            {
+                var resultExist = _rc.Get<T>(key.Key);
+
+                if (resultExist != null && !resultExist.Equals(default(T)))
+                    return resultExist;
+            }
+
+            var result = acquire();
+
+            if (key.CacheTime > 0)
+                SetValue(key, result);
+
+            return result;
+        }
         public bool StoreList<T>(RedisKey key, T value, TimeSpan timeout)
         {
             try
@@ -64,6 +82,27 @@ namespace Adverthouse.Common.Data.Redis
             var wrapper = _rc.As<T>();
             result = wrapper.GetValue(key.Key);
             return result;
+        }
+
+        protected virtual object CreateCacheKeyParameters(object parameter)
+        {
+            return parameter switch
+            {
+                null => "null",
+                //IEnumerable<int> ids => CreateIdsHash(ids),
+                //IEnumerable<IEntity> entities => CreateIdsHash(entities.Select(entity => entity.Id)),
+                //BaseEntity entity => entity.Id,
+                decimal param => param.ToString(CultureInfo.InvariantCulture),
+                _ => parameter
+            };
+        }
+        public RedisKey PrepareKeyForDefaultCache(RedisKey cacheKey, params object[] cacheKeyParameters)
+        {
+            var key = cacheKey.Create(CreateCacheKeyParameters, cacheKeyParameters);
+
+            key.CacheTime = _redisConfig.DefaultCacheTime;
+
+            return key;
         }
     }
 }
