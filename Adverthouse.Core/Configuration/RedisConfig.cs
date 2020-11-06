@@ -7,10 +7,10 @@ namespace Adverthouse.Core.Configuration
     public class RedisConfig : IConfig
     {
         public bool Enabled { get; set; } = false;
-
         public string RedisHost { get; set; } = "127.0.0.1";
-
         public int RedisPort { get; set; } = 6379;
-        public int DefaultCacheTime { get; set; } = 5;
+        public int DefaultCacheTime { get; set; } = 15;
+        public bool EnableReCache { get; set; } = true;
+        public int DefaultReCacheTime { get; set; } = 5;
     }
 }

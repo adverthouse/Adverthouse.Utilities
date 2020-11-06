@@ -5,6 +5,7 @@ using ServiceStack.Redis;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 
 namespace Adverthouse.Common.Data.Redis
 {
@@ -47,6 +48,14 @@ namespace Adverthouse.Common.Data.Redis
             if (IsKeyExist(key))
             {
                 var resultExist = _rc.Get<T>(key.Key);
+
+                if (key.ReCacheNearToExpires)
+                {
+                    if (NearToExpire(key,key.ReCacheTime))
+                    {
+                        Task.Run(() => SetValue(key, acquire(), key.CacheTime));
+                    }
+                }
 
                 if (resultExist != null && !resultExist.Equals(default(T)))
                     return resultExist;
