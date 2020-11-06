@@ -32,15 +32,11 @@ namespace Adverthouse.Common.Data.Redis
             return _rc.ContainsKey(key.Key) ? true : false;
         }
 
-        public bool NearToExpire(RedisKey key, int minute = 5)
+        public bool NearToExpire(RedisKey key, TimeSpan time)
         {
-            return _rc.GetTimeToLive(key.Key) < TimeSpan.FromMinutes(5) ? true : false;
+            return _rc.GetTimeToLive(key.Key) < time ? true : false;
         }
-
-        public void SetValue<T>(RedisKey key, T value)
-        {
-            _rc.Set(key.Key, value);
-        }
+    
         public void SetValue<T>(RedisKey key, T value, TimeSpan timeout)
         {
             _rc.Set(key.Key, value, timeout);
@@ -58,40 +54,17 @@ namespace Adverthouse.Common.Data.Redis
 
             var result = acquire();
 
-            if (key.CacheTime > 0)
-                SetValue(key, result);
+            if (key.CacheTime.TotalMinutes > 0)
+                SetValue(key, result, key.CacheTime);
 
             return result;
-        }
-        public bool StoreList<T>(RedisKey key, T value, TimeSpan timeout)
-        {
-            try
-            {
-                _rc.Set<T>(key.Key, value, timeout);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public T GetList<T>(RedisKey key)
-        {
-            T result;
-            var wrapper = _rc.As<T>();
-            result = wrapper.GetValue(key.Key);
-            return result;
-        }
+        } 
 
         protected virtual object CreateCacheKeyParameters(object parameter)
         {
             return parameter switch
             {
                 null => "null",
-                //IEnumerable<int> ids => CreateIdsHash(ids),
-                //IEnumerable<IEntity> entities => CreateIdsHash(entities.Select(entity => entity.Id)),
-                //BaseEntity entity => entity.Id,
                 decimal param => param.ToString(CultureInfo.InvariantCulture),
                 _ => parameter
             };
@@ -100,9 +73,14 @@ namespace Adverthouse.Common.Data.Redis
         {
             var key = cacheKey.Create(CreateCacheKeyParameters, cacheKeyParameters);
 
-            key.CacheTime = _redisConfig.DefaultCacheTime;
+            key.CacheTime = TimeSpan.FromMinutes(_redisConfig.DefaultCacheTime);
 
             return key;
         }
+        public void Dispose()
+        {
+           // Dispose(true);
+            GC.SuppressFinalize(this);
+        } 
     }
 }
