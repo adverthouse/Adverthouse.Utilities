@@ -11,6 +11,8 @@ namespace Adverthouse.Core.Security
         Update = 3,
         Delete = 4,
         Extra1 = 5,
-        Extra2 = 6
+        Extra2 = 6,
+        Extra3 = 7,
+        Extra4 = 8,
     }
 }

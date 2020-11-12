@@ -11,6 +11,9 @@ namespace Adverthouse.Core.Configuration
         public reCAPTCHAConfig reCAPTCHAConfig { get; set; } = new reCAPTCHAConfig();
         public RedisConfig RedisConfig { get; set; } = new RedisConfig();
         public ElasticSearchConfig ElasticSearchConfig { get; set; } = new ElasticSearchConfig();
+        public string SecurityKey { get; set; }
+        public string TestServerMode { get; set; }
+
         public string BestHDWMembers { get; set; }
         public string BlogPhotos { get; set; }
         public string Categories { get; set; }
@@ -20,8 +23,7 @@ namespace Adverthouse.Core.Configuration
         public string Images { get; set; }
         public string BestHDWImages { get; set; }
         public string EmailTemplates { get; set; }
-        public string SitemapRootFolder { get; set; } 
-        public string TestServerMode { get; set; } 
+        public string SitemapRootFolder { get; set; }  
  
         public AppSettings()
         {
