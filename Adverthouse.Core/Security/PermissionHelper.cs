@@ -13,6 +13,11 @@ namespace Adverthouse.Core.Security
             Section = section;
             TypeOfPermission = typeOfPermission;
         }
+        public PermissionHelper(string section, string description)
+        {
+            Section = section;
+            TypeOfPermission = GetPermissionTypeByDescription(description);
+        }
         public string Section { get; set; }
 
         public PermissionType TypeOfPermission { get; set; }
