@@ -18,12 +18,12 @@ namespace Adverthouse.Utility.Validation.Validators
             get {
                 if (_minLength.HasValue && _maxLength.HasValue)
                 {
-                    return $" minlength : {_minLength.Value} \r\n," +
-                           $" maxlength : {_maxLength.Value} \r\n";
+                    return $" minlength : {_minLength.Value}," +
+                           $" maxlength : {_maxLength.Value}";
                 }
                 else {
                     return $" { (_minLength.HasValue ? "minlength": "maxlength" )} :" +
-                        $" {(_minLength.HasValue ? _minLength.Value : _maxLength.Value )} \r\n";
+                        $" {(_minLength.HasValue ? _minLength.Value : _maxLength.Value )}";
                 }
             }
         }
@@ -33,13 +33,13 @@ namespace Adverthouse.Utility.Validation.Validators
             {
                 if (_minLength.HasValue && _maxLength.HasValue)
                 {
-                    return $" minlength : {ErrorMessage.Replace("\"", "'")} \r\n," +
-                           $" maxlength : {ErrorMessage.Replace("\"", "'")} \r\n";
+                    return $" minlength : \"{ErrorMessage.Replace("\"", "'")}\"" +
+                           $" maxlength : \"{ErrorMessage.Replace("\"", "'")}\"";
                 }
                 else
                 {
                     return $" { (_minLength.HasValue ? "minlength" : "maxlength")} :" +
-                        $" {(_minLength.HasValue ? ErrorMessage.Replace("\"", "'") : ErrorMessage.Replace("\"", "'") )} \r\n";
+                        $" \"{ErrorMessage.Replace("\"", "'")}\"";
                 }
             }
         }

@@ -35,13 +35,13 @@ namespace Adverthouse.Utility.Validation
             return ruleBuilder;
         }
         public static IRuleBuilder MinMaxLength(this IRuleBuilder ruleBuilder,
-            int minLenght, int maxLength)
+            int? minLenght, int? maxLength)
         {
             ruleBuilder.AddRule(new MinMaxLengthValidator(minLenght, maxLength, ruleBuilder.ValidationRule.PropertyName));
             return ruleBuilder;
         }
         public static IRuleBuilder MinMaxLength(this IRuleBuilder ruleBuilder,
-           int minLenght, int maxLength, string errorMessage)
+           int? minLenght, int? maxLength, string errorMessage)
         {
             ruleBuilder.AddRule(new MinMaxLengthValidator(minLenght, maxLength, ruleBuilder.ValidationRule.PropertyName, errorMessage));
             return ruleBuilder;
@@ -74,7 +74,7 @@ namespace Adverthouse.Utility.Validation
         {
             ruleBuilder.AddRule(new RegexValidator(ruleBuilder.ValidationRule.PropertyName, errorMessage)
             {
-                Pattern = @"^-?\d+$"
+                Pattern = @"^\d+$"
             });
             return ruleBuilder;
         }
@@ -82,7 +82,7 @@ namespace Adverthouse.Utility.Validation
         {
             ruleBuilder.AddRule(new RegexValidator(ruleBuilder.ValidationRule.PropertyName, errorMessage)
             {
-                Pattern = @"[^a-zA-Z0-9_\.]"
+                Pattern = @"^a-zA-Z0-9_\.$"
             });
             return ruleBuilder;
         }

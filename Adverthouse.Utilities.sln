@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Adverthouse.Common", "Adver
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Adverthouse.Core", "Adverthouse.Core\Adverthouse.Core.csproj", "{F792C5A9-E58E-480E-A03E-E21FED979F4C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{98EAAD5F-EE92-476E-8C49-3C84BD770CDF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.WebUI", "Test.WebUI\Test.WebUI.csproj", "{31F74150-8A93-4F1C-9D94-8DF57A0D7DCF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,9 +37,16 @@ Global
 		{F792C5A9-E58E-480E-A03E-E21FED979F4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F792C5A9-E58E-480E-A03E-E21FED979F4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F792C5A9-E58E-480E-A03E-E21FED979F4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31F74150-8A93-4F1C-9D94-8DF57A0D7DCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31F74150-8A93-4F1C-9D94-8DF57A0D7DCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31F74150-8A93-4F1C-9D94-8DF57A0D7DCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31F74150-8A93-4F1C-9D94-8DF57A0D7DCF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{31F74150-8A93-4F1C-9D94-8DF57A0D7DCF} = {98EAAD5F-EE92-476E-8C49-3C84BD770CDF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A95238EE-1E8B-47D5-A712-CAD79B41C8EB}
