@@ -79,17 +79,10 @@ namespace Adverthouse.Utility.Validation
                 string messageItem = "";
                 foreach (IPropertyValidator item in rule.ValidationRule.PropertyValidator)
                 {
-                    ruleItem += "";// (String.IsNullOrWhiteSpace(ruleItem) ? "" : ",");
-                    messageItem += "";// (String.IsNullOrWhiteSpace(ruleItem) ? "" : ",");
-                    switch (item.Name)
-                    {
-                        case "RequiredValidator":
-                            ruleItem += $" required : true \r\n";
-                            messageItem += $" required :\"{item.ErrorMessage.Replace("\"", "'")}\" \r\n";
-                            break;
-
-                            //other validation rules willbe here
-                    }
+                    ruleItem += (String.IsNullOrWhiteSpace(ruleItem) ? "" : ",");
+                    messageItem += (String.IsNullOrWhiteSpace(ruleItem) ? "" : ",");
+                    ruleItem += item.ScriptRule;
+                    messageItem += item.ScriptMessage; 
                 }
                 ruleItems += ruleItem;
                 messageItems += messageItem;

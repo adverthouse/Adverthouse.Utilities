@@ -18,6 +18,10 @@ namespace Adverthouse.Utility.Validation.Validators
         }
         public string ProperyName { get; }
 
+        public string ScriptRule => $" pattern : {Pattern} \r\n";
+        public string ScriptMessage => $" pattern :\"{ErrorMessage.Replace("\"", "'")}\" \r\n";
+
+
         public bool IsValid(object value)
         {
             if (string.IsNullOrWhiteSpace(Convert.ToString(value)))

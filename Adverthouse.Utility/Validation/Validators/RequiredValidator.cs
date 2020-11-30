@@ -14,6 +14,8 @@ namespace Adverthouse.Utility.Validation.Validators
                 return _errorMessage == null ? $"{ProperyName} required" : _errorMessage;
             }
         }
+        public string ScriptRule => $" required : true \r\n"; 
+        public string ScriptMessage => $" required :\"{ErrorMessage.Replace("\"", "'")}\" \r\n"; 
         public string ProperyName { get; }
         public bool IsValid(object value)
         {

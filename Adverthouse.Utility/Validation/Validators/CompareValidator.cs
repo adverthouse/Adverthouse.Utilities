@@ -16,6 +16,11 @@ namespace Adverthouse.Utility.Validation.Validators
         }
         public string ProperyName { get; }
         public string ComparePropertyName { get; }
+
+        public string ScriptRule => $" equalTo : '#{ComparePropertyName}' \r\n"; 
+
+        public string ScriptMessage => $" equalTo :\"{ErrorMessage.Replace("\"", "'")}\" \r\n";
+
         public bool IsValid(object value) => false;
         public bool IsValid(object value, object CompareValue)
         {
