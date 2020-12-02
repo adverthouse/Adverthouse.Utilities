@@ -72,3 +72,45 @@ body {
 .error {
    color:red;
 }
+ 
+.label {
+    padding: 3px 9px;
+    font-size: 11px;
+    line-height: 1;
+    text-shadow: none;
+    background-color: #e1e1e1;
+    font-weight: 600;
+    color: #575757;
+    border-radius: .25em;
+}
+
+.label-success {
+    background-color: #1dbb99;
+    color: #fff;
+}
+
+.label-warning {
+    background-color: #f7cf5f;
+    color: #fff;
+}
+
+.label-important,
+.label-danger {
+    background-color: #f35958;
+    color: #fff;
+}
+
+.label-info {
+    background-color: #37b0e9;
+    color: #fff;
+}
+
+.label-inverse {
+    background-color: #2d8fbd;
+    color: #fff;
+}
+
+.label-white {
+    background-color: #fff;
+    color: #575757;
+}

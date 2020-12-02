@@ -1,12 +1,32 @@
 ﻿using Adverthouse.Common.Interfaces;
+using Adverthouse.Core;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using System.Linq;
+using System.Reflection;
 
 namespace Adverthouse.Utility
 {
     public static class Widgets
     {
+        public static IHtmlContent WidgetEnum(this IHtmlHelper htmlHelper,Enum genericEnum,string tag="span")
+        {
+            var content = new HtmlContentBuilder();
+            Type genericEnumType = genericEnum.GetType();
+            MemberInfo[] memberInfo = genericEnumType.GetMember(genericEnum.ToString());
+            if ((memberInfo != null && memberInfo.Length > 0))
+            {
+                var _Attribs = memberInfo[0].GetCustomAttributes(typeof(EnumAttribute), false);
+                if ((_Attribs != null && _Attribs.Count() > 0))
+                {
+                    var attr = ((EnumAttribute)_Attribs.ElementAt(0));
+                    content.AppendHtml(String.Format($"<{tag} class=\"label label-{attr.ClassName}\">{attr.Description}</{tag}>"));
+                    return content;
+                }
+            }
+            return content.AppendHtml(genericEnum.ToString());
+        }
         public static IHtmlContent WidgetTitle(this IHtmlHelper htmlHelper, string title)
         {
             var content = new HtmlContentBuilder()
