@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Test.WebUI.Models;
+using Test.WebUI.PSFs;
 using Test.WebUI.Validators;
 
 namespace Test.WebUI.Controllers
@@ -22,6 +23,9 @@ namespace Test.WebUI.Controllers
 
         public IActionResult Index()
         {
+            PSFMember pSFMember = new PSFMember();
+
+            string temp = pSFMember.Filter;
             return View();
         }
 
