@@ -1,3 +1,5 @@
+using Adverthouse.Core.Configuration;
+using Adverthouse.Core.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -23,6 +25,11 @@ namespace Test.WebUI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var settings = Configuration.GetSection("AppSettings").Get<AppSettings>();
+            services.AddSingleton<AppSettings>(settings);
+
+            Singleton<AppSettings>.Instance = settings;
+
             services.AddMvc()
               .AddControllersAsServices()
               .AddRazorRuntimeCompilation();
