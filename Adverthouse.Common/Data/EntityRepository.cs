@@ -120,6 +120,10 @@ namespace Adverthouse.Common.Data
             _db.SaveChanges();
         }
 
-
+        public void Dispose()
+        {
+            if (_db != null)  _db.Dispose();  
+            GC.SuppressFinalize(this);
+        }
     }
 }
