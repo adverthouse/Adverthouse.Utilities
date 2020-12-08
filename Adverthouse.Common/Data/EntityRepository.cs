@@ -4,21 +4,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Linq.Dynamic.Core; 
+using System.Linq.Dynamic.Core;
 
 namespace Adverthouse.Common.Data
 {
     public class EntityRepository<TEntity> : IRepository<TEntity> where TEntity : class, IEntity 
     {
         protected readonly DbContext _db;
-        public EntityRepository(DbContext db)
+        private readonly IDbContextFactory<DbContext> _contextFactory;
+
+        public EntityRepository(DbContext db,
+                                IDbContextFactory<DbContext> contextFactory)
         {
             _db = db;
+            _contextFactory = contextFactory;
         }
+
+        public bool IsMultiThreaded { get; set; } = false;
+
         public IQueryable<TEntity> GetResult()
         {
-            return _db.Set<TEntity>();
+            if (IsMultiThreaded)
+            {
+                using (var _db2 = _contextFactory.CreateDbContext())
+                {
+                    return _db2.Set<TEntity>();
+                }
+            }
+            else return _db.Set<TEntity>();
         }
 
         public virtual ListingResult<TEntity, PSF> GetResult<PSF>(PSF psfInfo, IQueryable<TEntity> preQuery) where PSF : IPSFBase 
@@ -43,16 +56,22 @@ namespace Adverthouse.Common.Data
         }
         public virtual ListingResult<TEntity, PSF> GetResult<PSF>(PSF psfInfo) where PSF : IPSFBase
         {
-            IQueryable<TEntity> filteredQuery = _db.Set<TEntity>();
-            var opRes = GetResult(psfInfo, filteredQuery);
-            return opRes;
+            using (var _db2 = _contextFactory.CreateDbContext())
+            {
+                IQueryable<TEntity> filteredQuery = _db2.Set<TEntity>();
+                var opRes = GetResult(psfInfo, filteredQuery);
+                return opRes;
+            }
         }
         public List<TEntity> GetResult(Expression<Func<TEntity, bool>> predicate = null)
         {
-            IQueryable<TEntity> filteredQuery = _db.Set<TEntity>();
-            if (predicate != null)
-                filteredQuery = filteredQuery.Where(predicate);
-            return filteredQuery.ToList();
+            using (var _db2 = _contextFactory.CreateDbContext())
+            {
+                IQueryable<TEntity> filteredQuery = _db2.Set<TEntity>();
+                if (predicate != null)
+                    filteredQuery = filteredQuery.Where(predicate);
+                return filteredQuery.ToList();
+            }
         }
 
         public List<int> SelectIDs(Expression<Func<TEntity, int?>> selectExp)
