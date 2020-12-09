@@ -19,6 +19,7 @@ namespace Adverthouse.Common.Data.ElasticSearch
         {
             queryPreFilter = new QueryContainer();
             queryPostFilter = new QueryContainer();
+            PSF = psf;
 
             IndexName = indexName;
         }

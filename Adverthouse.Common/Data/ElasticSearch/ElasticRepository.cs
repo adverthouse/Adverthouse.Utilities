@@ -21,7 +21,7 @@ namespace Adverthouse.Common.Data.ElasticSearch
             }
             var connectionPool = new StaticConnectionPool(hosts);
 
-            var settings = new ConnectionSettings(connectionPool);
+            var settings = new ConnectionSettings(connectionPool); 
             if (_elasticConfig.EnableAuthentication)
             {
                 settings = settings.BasicAuthentication(_elasticConfig.Username, _elasticConfig.Password);
@@ -76,7 +76,7 @@ namespace Adverthouse.Common.Data.ElasticSearch
 
         public ISearchResponse<T> Search(ElasticSearchBuilder elasticSearchBuilder)
         {
-            ISearchRequest<T> searchRequest = new SearchRequest<T>();
+            ISearchRequest<T> searchRequest = new SearchRequest<T>(elasticSearchBuilder.IndexName); 
 
             searchRequest.From = (elasticSearchBuilder.PSF.CurrentPage - 1) * elasticSearchBuilder.PSF.ItemPerPage;
             searchRequest.Size = elasticSearchBuilder.PSF.ItemPerPage;
@@ -85,7 +85,9 @@ namespace Adverthouse.Common.Data.ElasticSearch
             searchRequest.PostFilter = elasticSearchBuilder.queryPostFilter;
 
             if (elasticSearchBuilder.Sort != null)
-                searchRequest.Sort = elasticSearchBuilder.Sort;
+                searchRequest.Sort = elasticSearchBuilder.Sort; 
+            
+             
 
             return _elasticClient.Search<T>(searchRequest);
         }

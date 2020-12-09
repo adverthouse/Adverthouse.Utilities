@@ -3,10 +3,10 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.1.9</Version>
+    <Version>1.1.11</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>MongoDB,ElasticSearch,Redis,SQL Server</PackageTags>
-    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
 
   <ItemGroup>
