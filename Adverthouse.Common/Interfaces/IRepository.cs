@@ -9,7 +9,6 @@ namespace Adverthouse.Common.Interfaces
 {
     public interface IRepository<TEntity>:IDisposable where TEntity : class, IEntity 
     {
-            bool IsMultiThreaded { get; set; } 
             IQueryable<TEntity> GetResult();
             List<TEntity> GetResult(Expression<Func<TEntity, bool>> predicate = null);
             ListingResult<TEntity, PSF> GetResult<PSF>(PSF psfInfo, IQueryable<TEntity> preQuery) where PSF : IPSFBase;
