@@ -60,9 +60,8 @@ namespace Adverthouse.Common.Data.Redis
                         Task.Run(() => SetValue(key, acquire(), key.CacheTime));
                     }
                 }
-
-                if (resultExist != null && !resultExist.Equals(default(T)))
-                    return resultExist;
+ 
+                return resultExist;
             }
 
             var result = acquire();
