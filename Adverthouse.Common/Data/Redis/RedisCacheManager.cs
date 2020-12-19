@@ -28,6 +28,9 @@ namespace Adverthouse.Common.Data.Redis
             };
             _rc = new RedisClient(_redisEndpoint);
         }
+        public bool RemoveKey(RedisKey key) {
+            return _rc.Remove(key.Key);
+        }
         public bool IsKeyExist(RedisKey key)
         {
             return _rc.ContainsKey(key.Key) ? true : false;
