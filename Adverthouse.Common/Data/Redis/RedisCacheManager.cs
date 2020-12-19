@@ -38,7 +38,8 @@ namespace Adverthouse.Common.Data.Redis
 
         public bool NearToExpire(RedisKey key, TimeSpan time)
         {
-            return _rc.GetTimeToLive(key.Key) < time ? true : false;
+            TimeSpan? ttl = _rc.GetTimeToLive(key.Key);
+            return ttl.HasValue ? (ttl.Value.Seconds < time.Seconds ? true : false) : false;
         }
     
         public void SetValue<T>(RedisKey key, T value, TimeSpan timeout)
