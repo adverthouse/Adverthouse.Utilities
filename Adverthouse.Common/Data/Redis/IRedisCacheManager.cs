@@ -5,6 +5,7 @@ namespace Adverthouse.Common.Data.Redis
 {
     public interface IRedisCacheManager : IDisposable
     {
+        bool RemoveKey(RedisKey key);
         bool IsKeyExist(RedisKey key);
         T Get<T>(RedisKey key, Func<T> acquire);
         void SetValue<T>(RedisKey key, T value, TimeSpan timeout);
