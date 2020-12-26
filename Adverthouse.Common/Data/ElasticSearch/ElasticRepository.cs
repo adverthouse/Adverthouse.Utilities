@@ -21,7 +21,7 @@ namespace Adverthouse.Common.Data.ElasticSearch
             }
             var connectionPool = new StaticConnectionPool(hosts);
 
-            var settings = new ConnectionSettings(connectionPool); 
+            var settings = new ConnectionSettings(connectionPool);             
             if (_elasticConfig.EnableAuthentication)
             {
                 settings = settings.BasicAuthentication(_elasticConfig.Username, _elasticConfig.Password);
@@ -41,9 +41,10 @@ namespace Adverthouse.Common.Data.ElasticSearch
         public CreateIndexResponse CreateIndex(string indexName, int numberOfReplica = 1, int numberOfShards = 5)
         {
             if (!IsIndexExist(indexName).Exists)
-            {
+            { 
                 return _elasticClient.Indices.Create(indexName,
                         c => c.Map<T>(m => m.AutoMap())
+                              .Index(indexName)
                               .Settings(a => a.NumberOfReplicas(numberOfReplica)
                               .NumberOfShards(numberOfShards))
                 );
@@ -54,9 +55,10 @@ namespace Adverthouse.Common.Data.ElasticSearch
         public BulkResponse UpsertDocument(string indexName, List<T> documents, bool autoCreateIndex = true)
         {
             if (autoCreateIndex) CreateIndex(indexName);
-
+             
             return _elasticClient.Bulk(b => b
                    .UpdateMany(documents, (bc, d) => bc
+                       .Index(indexName)
                        .Doc(d)
                        .DocAsUpsert(true)
                    ).Refresh(Refresh.True)
