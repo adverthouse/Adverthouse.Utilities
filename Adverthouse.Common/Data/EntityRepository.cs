@@ -104,11 +104,11 @@ namespace Adverthouse.Common.Data
         public TEntity FindBy(Expression<Func<TEntity, bool>> predicate)
         {
             _db.ChangeTracker.LazyLoadingEnabled = false;
-            return _db.Set<TEntity>().Where(predicate).FirstOrDefault();
+            return _db.Set<TEntity>().Where(predicate).SingleOrDefault();
         }
         public TEntity FindBy(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEntity>> include)
         {
-            return _db.Set<TEntity>().Include(include).Where(predicate).FirstOrDefault();
+            return _db.Set<TEntity>().Include(include).Where(predicate).SingleOrDefault();
         }
         public int Count(Expression<Func<TEntity, bool>> predicate)
         {
