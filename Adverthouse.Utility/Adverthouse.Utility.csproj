@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>Adverthouse.Utility</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Adverthouse</Authors>
@@ -11,7 +11,7 @@
     <NeutralLanguage>en</NeutralLanguage>
     <PackageIcon> </PackageIcon>
     <RepositoryUrl>https://github.com/adverthouse/Adverthouse.Utilities/tree/master/Adverthouse.Utility</RepositoryUrl>
-    <Version>1.1.4</Version>
+    <Version>1.1.5</Version>
   </PropertyGroup>
 
   <ItemGroup>

@@ -101,14 +101,17 @@ namespace Adverthouse.Common.Data
             _db.Entry(entity).State = EntityState.Modified;
             _db.SaveChanges();
         }
-        public TEntity FindBy(Expression<Func<TEntity, bool>> predicate)
+
+        public TEntity FindBy(Expression<Func<TEntity, bool>> predicate, bool enableLazyLoad = false)
         {
-            _db.ChangeTracker.LazyLoadingEnabled = false;
-            return _db.Set<TEntity>().Where(predicate).SingleOrDefault();
+            _db.ChangeTracker.LazyLoadingEnabled = enableLazyLoad;
+            return _db.Set<TEntity>().Where(predicate).FirstOrDefault(); 
         }
-        public TEntity FindBy(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEntity>> include)
+
+        public TEntity FindBy(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEntity>> include, bool enableLazyLoad = false)
         {
-            return _db.Set<TEntity>().Include(include).Where(predicate).SingleOrDefault();
+            _db.ChangeTracker.LazyLoadingEnabled = enableLazyLoad;
+            return _db.Set<TEntity>().Include(include).Where(predicate).FirstOrDefault();
         }
         public int Count(Expression<Func<TEntity, bool>> predicate)
         {
