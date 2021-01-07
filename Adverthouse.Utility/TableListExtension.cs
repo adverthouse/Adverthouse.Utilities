@@ -10,7 +10,7 @@ namespace Adverthouse.Utility
 {
     public static class TableListExtension
     {
-        public static DataTable ListToDataTable<T>(IList<T> lst)
+        public static DataTable ToDataTable<T>(this IList<T> lst)
         { 
             DataTable currentDT = CreateTable<T>();
 
