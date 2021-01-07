@@ -24,6 +24,7 @@ namespace Test.WebUI.Controllers
         public IActionResult Index()
         {
             PSFMember pSFMember = new PSFMember();
+            pSFMember.FFirstName = "Yunus";
 
             string temp = pSFMember.Filter;
             return View();

@@ -23,7 +23,7 @@ namespace Adverthouse.Utility.Validation.Validators
                 }
                 else {
                     return $" { (_minLength.HasValue ? "minlength": "maxlength" )} :" +
-                        $" {(_minLength.HasValue ? _minLength.Value : _maxLength.Value )}";
+                        $" {(_minLength.HasValue ? _minLength.Value : _maxLength.Value )}, ";
                 }
             }
         }
