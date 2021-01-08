@@ -21,6 +21,7 @@ namespace Adverthouse.Common.Interfaces
             void AddRange(IEnumerable<TEntity> entities);
             void Update(TEntity entity);
             TEntity FindBy(Expression<Func<TEntity, bool>> predicate, bool enableLazyLoad = false);
+            TEntity FindBy(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEnumerable<IEntity>>> include, bool enableLazyLoad = false);
             TEntity FindBy(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEntity>> include, bool enableLazyLoad = false);
             int Count(Expression<Func<TEntity, bool>> predicate);
             int Count();

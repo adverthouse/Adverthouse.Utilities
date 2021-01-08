@@ -107,8 +107,12 @@ namespace Adverthouse.Common.Data
             _db.ChangeTracker.LazyLoadingEnabled = enableLazyLoad;
             return _db.Set<TEntity>().Where(predicate).FirstOrDefault(); 
         }
-
         public TEntity FindBy(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEntity>> include, bool enableLazyLoad = false)
+        {
+            _db.ChangeTracker.LazyLoadingEnabled = enableLazyLoad;
+            return _db.Set<TEntity>().Include(include).Where(predicate).FirstOrDefault();
+        }
+        public TEntity FindBy(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEnumerable<IEntity>>> include, bool enableLazyLoad = false)
         {
             _db.ChangeTracker.LazyLoadingEnabled = enableLazyLoad;
             return _db.Set<TEntity>().Include(include).Where(predicate).FirstOrDefault();
