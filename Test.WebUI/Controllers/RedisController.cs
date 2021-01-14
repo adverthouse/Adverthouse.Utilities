@@ -11,7 +11,7 @@ namespace Test.WebUI.Controllers
     {
         public IActionResult Index()
         {
-            RedisKey CategoriesByLangCacheKey = new RedisKey("Redis.CategoriesByLang-{0}");
+            NoSQLKey CategoriesByLangCacheKey = new NoSQLKey("Redis.CategoriesByLang-{0}");
             return View();
         }
     }

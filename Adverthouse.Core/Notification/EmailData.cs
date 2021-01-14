@@ -43,7 +43,8 @@ namespace Adverthouse.Core.Notification
         {
             get
             {
-                return _appSettings.TestServerMode == "true" ? true : false;
+                return true;
+          //      return _appSettings.AdditionalSettings.TryGetValue("IsTestMode") == "true" ? true : false;
             }
         }
         public string ToAddress { get; private set; }
@@ -58,7 +59,7 @@ namespace Adverthouse.Core.Notification
 
             MergeTags = new Dictionary<string, string>();
 
-            var fileName = String.Format(_appSettings.EmailTemplates + "{0}-{1}.html", lang ?? lang ?? "", id);
+            var fileName = ""; // String.Format(_appSettings.EmailTemplates + "{0}-{1}.html", lang ?? lang ?? "", id);
             using (FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
             {
                 var sr = new StreamReader(fs, Encoding.Default);

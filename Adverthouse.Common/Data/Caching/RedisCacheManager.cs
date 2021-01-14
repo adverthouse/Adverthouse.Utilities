@@ -7,11 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks; 
-using RedisKey = Adverthouse.Common.NoSQL.RedisKey;
+using NoSQLKey = Adverthouse.Common.NoSQL.NoSQLKey;
 
-namespace Adverthouse.Common.Data.Redis
+namespace Adverthouse.Common.Data.Caching
 {
-    public class RedisCacheManager : IRedisCacheManager
+    public class RedisCacheManager : ICacheManager
     {
         private ConnectionMultiplexer _connectionMultiplexer;
         private IDatabase _database;
@@ -24,27 +24,27 @@ namespace Adverthouse.Common.Data.Redis
             _database = _connectionMultiplexer.GetDatabase(_currentDatabaseID);
         }
 
-        public bool RemoveKey(RedisKey key) {
+        public bool RemoveKey(NoSQLKey key) {
             return _database.KeyDelete(key.Key);
         }
-        public bool IsKeyExist(RedisKey key)
+        public bool IsKeyExist(NoSQLKey key)
         {
             return _database.KeyExists(key.Key);
         }
 
-        public bool NearToExpire(RedisKey key, TimeSpan time)
+        public bool NearToExpire(NoSQLKey key, TimeSpan time)
         {
             TimeSpan? ttl = _database.KeyTimeToLive(key.Key);
             return ttl.HasValue ? (ttl.Value.Seconds < time.Seconds ? true : false) : false;
         }
     
-        public void SetValue<T>(RedisKey key, T value, TimeSpan timeout)
+        public void SetValue<T>(NoSQLKey key, T value, TimeSpan timeout)
         {
             string jsonData = JsonConvert.SerializeObject(value);
             _database.StringSet(key.Key, jsonData, timeout); 
         }
 
-        public T Get<T>(RedisKey key,Func<T> acquire)
+        public T Get<T>(NoSQLKey key,Func<T> acquire)
         {
             if (IsKeyExist(key))
             {
@@ -77,14 +77,6 @@ namespace Adverthouse.Common.Data.Redis
                 decimal param => param.ToString(CultureInfo.InvariantCulture),
                 _ => parameter
             };
-        }
-        public RedisKey PrepareKeyForDefaultCache(RedisKey cacheKey, params object[] cacheKeyParameters)
-        {
-            var key = cacheKey.Create(CreateCacheKeyParameters, cacheKeyParameters);
-
-            key.CacheTime = TimeSpan.FromMinutes(_redisConfig.DefaultCacheTime);
-
-            return key;
         }
         public void Dispose()
         {

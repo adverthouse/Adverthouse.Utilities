@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Adverthouse.Common.Data.Caching;
+using Adverthouse.Common.NoSQL;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -15,14 +17,27 @@ namespace Test.WebUI.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private MemberValidator _memberValidator;
-        public HomeController(ILogger<HomeController> logger)
+        private readonly ICacheManager _cacheManager;
+
+        public HomeController(ILogger<HomeController> logger,
+            ICacheManager cacheManager)
         {
             _logger = logger;
             _memberValidator = new MemberValidator("#EditForm");
+            _cacheManager = cacheManager;
         }
 
         public IActionResult Index()
         {
+            DateTime get() {
+                return DateTime.Now;
+            }
+
+            DateTime dt = _cacheManager.Get(new NoSQLKey("today"), get);
+
+
+            ViewBag.dt = dt;
+
             PSFMember pSFMember = new PSFMember();
             pSFMember.FFirstName = "Yunus";
 

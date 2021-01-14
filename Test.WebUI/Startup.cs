@@ -1,3 +1,4 @@
+using Adverthouse.Common.Data.Caching;
 using Adverthouse.Core.Configuration;
 using Adverthouse.Core.Infrastructure;
 using Microsoft.AspNetCore.Builder;
@@ -6,8 +7,11 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,10 +29,27 @@ namespace Test.WebUI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<ICacheManager, MemoryCacheManager>();
+
             var settings = Configuration.GetSection("AppSettings").Get<AppSettings>();
             services.AddSingleton<AppSettings>(settings);
 
             Singleton<AppSettings>.Instance = settings;
+
+            JToken jAppSettings = JToken.Parse(
+                  File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "appsettings.json"))
+            );
+
+            settings.AdditionalSettings = (IDictionary<string,JToken>)jAppSettings["AppSettings"]["AdditionalSettings"];
+            
+            var root = settings.AdditionalSettings["SitemapRootAddres"].Value<string>();
+
+
+            string temp = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "appsettings.json"));
+            var additionalSettings = JsonConvert.DeserializeObject<AppSettings>(temp);
+            
+       /// 
+
 
             services.AddMvc()
               .AddControllersAsServices()

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Adverthouse.Common.NoSQL
 {
-    public class RedisKey
+    public class NoSQLKey
     {        
         public string Key { get; protected set; }
         public List<string> Prefixes { get; protected set; } = new List<string>();
@@ -15,15 +15,15 @@ namespace Adverthouse.Common.NoSQL
         public TimeSpan ReCacheTime { get; protected set; } = TimeSpan.FromMinutes(Singleton<AppSettings>.Instance.RedisConfig.DefaultReCacheTime);
         public TimeSpan CacheTime { get; set; } = TimeSpan.FromMinutes(Singleton<AppSettings>.Instance.RedisConfig.DefaultCacheTime);
 
-        public RedisKey(string key, params string[] prefixes)
+        public NoSQLKey(string key, params string[] prefixes)
         {
             Key = key;
             Prefixes.AddRange(prefixes.Where(prefix => !string.IsNullOrEmpty(prefix)));
         }
 
-        public virtual RedisKey Create(Func<object, object> createCacheKeyParameters, params object[] keyObjects)
+        public virtual NoSQLKey Create(Func<object, object> createCacheKeyParameters, params object[] keyObjects)
         {
-            var cacheKey = new RedisKey(Key, Prefixes.ToArray());
+            var cacheKey = new NoSQLKey(Key, Prefixes.ToArray());
 
             if (!keyObjects.Any())
                 return cacheKey;
