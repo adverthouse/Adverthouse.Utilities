@@ -29,7 +29,7 @@ namespace Adverthouse.Common.Data.Caching
             //set expiration time for the passed cache key
             var options = new MemoryCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(150), // key.CacheTime
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(60), // key.CacheTime
                 SlidingExpiration = TimeSpan.FromSeconds(5)
             }.RegisterPostEvictionCallback(callback: EvictionCallback, state: this);
 
@@ -47,7 +47,11 @@ namespace Adverthouse.Common.Data.Caching
         private void EvictionCallback(object key, object value,  
             EvictionReason reason, object state)
         {
-            _memoryCache.Set(key, value); //if near to expire recache            
+            //_memoryCache.GetOrCreate((string)key, entry => {
+            //    entry.SetOptions(PrepareEntryOptions(key));
+
+            //    return value;
+            //});  
         }
         public T Get<T>(NoSQLKey key, Func<T> acquire)
         {
