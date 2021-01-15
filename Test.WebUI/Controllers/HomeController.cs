@@ -22,16 +22,14 @@ namespace Test.WebUI.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private MemberValidator _memberValidator;
-        private readonly ICacheManager _cacheManager;
-        private readonly INoSQLKeyService _noSQLKeyService;
+        private readonly ICacheManager<MemoryCacheManager> _cacheManager;
 
         public HomeController(ILogger<HomeController> logger,
-            ICacheManager cacheManager, INoSQLKeyService noSQLKeyService)
+            ICacheManager<MemoryCacheManager> cacheManager)
         {
             _logger = logger;
             _memberValidator = new MemberValidator("#EditForm");
             _cacheManager = cacheManager;
-            _noSQLKeyService = noSQLKeyService;
         }
 
         public IActionResult Index()
@@ -40,7 +38,7 @@ namespace Test.WebUI.Controllers
                 return DateTime.Now;
             }
 
-            var cacheKey = _noSQLKeyService.PrepareKeyForDefaultCache(AdminDefaults.RoleByIDCacheKey, 1);
+            var cacheKey = _cacheManager.PrepareKeyForDefaultCache(AdminDefaults.RoleByIDCacheKey, 1);
 
             DateTime dt = _cacheManager.Get(cacheKey, saat);
 

@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace Adverthouse.Common.NoSQL
 {
-    public class NoSQLKeyService : INoSQLKeyService
+    public abstract class CacheServiceBase
     {
         private readonly AppSettings _appSettings;
-        public NoSQLKeyService(AppSettings appSettings)
+        public CacheServiceBase(AppSettings appSettings)
         {
             _appSettings = appSettings;
         }
@@ -31,11 +31,7 @@ namespace Adverthouse.Common.NoSQL
                 ? string.Format(prefix, prefixParameters.Select(CreateCacheKeyParameters).ToArray())
                 : prefix;
         }
-        public NoSQLKey PrepareKey(NoSQLKey noSqlKey, params object[] cacheKeyParameters)
-        {
-            return noSqlKey.Create(CreateCacheKeyParameters, cacheKeyParameters);
-        }
-
+ 
         public NoSQLKey PrepareKeyForDefaultCache(NoSQLKey noSqlKey, params object[] cacheKeyParameters)
         {
             var key = noSqlKey.Create(CreateCacheKeyParameters, cacheKeyParameters);
@@ -44,14 +40,6 @@ namespace Adverthouse.Common.NoSQL
 
             return key;
         }
-
-        public NoSQLKey PrepareKeyForShortTermCache(NoSQLKey noSqlKey, params object[] cacheKeyParameters)
-        {
-            var key = noSqlKey.Create(CreateCacheKeyParameters, cacheKeyParameters);
-
-            key.CacheTime = TimeSpan.FromMinutes(_appSettings.RedisConfig.DefaultCacheTime);
-
-            return key;
-        }
+         
     }
 }

@@ -3,8 +3,11 @@ using System;
 
 namespace Adverthouse.Common.Data.Caching
 {
-    public interface ICacheManager 
+    public interface ICacheManager<T> where T :class, ICacheManager<T>
     {
+        string PrepareKeyPrefix(string prefix, params object[] prefixParameters);
+        NoSQLKey PrepareKeyForDefaultCache(NoSQLKey noSqlKey, params object[] cacheKeyParameters);
+
         bool RemoveKey(NoSQLKey key);
         bool IsKeyExist(NoSQLKey key);
         T Get<T>(NoSQLKey key, Func<T> acquire);

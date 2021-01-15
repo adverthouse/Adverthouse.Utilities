@@ -30,8 +30,7 @@ namespace Test.WebUI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<ICacheManager, MemoryCacheManager>();
-            services.AddTransient<INoSQLKeyService, NoSQLKeyService>();
+            services.AddSingleton<ICacheManager<MemoryCacheManager>, MemoryCacheManager>(); 
 
             var settings = Configuration.GetSection("AppSettings").Get<AppSettings>();
             services.AddSingleton<AppSettings>(settings);

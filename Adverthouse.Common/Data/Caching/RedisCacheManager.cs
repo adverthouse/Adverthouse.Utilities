@@ -7,17 +7,16 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks; 
-using NoSQLKey = Adverthouse.Common.NoSQL.NoSQLKey;
 
 namespace Adverthouse.Common.Data.Caching
 {
-    public class RedisCacheManager : ICacheManager
+    public class RedisCacheManager : CacheServiceBase, ICacheManager<RedisCacheManager>
     {
         private ConnectionMultiplexer _connectionMultiplexer;
         private IDatabase _database;
         private int _currentDatabaseID = 0;
         private Core.Configuration.RedisConfig _redisConfig;
-        public RedisCacheManager(AppSettings appSettings)
+        public RedisCacheManager(AppSettings appSettings):base(appSettings)
         {
             _redisConfig = appSettings.RedisConfig; 
             _connectionMultiplexer = ConnectionMultiplexer.Connect($"{ _redisConfig.RedisHost}:{ _redisConfig.RedisPort}");

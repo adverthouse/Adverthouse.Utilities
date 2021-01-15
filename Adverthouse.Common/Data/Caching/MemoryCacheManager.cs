@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Adverthouse.Common.Data.Caching
 {
-    public class MemoryCacheManager : ICacheManager
+    public class MemoryCacheManager : CacheServiceBase, ICacheManager<MemoryCacheManager>
     {
         private bool _disposed;
 
@@ -20,7 +20,7 @@ namespace Adverthouse.Common.Data.Caching
         private static readonly ConcurrentDictionary<string, CancellationTokenSource> _prefixes = new ConcurrentDictionary<string, CancellationTokenSource>();
         private static CancellationTokenSource _clearToken = new CancellationTokenSource();
 
-        public MemoryCacheManager(IMemoryCache memoryCache)
+        public MemoryCacheManager(AppSettings appSettings, IMemoryCache memoryCache):base(appSettings)
         {
             _memoryCache = memoryCache;
         }
