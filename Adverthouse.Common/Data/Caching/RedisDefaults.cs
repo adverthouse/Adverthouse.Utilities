@@ -1,9 +1,10 @@
 ﻿using Adverthouse.Common.Interfaces;
+using Adverthouse.Common.NoSQL;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Adverthouse.Common.NoSQL
+namespace Adverthouse.Common.Data.Caching
 {
     public static class RedisDefaults<TEntity> where TEntity : IEntity
     {

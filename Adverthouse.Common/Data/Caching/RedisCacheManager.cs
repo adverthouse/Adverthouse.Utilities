@@ -78,10 +78,5 @@ namespace Adverthouse.Common.Data.Caching
                 _ => parameter
             };
         }
-        public void Dispose()
-        {
-           // Dispose(true);
-            GC.SuppressFinalize(this);
-        } 
     }
 }

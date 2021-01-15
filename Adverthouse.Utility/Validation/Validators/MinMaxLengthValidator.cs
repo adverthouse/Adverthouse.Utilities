@@ -33,8 +33,7 @@ namespace Adverthouse.Utility.Validation.Validators
             {
                 if (_minLength.HasValue && _maxLength.HasValue)
                 {
-                    return $" minlength : \"{ErrorMessage.Replace("\"", "'")},\"" +
-                           $" maxlength : \"{ErrorMessage.Replace("\"", "'")}\"";
+                    return $"  minlength : \"{ErrorMessage.Replace("\"", "'")}\" ,maxlength : \"{ErrorMessage.Replace("\"", "'")}\"";
                 }
                 else
                 {

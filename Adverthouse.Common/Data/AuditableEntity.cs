@@ -8,16 +8,16 @@ namespace Adverthouse.Common.Data
     {
         public T CreatedBy { get; set; }
 
-        public DateTime Created { get; set; }
+        public DateTime CreateDate { get; set; }
 
         public T LastModifiedBy { get; set; }
 
-        public DateTime? LastModified { get; set; }
+        public DateTime? LastModifiedDate { get; set; }
 
         public AuditableEntity()
         {
-            Created = DateTime.Now;
-            LastModified = DateTime.Now;
+            CreateDate = DateTime.Now;
+            LastModifiedDate = DateTime.Now;
         }
     }
 }

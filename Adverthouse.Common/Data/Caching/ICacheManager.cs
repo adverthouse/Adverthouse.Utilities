@@ -3,7 +3,7 @@ using System;
 
 namespace Adverthouse.Common.Data.Caching
 {
-    public interface ICacheManager : IDisposable
+    public interface ICacheManager 
     {
         bool RemoveKey(NoSQLKey key);
         bool IsKeyExist(NoSQLKey key);
