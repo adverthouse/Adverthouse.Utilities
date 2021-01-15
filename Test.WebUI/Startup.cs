@@ -1,4 +1,5 @@
 using Adverthouse.Common.Data.Caching;
+using Adverthouse.Common.NoSQL;
 using Adverthouse.Core.Configuration;
 using Adverthouse.Core.Infrastructure;
 using Microsoft.AspNetCore.Builder;
@@ -30,6 +31,7 @@ namespace Test.WebUI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<ICacheManager, MemoryCacheManager>();
+            services.AddTransient<INoSQLKeyService, NoSQLKeyService>();
 
             var settings = Configuration.GetSection("AppSettings").Get<AppSettings>();
             services.AddSingleton<AppSettings>(settings);

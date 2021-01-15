@@ -14,11 +14,13 @@ namespace Adverthouse.Common.Data.Caching
 {
     public class MemoryCacheManager : ICacheManager
     {
+        private bool _disposed;
+
         private readonly IMemoryCache _memoryCache;
         private static readonly ConcurrentDictionary<string, CancellationTokenSource> _prefixes = new ConcurrentDictionary<string, CancellationTokenSource>();
         private static CancellationTokenSource _clearToken = new CancellationTokenSource();
 
-        public MemoryCacheManager(AppSettings appSettings, IMemoryCache memoryCache)
+        public MemoryCacheManager(IMemoryCache memoryCache)
         {
             _memoryCache = memoryCache;
         }
@@ -47,16 +49,11 @@ namespace Adverthouse.Common.Data.Caching
             if ((key?.CacheTime.TotalSeconds ?? 0) <= 0)
                 return acquire();
 
-           
-            var preResult = _memoryCache.Get(key.Key);
-            if (preResult != null) return (T)preResult;
-
             var result = _memoryCache.GetOrCreate(key.Key, entry => {
                 entry.SetOptions(PrepareEntryOptions(key)); 
        
                 return acquire();
-            });
-            
+            });            
             
             if (result == null)
                 RemoveKey(key);
@@ -90,7 +87,21 @@ namespace Adverthouse.Common.Data.Caching
 
         public void Dispose()
         {
+            Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+         protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+                return;
+
+            if (disposing)
+            {
+                _memoryCache.Dispose();
+            }
+
+            _disposed = true;
         }
 
     }
