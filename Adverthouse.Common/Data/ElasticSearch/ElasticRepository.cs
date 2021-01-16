@@ -3,6 +3,7 @@ using Elasticsearch.Net;
 using Nest;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Adverthouse.Common.Data.ElasticSearch
@@ -19,7 +20,14 @@ namespace Adverthouse.Common.Data.ElasticSearch
             {
                 hosts.Add(new Uri(host));
             }
-            var connectionPool = new StaticConnectionPool(hosts);
+            IConnectionPool connectionPool;
+            if (hosts.Count == 1)
+            {
+                connectionPool = new StaticConnectionPool(hosts);
+            } else
+            {
+                connectionPool = new SingleNodeConnectionPool(hosts.First());
+            }
 
             var settings = new ConnectionSettings(connectionPool);             
             if (_elasticConfig.EnableAuthentication)
