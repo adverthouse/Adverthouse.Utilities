@@ -29,8 +29,4 @@
     <ProjectReference Include="..\Adverthouse.Core\Adverthouse.Core.csproj" />
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="@set ERRORLEVEL=0&#xD;&#xA;xcopy /y &quot;$(ProjectDir)bin\debug\*.nupkg&quot; &quot;C:\Program Files (x86)\Microsoft SDKs\NuGetPackages\&quot;" />
-  </Target>
-
 </Project>

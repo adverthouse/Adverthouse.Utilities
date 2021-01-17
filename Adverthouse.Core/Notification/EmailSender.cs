@@ -22,22 +22,13 @@ namespace Adverthouse.Core.Notification
             string emailBody = emailData.EmailBody;
             var msg = new MailMessage
             {
-                From = new MailAddress(_smtpConfig.FromAddress, (emailData.IsTestMode ? "Test - " : "") + emailData.EmailSubject)
+                From = new MailAddress(_smtpConfig.FromAddress, emailData.EmailSubject)
             };
             if (!String.IsNullOrWhiteSpace(emailData.CCAddresses))
             {
                 foreach (string pCC in emailData.CCAddresses.Split(';'))
                 {
                     msg.CC.Add(pCC);
-                }
-            }
-            if (emailData.IsTestMode)
-            {
-                emailBody = emailBody.Replace("<!-- MailInfo -->", "<br>to: " + emailData.ToAddress + "<br>cc: " + emailData.CCAddresses + "<br> bcc_to:" + _smtpConfig.BCCAddresses);
-                string testReveivers = _smtpConfig.TestReceiver;
-                foreach (string pto in testReveivers.Split(';'))
-                {
-                    msg.To.Add(pto);
                 }
             }
             else
@@ -89,7 +80,7 @@ namespace Adverthouse.Core.Notification
             msg.SubjectEncoding = Encoding.GetEncoding(encoding);
             msg.BodyEncoding = Encoding.GetEncoding(encoding);
             msg.Body = emailBody;
-            msg.Subject = (emailData.IsTestMode ? "Test - " : "") + emailData.EmailSubject;
+            msg.Subject = emailData.EmailSubject;
             msg.IsBodyHtml = true;
             if (!String.IsNullOrWhiteSpace(emailData.Attachment)) msg.Attachments.Add(new Attachment(emailData.Attachment));
             msg.Priority = MailPriority.Normal;
