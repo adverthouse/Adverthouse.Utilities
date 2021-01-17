@@ -8,7 +8,6 @@ namespace Adverthouse.Core.Notification
 {
     public class EmailData
     {
-        private readonly AppSettings _appSettings;
         public Dictionary<string, string> MergeTags { get; set; }
         public string RawContent { get; private set; }
         public string ID { get; private set; }
@@ -39,34 +38,33 @@ namespace Adverthouse.Core.Notification
                 return tempSubject;
             }
         }
-        public bool IsTestMode
-        {
-            get
-            {
-                return true;
-          //      return _appSettings.AdditionalSettings.TryGetValue("IsTestMode") == "true" ? true : false;
-            }
-        }
         public string ToAddress { get; private set; }
         public string CCAddresses { get; set; }
         public string Attachment { get; set; }
-        public EmailData(string id, string toAddress, string subject, AppSettings appSettings, string lang = null)
+        public EmailData(string id, string toAddress, string subject, string rawContent)
         {
             ID = id;
             ToAddress = toAddress;
             RawSubject = subject;
-            _appSettings = appSettings;
 
             MergeTags = new Dictionary<string, string>();
+            RawContent = rawContent; 
+        } 
 
-            var fileName = ""; // String.Format(_appSettings.EmailTemplates + "{0}-{1}.html", lang ?? lang ?? "", id);
+        public EmailData(string id, string toAddress, string subject, string fileName, bool fromFile)
+        {
+            ID = id;
+            ToAddress = toAddress;
+            RawSubject = subject;
+
+            MergeTags = new Dictionary<string, string>();
+ 
             using (FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
             {
                 var sr = new StreamReader(fs, Encoding.Default);
                 RawContent = sr.ReadToEnd();
                 sr.Close();
             }
-            _appSettings = appSettings;
         } 
     }
 }
