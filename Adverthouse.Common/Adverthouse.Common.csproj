@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.1.36</Version>
+    <Version>1.1.37</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>MongoDB,ElasticSearch,Redis,SQL Server</PackageTags>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>

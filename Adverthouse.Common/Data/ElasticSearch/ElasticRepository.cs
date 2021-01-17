@@ -29,7 +29,7 @@ namespace Adverthouse.Common.Data.ElasticSearch
                 connectionPool = new SingleNodeConnectionPool(hosts.First());
             }
 
-            var settings = new ConnectionSettings(connectionPool);             
+            var settings = new ConnectionSettings(connectionPool).DisablePing();             
             if (_elasticConfig.EnableAuthentication)
             {
                 settings = settings.BasicAuthentication(_elasticConfig.Username, _elasticConfig.Password);
