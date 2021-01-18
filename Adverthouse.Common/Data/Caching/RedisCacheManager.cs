@@ -45,13 +45,11 @@ namespace Adverthouse.Common.Data.Caching
 
         public T GetOrCreate<T>(NoSQLKey key,Func<T> acquire)
         {
-            if (IsKeyExist(key))
-            {
-                var resultExist = _database.StringGet(key.Key);                
+            RedisValue resultExist = _database.StringGet(key.Key);
 
+            if (resultExist.HasValue)
                 return JsonConvert.DeserializeObject<T>(resultExist);
-            }
-
+ 
             var result = acquire();
 
             if (key.CacheTime.TotalMinutes > 0)
@@ -71,7 +69,8 @@ namespace Adverthouse.Common.Data.Caching
                 if (key.CacheTime.TotalMinutes > 0)
                     SetValue(refreshKey, lad);
 
-                if (lad == result.LastUpdateDate) _database.KeyExpire(key.Key, key.CacheTime);
+                if (lad == result.LastUpdateDate) 
+                    _database.KeyExpire(key.Key, key.CacheTime);
             }
 
             return result;
