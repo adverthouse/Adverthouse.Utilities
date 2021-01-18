@@ -44,7 +44,7 @@ namespace Adverthouse.Common.Data.Caching
         }
             
 
-        public T Get<T>(NoSQLKey key, Func<T> acquire)
+        public T GetOrCreate<T>(NoSQLKey key, Func<T> acquire)
         {
             if ((key?.CacheTime.TotalSeconds ?? 0) <= 0)
                 return acquire();
@@ -53,31 +53,43 @@ namespace Adverthouse.Common.Data.Caching
                 entry.SetOptions(PrepareEntryOptions(key)); 
        
                 return acquire();
-            });            
-            
+            });
+
             if (result == null)
                 RemoveKey(key);
 
             return result;
         }
+        public TTLExtendableCacheObject<T> GetOrCreate<T>(NoSQLKey key, Func<TTLExtendableCacheObject<T>> acquire, NoSQLKey refreshKey, Func<DateTime> ladAcquire)
+        {
+            var result = GetOrCreate(key, acquire);
 
+            _memoryCache.GetOrCreate(refreshKey.Key, entry => {
+                entry.SetOptions(PrepareEntryOptions(refreshKey));
+
+                var lad = ladAcquire();
+                if (lad == result.LastUpdateDate) SetValue(key, result);
+
+                return lad;
+            });
+
+            return result;
+        }
+
+
+         
         public bool IsKeyExist(NoSQLKey key)
         {
             return _memoryCache.TryGetValue(key.Key, out _);
         }
-
-        public bool NearToExpire(NoSQLKey key, TimeSpan time)
-        {
-            return false; // not have ttl
-        }
-
+ 
         public bool RemoveKey(NoSQLKey key)
         {      
             _memoryCache.Remove(key.Key);
             return true;
         }
 
-        public void SetValue<T>(NoSQLKey key, T value, TimeSpan timeout)
+        public void SetValue<T>(NoSQLKey key, T value)
         {
             if ((key?.CacheTime.TotalSeconds ?? 0) <= 0 || value == null)
                 return;

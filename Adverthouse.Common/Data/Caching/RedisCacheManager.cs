@@ -37,25 +37,17 @@ namespace Adverthouse.Common.Data.Caching
             return ttl.HasValue ? (ttl.Value.Seconds < time.Seconds ? true : false) : false;
         }
     
-        public void SetValue<T>(NoSQLKey key, T value, TimeSpan timeout)
+        public void SetValue<T>(NoSQLKey key, T value)
         {
             string jsonData = JsonConvert.SerializeObject(value);
-            _database.StringSet(key.Key, jsonData, timeout); 
+            _database.StringSet(key.Key, jsonData, key.CacheTime); 
         }
 
-        public T Get<T>(NoSQLKey key,Func<T> acquire)
+        public T GetOrCreate<T>(NoSQLKey key,Func<T> acquire)
         {
             if (IsKeyExist(key))
             {
-                var resultExist = _database.StringGet(key.Key);
-
-                if (key.ReCacheNearToExpires)
-                {
-                    if (NearToExpire(key,key.ReCacheTime))
-                    {
-                        Task.Run(() => SetValue(key, acquire(), key.CacheTime));
-                    }
-                }
+                var resultExist = _database.StringGet(key.Key);                
 
                 return JsonConvert.DeserializeObject<T>(resultExist);
             }
@@ -63,9 +55,45 @@ namespace Adverthouse.Common.Data.Caching
             var result = acquire();
 
             if (key.CacheTime.TotalMinutes > 0)
-                SetValue(key, result, key.CacheTime);
+                SetValue(key, result);
 
             return result;
+        }
+
+        public TTLExtendableCacheObject<T> GetOrCreate<T>(NoSQLKey key, Func<TTLExtendableCacheObject<T>> acquire, NoSQLKey refreshKey, Func<DateTime> ladAcquire)
+        {
+            var result = GetOrCreate(key, acquire);
+
+            if (!IsKeyExist(refreshKey))
+            {
+                var lad = ladAcquire();
+
+                if (key.CacheTime.TotalMinutes > 0)
+                    SetValue(refreshKey, lad);
+
+                if (lad == result.LastUpdateDate) _database.KeyExpire(key.Key, key.CacheTime);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        ///  if lastupdatedate didn't change, this method extends targetKey ttl.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="refreshKey"></param>
+        /// <param name="ladAcquire"></param>
+        /// <param name="targetKey"></param>
+        /// <param name="eco"></param>
+        public void ExtendTTL<T>(NoSQLKey refreshKey, Func<DateTime> ladAcquire, NoSQLKey targetKey, TTLExtendableCacheObject<T> eco)
+        {
+            if (!IsKeyExist(refreshKey))
+            {
+                var lad = ladAcquire();
+                SetValue(refreshKey, lad);
+
+                if (lad == eco.LastUpdateDate) _database.KeyExpire(targetKey.Key, targetKey.CacheTime);  
+            }
         } 
 
         protected virtual object CreateCacheKeyParameters(object parameter)
