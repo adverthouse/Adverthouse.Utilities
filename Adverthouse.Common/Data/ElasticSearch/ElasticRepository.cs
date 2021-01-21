@@ -42,8 +42,7 @@ namespace Adverthouse.Common.Data.ElasticSearch
 
         public ExistsResponse IsIndexExist(string indexName)
         {
-            IIndexExistsRequest iier = new IndexExistsRequest(indexName);
-            return _elasticClient.Indices.Exists(iier);
+            return _elasticClient.Indices.Exists(new IndexExistsRequest(indexName));
         }
 
         public CreateIndexResponse CreateIndex(string indexName, int numberOfReplica = 1, int numberOfShards = 5)

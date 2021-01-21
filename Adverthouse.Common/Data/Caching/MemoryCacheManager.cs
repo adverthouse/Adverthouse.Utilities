@@ -64,13 +64,17 @@ namespace Adverthouse.Common.Data.Caching
         {
             var result = GetOrCreate(key, acquire);
 
-            _memoryCache.GetOrCreate(refreshKey.Key, entry => {
-                entry.SetOptions(PrepareEntryOptions(refreshKey));
+            Task.Run(() =>
+            {
+                _memoryCache.GetOrCreate(refreshKey.Key, entry =>
+                {
+                    entry.SetOptions(PrepareEntryOptions(refreshKey));
 
-                var lad = ladAcquire();
-                if (lad == result.LastUpdateDate) SetValue(key, result);
+                    var lad = ladAcquire();
+                    if (lad == result.LastUpdateDate) SetValue(key, result);
 
-                return lad;
+                    return lad;
+                });
             });
 
             return result;

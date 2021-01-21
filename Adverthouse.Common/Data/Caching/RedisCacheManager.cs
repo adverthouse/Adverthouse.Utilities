@@ -62,16 +62,10 @@ namespace Adverthouse.Common.Data.Caching
         {
             var result = GetOrCreate(key, acquire);
 
-            if (!IsKeyExist(refreshKey))
+            Task.Run(() =>
             {
-                var lad = ladAcquire();
-
-                if (key.CacheTime.TotalMinutes > 0)
-                    SetValue(refreshKey, lad);
-
-                if (lad == result.LastUpdateDate) 
-                    _database.KeyExpire(key.Key, key.CacheTime);
-            }
+                ExtendTTL(refreshKey, ladAcquire, key, result);
+            });
 
             return result;
         }
@@ -89,9 +83,12 @@ namespace Adverthouse.Common.Data.Caching
             if (!IsKeyExist(refreshKey))
             {
                 var lad = ladAcquire();
-                SetValue(refreshKey, lad);
 
-                if (lad == eco.LastUpdateDate) _database.KeyExpire(targetKey.Key, targetKey.CacheTime);  
+                if (refreshKey.CacheTime.TotalMinutes > 0)
+                    SetValue(refreshKey, lad);
+
+                if (lad == eco.LastUpdateDate)
+                    _database.KeyExpire(targetKey.Key, targetKey.CacheTime);  
             }
         } 
 
