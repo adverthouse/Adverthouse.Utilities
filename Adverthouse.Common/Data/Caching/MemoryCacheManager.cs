@@ -42,9 +42,45 @@ namespace Adverthouse.Common.Data.Caching
 
             return options;
         }
-            
 
-        public T GetOrCreate<T>(NoSQLKey key, Func<T> acquire)
+        public bool IsKeyExist(NoSQLKey key) => _memoryCache.TryGetValue(key.Key, out _);
+        public Task<bool> IsKeyExistAsync(NoSQLKey key) =>
+            Task.Run(() => _memoryCache.TryGetValue(key.Key, out _));
+
+        public bool RemoveKey(NoSQLKey key)
+        {
+            _memoryCache.Remove(key.Key);
+            return true;
+        }
+        public Task<bool> RemoveKeyAsync(NoSQLKey key)
+        {
+            return Task.Run(() =>
+            {
+                _memoryCache.Remove(key.Key);
+                return true;
+            });
+        }
+
+        public void SetValue<T2>(NoSQLKey key, T2 value)
+        {
+            if ((key?.CacheTime.TotalSeconds ?? 0) <= 0 || value == null)
+                return;
+
+            _memoryCache.Set(key.Key, value, PrepareEntryOptions(key));
+        }
+
+        public Task SetValueAsync<T2>(NoSQLKey key, T2 value)
+        {
+            return Task.Run(() =>
+            {
+                if ((key?.CacheTime.TotalSeconds ?? 0) <= 0 || value == null)
+                    return;
+
+                _memoryCache.Set(key.Key, value, PrepareEntryOptions(key));
+            });           
+        }
+
+        public T2 GetOrCreate<T2>(NoSQLKey key, Func<T2> acquire)
         {
             if ((key?.CacheTime.TotalSeconds ?? 0) <= 0)
                 return acquire();
@@ -60,7 +96,24 @@ namespace Adverthouse.Common.Data.Caching
 
             return result;
         }
-        public TTLExtendableCacheObject<T> GetOrCreate<T>(NoSQLKey key, Func<TTLExtendableCacheObject<T>> acquire, NoSQLKey refreshKey, Func<DateTime> ladAcquire)
+        public async Task<T2> GetOrCreateAsync<T2>(NoSQLKey key, Func<Task<T2>> acquire)
+        {
+            if ((key?.CacheTime.TotalSeconds ?? 0) <= 0)
+                return await acquire();
+
+            var result = await _memoryCache.GetOrCreateAsync(key.Key, async entry => {
+                entry.SetOptions(PrepareEntryOptions(key));
+
+                return await acquire();
+            });
+
+            if (result == null)
+                RemoveKey(key);
+
+            return result;
+        }
+
+        public TTLExtendableCacheObject<T2> GetOrCreate<T2>(NoSQLKey key, Func<TTLExtendableCacheObject<T2>> acquire, NoSQLKey refreshKey, Func<DateTime> ladAcquire)
         {
             var result = GetOrCreate(key, acquire);
 
@@ -79,28 +132,8 @@ namespace Adverthouse.Common.Data.Caching
 
             return result;
         }
-
-
          
-        public bool IsKeyExist(NoSQLKey key)
-        {
-            return _memoryCache.TryGetValue(key.Key, out _);
-        }
- 
-        public bool RemoveKey(NoSQLKey key)
-        {      
-            _memoryCache.Remove(key.Key);
-            return true;
-        }
-
-        public void SetValue<T>(NoSQLKey key, T value)
-        {
-            if ((key?.CacheTime.TotalSeconds ?? 0) <= 0 || value == null)
-                return;
-
-            _memoryCache.Set(key.Key, value, PrepareEntryOptions(key));
-        }
-
+   
         public void Dispose()
         {
             Dispose(true);
@@ -118,7 +151,6 @@ namespace Adverthouse.Common.Data.Caching
             }
 
             _disposed = true;
-        }
-
+        } 
     }
 }

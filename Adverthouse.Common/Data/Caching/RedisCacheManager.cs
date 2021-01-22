@@ -23,32 +23,29 @@ namespace Adverthouse.Common.Data.Caching
             _database = _connectionMultiplexer.GetDatabase(_currentDatabaseID);
         }
 
-        public bool RemoveKey(NoSQLKey key) {
-            return _database.KeyDelete(key.Key);
-        }
-        public bool IsKeyExist(NoSQLKey key)
-        {
-            return _database.KeyExists(key.Key);
-        }
+        public bool RemoveKey(NoSQLKey key) => _database.KeyDelete(key.Key);
+        public Task<bool> RemoveKeyAsync(NoSQLKey key) => _database.KeyDeleteAsync(key.Key);
 
-        public bool NearToExpire(NoSQLKey key, TimeSpan time)
-        {
-            TimeSpan? ttl = _database.KeyTimeToLive(key.Key);
-            return ttl.HasValue ? (ttl.Value.Seconds < time.Seconds ? true : false) : false;
-        }
-    
-        public void SetValue<T>(NoSQLKey key, T value)
+        public bool IsKeyExist(NoSQLKey key) => _database.KeyExists(key.Key);
+        public Task<bool> IsKeyExistAsync(NoSQLKey key) => _database.KeyExistsAsync(key.Key);
+
+        public void SetValue<T2>(NoSQLKey key, T2 value)
         {
             string jsonData = JsonConvert.SerializeObject(value);
             _database.StringSet(key.Key, jsonData, key.CacheTime); 
         }
+        public async Task SetValueAsync<T2>(NoSQLKey key, T2 value)
+        {
+            string jsonData = JsonConvert.SerializeObject(value);
+            await _database.StringSetAsync(key.Key, jsonData, key.CacheTime);
+        }
 
-        public T GetOrCreate<T>(NoSQLKey key,Func<T> acquire)
+        public T2 GetOrCreate<T2>(NoSQLKey key,Func<T2> acquire)
         {
             RedisValue resultExist = _database.StringGet(key.Key);
 
             if (resultExist.HasValue)
-                return JsonConvert.DeserializeObject<T>(resultExist);
+                return JsonConvert.DeserializeObject<T2>(resultExist);
  
             var result = acquire();
 
@@ -58,40 +55,42 @@ namespace Adverthouse.Common.Data.Caching
             return result;
         }
 
-        public TTLExtendableCacheObject<T> GetOrCreate<T>(NoSQLKey key, Func<TTLExtendableCacheObject<T>> acquire, NoSQLKey refreshKey, Func<DateTime> ladAcquire)
+        public async Task<T2> GetOrCreateAsync<T2>(NoSQLKey key, Func<Task<T2>> acquire)
+        {
+            RedisValue resultExist = await _database.StringGetAsync(key.Key);
+
+            if (resultExist.HasValue)
+                return JsonConvert.DeserializeObject<T2>(resultExist);
+
+            var result = await acquire();
+
+            if (key.CacheTime.TotalMinutes > 0)
+                await SetValueAsync(key, result);
+
+            return result;
+        }
+
+        public TTLExtendableCacheObject<T2> GetOrCreate<T2>(NoSQLKey key, Func<TTLExtendableCacheObject<T2>> acquire, NoSQLKey refreshKey, Func<DateTime> ladAcquire)
         {
             var result = GetOrCreate(key, acquire);
 
             Task.Run(() =>
             {
-                ExtendTTL(refreshKey, ladAcquire, key, result);
+                if (!IsKeyExist(refreshKey))
+                {
+                    var lad = ladAcquire();
+
+                    if (refreshKey.CacheTime.TotalMinutes > 0)
+                        SetValue(refreshKey, lad);
+
+                    if (lad == result.LastUpdateDate)
+                        _database.KeyExpire(key.Key, key.CacheTime);
+                }
             });
 
             return result;
         }
-
-        /// <summary>
-        ///  if lastupdatedate didn't change, this method extends targetKey ttl.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="refreshKey"></param>
-        /// <param name="ladAcquire"></param>
-        /// <param name="targetKey"></param>
-        /// <param name="eco"></param>
-        public void ExtendTTL<T>(NoSQLKey refreshKey, Func<DateTime> ladAcquire, NoSQLKey targetKey, TTLExtendableCacheObject<T> eco)
-        {
-            if (!IsKeyExist(refreshKey))
-            {
-                var lad = ladAcquire();
-
-                if (refreshKey.CacheTime.TotalMinutes > 0)
-                    SetValue(refreshKey, lad);
-
-                if (lad == eco.LastUpdateDate)
-                    _database.KeyExpire(targetKey.Key, targetKey.CacheTime);  
-            }
-        } 
-
+         
         protected virtual object CreateCacheKeyParameters(object parameter)
         {
             return parameter switch
@@ -101,5 +100,7 @@ namespace Adverthouse.Common.Data.Caching
                 _ => parameter
             };
         }
+
+    
     }
 }
