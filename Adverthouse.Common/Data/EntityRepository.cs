@@ -24,7 +24,7 @@ namespace Adverthouse.Common.Data
         {
             return _db.Set<TEntity>();
         }
-
+         
         public virtual ListingResult<TEntity, PSF> GetResult<PSF>(PSF psfInfo, IQueryable<TEntity> preQuery) where PSF : IPSFBase 
         {
             ListingResult<TEntity, PSF> opRes = new ListingResult<TEntity, PSF>();
@@ -77,8 +77,7 @@ namespace Adverthouse.Common.Data
             return result.OrderBy(psfInfo.SortExpression)
                              .Skip((psfInfo.CurrentPage - 1) * psfInfo.ItemPerPage)
                              .Take(psfInfo.ItemPerPage).Select(selectExp).Distinct().Where(x => x != null).Cast<int>().ToList();
-        }
-
+        } 
         public virtual void Add(TEntity entity)
         {
             _db.Set<TEntity>().Add(entity);
@@ -86,10 +85,7 @@ namespace Adverthouse.Common.Data
         }
         public virtual void AddIfNotExists(Expression<Func<TEntity, bool>> predicate, TEntity entity)
         {
-            if (Count(predicate) == 0)
-            {
-                Add(entity);
-            }
+            if (Count(predicate) == 0) Add(entity); 
         }
         public virtual void AddRange(IEnumerable<TEntity> entities)
         {

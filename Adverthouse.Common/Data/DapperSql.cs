@@ -15,6 +15,7 @@ namespace Adverthouse.Common.Data
     {
         private string _connectionString = "";
         private int _defaultConnectionTimeOut;
+        public SqlConnection SqlConnection() => new SqlConnection(GetConnectionString());
 
         public DapperSql(string connectionString, int connectionTimeOut = 300)
         {
@@ -70,13 +71,6 @@ namespace Adverthouse.Common.Data
         }
         public void Dispose() {}
 
-        public SqlConnection SqlConnection()
-        {
-            return new SqlConnection(GetConnectionString());
-        }
-
-
-
-
+        
     }
 }

@@ -119,7 +119,7 @@ namespace Adverthouse.Common.Data.Caching
 
             Task.Run(() =>
             {
-                _memoryCache.GetOrCreate(refreshKey.Key, entry =>
+                 _memoryCache.GetOrCreate(refreshKey.Key, entry =>
                 {
                     entry.SetOptions(PrepareEntryOptions(refreshKey));
 

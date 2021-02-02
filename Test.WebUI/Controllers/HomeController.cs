@@ -42,12 +42,13 @@ namespace Test.WebUI.Controllers
             var cacheRefreshKey = _cacheManager.PrepareKeyForDefaultCache(AdminDefaults.RefreshRoleByIDCacheKey, 1);
             cacheRefreshKey.CacheTime = TimeSpan.FromSeconds(10);
 
-            DateTime LastUpdateDate() => DateTime.Now; 
+            DateTime LastUpdateDate() => 
+                DateTime.Now; 
 
             TTLExtendableCacheObject<DateTime> dt = _cacheManager.GetOrCreate(cacheKey,
                 saat,cacheRefreshKey,LastUpdateDate); 
 
-            ViewBag.dt = dt;
+            ViewBag.dt = dt.CacheObject;
 
             PSFMember pSFMember = new PSFMember();
             pSFMember.FFirstName = "Yunus";
