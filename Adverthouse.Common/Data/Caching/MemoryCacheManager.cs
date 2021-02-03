@@ -119,12 +119,16 @@ namespace Adverthouse.Common.Data.Caching
 
             Task.Run(() =>
             {
-                 _memoryCache.GetOrCreate(refreshKey.Key, entry =>
+                var preResult = _memoryCache.GetOrCreate(refreshKey.Key, entry =>
                 {
                     entry.SetOptions(PrepareEntryOptions(refreshKey));
 
                     var lad = ladAcquire();
-                    if (lad == result.LastUpdateDate) SetValue(key, result);
+                    if (lad != result.LastUpdateDate)
+                    {
+                        result = acquire();
+                        SetValue(key, result);
+                    }
 
                     return lad;
                 });
