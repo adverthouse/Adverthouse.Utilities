@@ -30,20 +30,20 @@ namespace Test.WebUI.Controllers
         }
 
         public IActionResult Index()
-        {
-            
+        { 
+            var lad = DateTime.Now;
             TTLExtendableCacheObject<DateTime> saat() {
-                return new TTLExtendableCacheObject<DateTime>(DateTime.Now, DateTime.Now);    
+                return new TTLExtendableCacheObject<DateTime>(lad, lad);    
             }
 
             var cacheKey = _cacheManager.PrepareKeyForDefaultCache(AdminDefaults.RoleByIDCacheKey, 1);
             cacheKey.CacheTime = TimeSpan.FromHours(1);
 
             var cacheRefreshKey = _cacheManager.PrepareKeyForDefaultCache(AdminDefaults.RefreshRoleByIDCacheKey, 1);
-            cacheRefreshKey.CacheTime = TimeSpan.FromSeconds(10);
+            cacheRefreshKey.CacheTime = TimeSpan.FromSeconds(60);
 
-            DateTime LastUpdateDate() => 
-                DateTime.Now; 
+            DateTime LastUpdateDate() =>
+                lad; 
 
             TTLExtendableCacheObject<DateTime> dt = _cacheManager.GetOrCreate(cacheKey,
                 saat,cacheRefreshKey,LastUpdateDate); 

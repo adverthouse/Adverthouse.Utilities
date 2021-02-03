@@ -14,8 +14,6 @@ namespace Adverthouse.Common.Data.Caching
 {
     public class MemoryCacheManager : CacheServiceBase, ICacheManager<MemoryCacheManager>
     {
-        private bool _disposed;
-
         private readonly IMemoryCache _memoryCache;
         private static readonly ConcurrentDictionary<string, CancellationTokenSource> _prefixes = new ConcurrentDictionary<string, CancellationTokenSource>();
         private static CancellationTokenSource _clearToken = new CancellationTokenSource();
@@ -29,6 +27,7 @@ namespace Adverthouse.Common.Data.Caching
             //set expiration time for the passed cache key
             var options = new MemoryCacheEntryOptions
             {
+                Priority = CacheItemPriority.NeverRemove,
                 AbsoluteExpirationRelativeToNow = key.CacheTime
             };
 
@@ -119,42 +118,16 @@ namespace Adverthouse.Common.Data.Caching
 
             Task.Run(() =>
             {
-                var preResult = _memoryCache.GetOrCreate(refreshKey.Key, entry =>
+                var ladResult = GetOrCreate(refreshKey, ladAcquire);
+
+                if (ladResult != result.LastUpdateDate)
                 {
-                    entry.SetOptions(PrepareEntryOptions(refreshKey));
-
-                    var lad = ladAcquire();
-                    if (lad != result.LastUpdateDate)
-                    {
-                        result = acquire();
-                        SetValue(key, result);
-                    }
-
-                    return lad;
-                });
+                    result = acquire();
+                    SetValue(key, result);
+                }
             });
 
             return result;
         }
-         
-   
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-         protected virtual void Dispose(bool disposing)
-        {
-            if (_disposed)
-                return;
-
-            if (disposing)
-            {
-                _memoryCache.Dispose();
-            }
-
-            _disposed = true;
-        } 
     }
 }
