@@ -1,9 +1,20 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".id").on("click", function (e) {
+                e.preventDefault();
+                window.location.href = $(this).attr("href") + "?download"; 
+            });
+  	});
+    </script>
+}
 <div class="text-center">
     <h1 class="display-4">Welcome Cache @ViewBag.dt</h1>
     <h1 class="display-4">Welcome @DateTime.Now</h1>
+    <a href="https://localhost:44314/images/cover5.jpg" target="_blank" class="id" download="ceee.jpg">Download</a>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+<img src="https://localhost:44314/images/cover5.jpg" />

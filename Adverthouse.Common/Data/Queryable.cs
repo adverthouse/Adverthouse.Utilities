@@ -28,5 +28,11 @@ namespace Adverthouse.Common.Data
 
             return source;
         }
+        public static IQueryable<TSource> NotNullWhere<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, double? exp)
+        {
+            if (exp.HasValue) return source.Where(predicate);
+
+            return source;
+        }
     }
 }
