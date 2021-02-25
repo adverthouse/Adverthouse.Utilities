@@ -25,9 +25,9 @@ namespace Adverthouse.Common.Data
             return _db.Set<TEntity>();
         }
          
-        public virtual ListingResult<TEntity, PSF> GetResult<PSF>(PSF psfInfo, IQueryable<TEntity> preQuery) where PSF : IPSFBase 
+        public virtual PagedList<TEntity, PSF> GetResult<PSF>(PSF psfInfo, IQueryable<TEntity> preQuery) where PSF : IPSFBase 
         {
-            ListingResult<TEntity, PSF> opRes = new ListingResult<TEntity, PSF>();
+            PagedList<TEntity, PSF> opRes = new PagedList<TEntity, PSF>();
             IQueryable<TEntity> filteredQuery = preQuery;
 
             if (psfInfo != null)
@@ -45,19 +45,18 @@ namespace Adverthouse.Common.Data
 
             return opRes;
         }
-        public virtual ListingResult<TEntity, PSF> GetResult<PSF>(PSF psfInfo) where PSF : IPSFBase
+        public virtual PagedList<TEntity, PSF> GetResult<PSF>(PSF psfInfo) where PSF : IPSFBase
         {
-                IQueryable<TEntity> filteredQuery = _db.Set<TEntity>();
-                var opRes = GetResult(psfInfo, filteredQuery);
-                return opRes;
+            IQueryable<TEntity> filteredQuery = _db.Set<TEntity>();
+            var opRes = GetResult(psfInfo, filteredQuery);
+            return opRes;
         }
         public List<TEntity> GetResult(Expression<Func<TEntity, bool>> predicate = null)
-        {
-           
-                IQueryable<TEntity> filteredQuery = _db.Set<TEntity>();
-                if (predicate != null)
-                    filteredQuery = filteredQuery.Where(predicate);
-                return filteredQuery.ToList();
+        { 
+            IQueryable<TEntity> filteredQuery = _db.Set<TEntity>();
+            if (predicate != null)
+                filteredQuery = filteredQuery.Where(predicate);
+            return filteredQuery.ToList();
         }
 
         public List<int> SelectIDs(Expression<Func<TEntity, int?>> selectExp)

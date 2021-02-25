@@ -2,8 +2,11 @@
 using Adverthouse.Common.NoSQL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Test.WebUI.Models;
 using Test.WebUI.PSFs;
 using Test.WebUI.Validators;
@@ -27,14 +30,18 @@ namespace Test.WebUI.Controllers
             _logger = logger;
             _memberValidator = new MemberValidator("#EditForm");
             _cacheManager = cacheManager;
-        }
-
+        } 
         public IActionResult Index()
         { 
             var lad = DateTime.Now;
             TTLExtendableCacheObject<DateTime> saat() {
                 return new TTLExtendableCacheObject<DateTime>(lad, lad);    
             }
+            List<String> tem = new List<string>();
+            tem.Add("deneme");
+            tem.Add("deneme 2");
+
+      
 
             var cacheKey = _cacheManager.PrepareKeyForDefaultCache(AdminDefaults.RoleByIDCacheKey, 1);
             cacheKey.CacheTime = TimeSpan.FromHours(1);
