@@ -117,7 +117,15 @@ namespace Adverthouse.Common.Data.MongoDB
             await _collection.InsertManyAsync(documents);
         }
 
-        public void ReplaceOne<TFieldValue>(TFieldValue Id, TDocument document, bool isUpsert = true)
+        public void UpdateMany(FilterDefinition<TDocument> filter, 
+            UpdateDefinition<TDocument> documents,
+            bool isUpsert = false) =>
+            _collection.UpdateMany(filter, documents,new UpdateOptions() { 
+              IsUpsert =isUpsert
+            });
+         
+        public void ReplaceOne<TFieldValue>(TFieldValue Id, TDocument document, 
+            bool isUpsert = true)
         {
             var filter = Builders<TDocument>.Filter.Eq("_id", Id);
             _collection.ReplaceOne(filter, document,new ReplaceOptions() { IsUpsert = isUpsert });
