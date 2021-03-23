@@ -71,7 +71,7 @@ namespace Adverthouse.Common.Data.ElasticSearch
                    ).Refresh(Refresh.True)
                 );
         }
-
+         
         public DeleteIndexResponse DeleteIndex(string indexName)
         {
 

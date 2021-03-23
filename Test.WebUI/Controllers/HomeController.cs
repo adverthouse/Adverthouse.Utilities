@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Test.WebUI.Models;
+using Test.WebUI.Models.Services;
 using Test.WebUI.PSFs;
 using Test.WebUI.Validators;
 
@@ -23,14 +24,57 @@ namespace Test.WebUI.Controllers
         private readonly ILogger<HomeController> _logger;
         private MemberValidator _memberValidator;
         private readonly ICacheManager<MemoryCacheManager> _cacheManager;
+        private readonly ICategoryService _categoryService;
 
         public HomeController(ILogger<HomeController> logger,
-            ICacheManager<MemoryCacheManager> cacheManager)
+            ICacheManager<MemoryCacheManager> cacheManager, ICategoryService categoryService)
         {
             _logger = logger;
             _memberValidator = new MemberValidator("#EditForm");
             _cacheManager = cacheManager;
-        } 
+            _categoryService = categoryService;
+        }
+
+        public IActionResult Fill() {
+            /*
+            _categoryService.Create(new Category()
+            {
+                CategoryID = 1,
+                CategoryName = "Elektronik",
+                TotalDownloadCount = 10,
+                TotalViewCount = 20
+            });
+            _categoryService.Create(new Category()
+            {
+                CategoryID = 2,
+                CategoryName = "Ev & Yaşam",
+                TotalDownloadCount = 3,
+                TotalViewCount = 4
+            });
+            string temp = "Data set";
+            _categoryService.AllZero();
+            temp = "All zero";
+            */
+            var lst = new List<CategoryStat>();
+            lst.Add(new CategoryStat()
+            {
+                CategoryID = 1, 
+                TotalDownloadCount = 100,
+                TotalViewCount = 200
+            });
+            lst.Add(new CategoryStat()
+            {
+                CategoryID = 2, 
+                TotalDownloadCount = 300,
+                TotalViewCount = 400
+            });
+
+
+            _categoryService.UpdateAllElastic(lst);
+
+
+            return Ok("");
+        }
         public IActionResult Index()
         { 
             var lad = DateTime.Now;

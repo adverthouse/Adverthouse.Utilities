@@ -1,4 +1,8 @@
+using Adverthouse.Common.Data;
 using Adverthouse.Common.Data.Caching;
+using Adverthouse.Common.Data.ElasticSearch;
+using Adverthouse.Common.Data.MongoDB;
+using Adverthouse.Common.Interfaces;
 using Adverthouse.Common.NoSQL;
 using Adverthouse.Core.Configuration;
 using Adverthouse.Core.Infrastructure;
@@ -15,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Test.WebUI.Models.Services;
 
 namespace Test.WebUI
 {
@@ -30,7 +35,7 @@ namespace Test.WebUI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<ICacheManager<MemoryCacheManager>, MemoryCacheManager>(); 
+           
 
             var settings = Configuration.GetSection("AppSettings").Get<AppSettings>();
             services.AddSingleton<AppSettings>(settings);
@@ -48,9 +53,16 @@ namespace Test.WebUI
 
             string temp = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "appsettings.json"));
             var additionalSettings = JsonConvert.DeserializeObject<AppSettings>(temp);
-            
-       /// 
 
+            ///       
+            /// repositories                      
+            services.AddTransient(typeof(IRepository<>), typeof(EntityRepository<>));
+            services.AddSingleton(typeof(IElasticRepository<>), typeof(ElasticRepository<>));
+            services.AddTransient(typeof(IMongoRepository<>), typeof(MongoRepository<>));
+
+            services.AddSingleton<ICacheManager<MemoryCacheManager>, MemoryCacheManager>();
+
+            services.AddScoped<ICategoryService, CategoryService>();
 
             services.AddMvc()
               .AddControllersAsServices()
