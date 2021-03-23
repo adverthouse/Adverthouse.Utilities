@@ -37,41 +37,42 @@ namespace Test.WebUI.Controllers
 
         public IActionResult Fill() {
             /*
-            _categoryService.Create(new Category()
-            {
-                CategoryID = 1,
-                CategoryName = "Elektronik",
-                TotalDownloadCount = 10,
-                TotalViewCount = 20
-            });
-            _categoryService.Create(new Category()
-            {
-                CategoryID = 2,
-                CategoryName = "Ev & Yaşam",
-                TotalDownloadCount = 3,
-                TotalViewCount = 4
-            });
+                 _categoryService.Create(new Category()
+                 {
+                     CategoryID = 1,
+                     CategoryName = "Elektronik",
+                     TotalDownloadCount = 10,
+                     TotalViewCount = 20
+                 });
+                 _categoryService.Create(new Category()
+                 {
+                     CategoryID = 2,
+                     CategoryName = "Ev & Yaşam",
+                     TotalDownloadCount = 3,
+                     TotalViewCount = 4
+                 }); */
             string temp = "Data set";
             _categoryService.AllZero();
             temp = "All zero";
-            */
-            var lst = new List<CategoryStat>();
-            lst.Add(new CategoryStat()
-            {
-                CategoryID = 1, 
-                TotalDownloadCount = 100,
-                TotalViewCount = 200
-            });
-            lst.Add(new CategoryStat()
-            {
-                CategoryID = 2, 
-                TotalDownloadCount = 300,
-                TotalViewCount = 400
-            });
+      
+            /*
+        var lst = new List<CategoryStat>();
+        lst.Add(new CategoryStat()
+        {
+            CategoryID = 1, 
+            TotalDownloadCount = 100,
+            TotalViewCount = 200
+        });
+        lst.Add(new CategoryStat()
+        {
+            CategoryID = 2, 
+            TotalDownloadCount = 300,
+            TotalViewCount = 400
+        });
 
 
-            _categoryService.UpdateAllElastic(lst);
-
+        _categoryService.UpdateAllElastic(lst);
+*/
 
             return Ok("");
         }

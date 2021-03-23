@@ -31,9 +31,10 @@ namespace Test.WebUI.Models.Services
 
         public void AllZero() {
             _mongoCategoryRepository.UpdateMany(
-                Builders<Category>.Filter.Where(x=>x.CategoryID == 1),
-                Builders<Category>.Update.Set(p => p.TotalDownloadCount, 30)
-                                         .Set(p => p.TotalViewCount,40)
+                  null,
+               // Builders<Category>.Filter.Where(x=>x.CategoryID == 1),
+                Builders<Category>.Update.Set(p => p.TotalDownloadCount, 300)
+                                         .Set(p => p.TotalViewCount,400)
            );
         }
 

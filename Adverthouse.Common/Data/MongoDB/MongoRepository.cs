@@ -69,9 +69,9 @@ namespace Adverthouse.Common.Data.MongoDB
             return _collection.Find(filterExpression).FirstOrDefault();
         }
 
-        public virtual Task<TDocument> FindOneAsync(Expression<Func<TDocument, bool>> filterExpression)
+        public async Task<TDocument> FindOneAsync(Expression<Func<TDocument, bool>> filterExpression)
         {
-            return Task.Run(() => _collection.Find(filterExpression).FirstOrDefaultAsync());
+            return await _collection.Find(filterExpression).FirstOrDefaultAsync();
         }
 
         public virtual TDocument FindById<TFieldValue>(TFieldValue id)
@@ -101,9 +101,9 @@ namespace Adverthouse.Common.Data.MongoDB
             _collection.InsertOne(document);
         }
 
-        public virtual Task InsertOneAsync(TDocument document)
+        public async Task InsertOneAsync(TDocument document)
         {
-            return Task.Run(() => _collection.InsertOneAsync(document));
+            await _collection.InsertOneAsync(document);
         }
 
         public void InsertMany(ICollection<TDocument> documents)
@@ -112,7 +112,7 @@ namespace Adverthouse.Common.Data.MongoDB
         }
 
 
-        public virtual async Task InsertManyAsync(ICollection<TDocument> documents)
+        public async Task InsertManyAsync(ICollection<TDocument> documents)
         {
             await _collection.InsertManyAsync(documents);
         }
@@ -123,7 +123,7 @@ namespace Adverthouse.Common.Data.MongoDB
             _collection.UpdateMany(filter, documents,new UpdateOptions() { 
               IsUpsert =isUpsert
             });
-         
+
         public void ReplaceOne<TFieldValue>(TFieldValue Id, TDocument document, 
             bool isUpsert = true)
         {
