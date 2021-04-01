@@ -24,11 +24,10 @@ namespace Adverthouse.Common.Data.MongoDB
             
             if (_mongoDBConfig.HasCredential)
             {
-                _clientSettings.Credentials = new List<MongoCredential>() {
-                    MongoCredential.CreateMongoCRCredential(
-                        _mongoDBConfig.UserDB,
+                _clientSettings.Credential =  MongoCredential.CreateCredential(
+                        _mongoDBConfig.DBName,
                         _mongoDBConfig.Username,
-                        _mongoDBConfig.Password) };
+                        _mongoDBConfig.Password);
             }
 
             _database = new MongoClient(_clientSettings).GetDatabase(_mongoDBConfig.DBName);
