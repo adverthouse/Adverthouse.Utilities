@@ -14,6 +14,18 @@ namespace Adverthouse.Common.Data.ElasticSearch
 
         public QueryContainer queryPreFilter;
         public QueryContainer queryPostFilter;
+        
+        private string NormalizeString(string str) { 
+           if (String.IsNullOrWhiteSpace(str)) return str;
+           string temp = str;
+           string[] escapeChars = {"+", "-", "=", "&&", "||", ">", "<", "!", "(", ")", "{", "}", "[", "]", "^", "\"", "~", "*", "?", ":", @"\", "/"};
+           foreach(var escapeChar in escapeChars)
+           {
+              if (temp.Contains(escapeChar))
+                  temp = temp.Replace(escapeChar, @"\\" + escapeChar);
+           }
+            return temp;
+        }
 
         public ElasticSearchBuilder(string indexName, IPSFBase psf)
         {
@@ -30,7 +42,7 @@ namespace Adverthouse.Common.Data.ElasticSearch
                 queryPreFilter &= new TermQuery()
                 {
                     Field = field,
-                    Value = value
+                    Value = value.GetType() == typeof(string) ? NormalizeString(value.ToString()) : value
                 };
             }
         }
@@ -41,7 +53,7 @@ namespace Adverthouse.Common.Data.ElasticSearch
                 queryPreFilter = !new TermQuery()
                 {
                     Field = field,
-                    Value = value
+                    Value = value.GetType() == typeof(string) ? NormalizeString(value.ToString()) : value
                 };
             }
         }
@@ -64,7 +76,7 @@ namespace Adverthouse.Common.Data.ElasticSearch
                 queryPreFilter &= new QueryStringQuery()
                 {
                     Fields = fields,
-                    Query = query
+                    Query = NormalizeString(query)
                 };
             }
         }
