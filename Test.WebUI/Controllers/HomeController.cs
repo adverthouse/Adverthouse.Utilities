@@ -1,6 +1,7 @@
 ﻿using Adverthouse.Common.Data.Caching;
 using Adverthouse.Common.NoSQL;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -25,14 +26,16 @@ namespace Test.WebUI.Controllers
         private MemberValidator _memberValidator;
         private readonly ICacheManager<MemoryCacheManager> _cacheManager;
         private readonly ICategoryService _categoryService;
+        private readonly IMemoryCache _memoryCache;
 
         public HomeController(ILogger<HomeController> logger,
-            ICacheManager<MemoryCacheManager> cacheManager, ICategoryService categoryService)
+            ICacheManager<MemoryCacheManager> cacheManager, ICategoryService categoryService, IMemoryCache memoryCache)
         {
             _logger = logger;
             _memberValidator = new MemberValidator("#EditForm");
             _cacheManager = cacheManager;
             _categoryService = categoryService;
+            _memoryCache = memoryCache;
         }
 
         public IActionResult Fill() {
@@ -77,7 +80,8 @@ namespace Test.WebUI.Controllers
             return Ok("");
         }
         public IActionResult Index()
-        { 
+        {
+
             var lad = DateTime.Now;
             TTLExtendableCacheObject<DateTime> saat() {
                 return new TTLExtendableCacheObject<DateTime>(lad, lad);    
@@ -92,7 +96,7 @@ namespace Test.WebUI.Controllers
             cacheKey.CacheTime = TimeSpan.FromHours(1);
 
             var cacheRefreshKey = _cacheManager.PrepareKeyForDefaultCache(AdminDefaults.RefreshRoleByIDCacheKey, 1);
-            cacheRefreshKey.CacheTime = TimeSpan.FromSeconds(60);
+            cacheRefreshKey.CacheTime = TimeSpan.FromSeconds(10);
 
             DateTime LastUpdateDate() =>
                 lad; 
@@ -106,6 +110,7 @@ namespace Test.WebUI.Controllers
             pSFMember.FFirstName = "Yunus";
 
             string temp = pSFMember.Filter;
+         
             return View();
         }
 

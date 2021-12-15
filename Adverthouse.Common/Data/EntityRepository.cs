@@ -45,12 +45,14 @@ namespace Adverthouse.Common.Data
 
             return opRes;
         }
+
         public virtual PagedList<TEntity, PSF> GetResult<PSF>(PSF psfInfo) where PSF : IPSFBase
         {
             IQueryable<TEntity> filteredQuery = _db.Set<TEntity>();
             var opRes = GetResult(psfInfo, filteredQuery);
             return opRes;
         }
+
         public List<TEntity> GetResult(Expression<Func<TEntity, bool>> predicate = null)
         { 
             IQueryable<TEntity> filteredQuery = _db.Set<TEntity>();

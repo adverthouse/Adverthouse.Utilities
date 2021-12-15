@@ -15,8 +15,8 @@ namespace Adverthouse.Common.Data.Caching
     public class MemoryCacheManager : CacheServiceBase, ICacheManager<MemoryCacheManager>
     {
         private readonly IMemoryCache _memoryCache;
-        private static readonly ConcurrentDictionary<string, CancellationTokenSource> _prefixes = new ConcurrentDictionary<string, CancellationTokenSource>();
-        private static CancellationTokenSource _clearToken = new CancellationTokenSource();
+        private static readonly ConcurrentDictionary<string, CancellationTokenSource> _prefixes = new();
+        private static CancellationTokenSource _clearToken = new();
 
         public MemoryCacheManager(AppSettings appSettings, IMemoryCache memoryCache):base(appSettings)
         {
