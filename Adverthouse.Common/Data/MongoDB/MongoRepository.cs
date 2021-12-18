@@ -142,8 +142,14 @@ namespace Adverthouse.Common.Data.MongoDB
         }
         public long Count<TFieldValue>(string collectionName,TFieldValue Id){
             ChangeCollection(collectionName);
-            var filter = Builders<TDocument>.Filter.Eq("_id", Id);
+            var filter = Builders<TDocument>.Filter.Eq("_id", Id); 
             return _collection.CountDocuments(filter);
+        }
+
+        public List<TFieldValue> GetIDs<TFieldValue>(string collectionName){
+            ChangeCollection(collectionName);          
+            var filterExpression = Builders<TDocument>.Filter.Ne("_id", "-1");  
+            return _collection.Distinct<TFieldValue>("_id",filterExpression).ToList();
         }
         public void DeleteOne(Expression<Func<TDocument, bool>> filterExpression)
         {

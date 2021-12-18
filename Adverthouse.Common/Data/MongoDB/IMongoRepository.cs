@@ -53,5 +53,6 @@ namespace Adverthouse.Common.Data.MongoDB
         void DropCollection(string collectionName);
         void UpdateMany(FilterDefinition<TDocument> filter, UpdateDefinition<TDocument> documents, bool isUpsert = false);
         long Count<TFieldValue>(string collectionName, TFieldValue Id);
+        List<TFieldValue> GetIDs<TFieldValue>(string collectionName);
     }
 }
