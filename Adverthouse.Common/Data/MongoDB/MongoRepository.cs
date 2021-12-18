@@ -140,7 +140,11 @@ namespace Adverthouse.Common.Data.MongoDB
             var filter = Builders<TDocument>.Filter.Eq("_id", Id);
             await _collection.ReplaceOneAsync(filter, document, new ReplaceOptions() { IsUpsert = isUpsert });
         }
-
+        public long Count<TFieldValue>(string collectionName,TFieldValue Id){
+            ChangeCollection(collectionName);
+            var filter = Builders<TDocument>.Filter.Eq("_id", Id);
+            return _collection.CountDocuments(filter);
+        }
         public void DeleteOne(Expression<Func<TDocument, bool>> filterExpression)
         {
             _collection.FindOneAndDelete(filterExpression);

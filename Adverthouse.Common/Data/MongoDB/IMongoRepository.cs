@@ -52,5 +52,6 @@ namespace Adverthouse.Common.Data.MongoDB
         Task DeleteManyAsync(Expression<Func<TDocument, bool>> filterExpression);
         void DropCollection(string collectionName);
         void UpdateMany(FilterDefinition<TDocument> filter, UpdateDefinition<TDocument> documents, bool isUpsert = false);
+        long Count<TFieldValue>(string collectionName, TFieldValue Id);
     }
 }
