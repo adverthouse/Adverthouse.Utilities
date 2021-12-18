@@ -34,8 +34,8 @@ namespace Adverthouse.Common.Data.MongoDB
         void InsertMany(ICollection<TDocument> documents);
 
         Task InsertManyAsync(ICollection<TDocument> documents);
-        void ReplaceOne<TFieldValue>(string collectionName, TFieldValue Id, TDocument document, bool isUpsert = true);
-        void ReplaceOne<TFieldValue>(TFieldValue Id, TDocument document, bool isUpsert = true);
+        ReplaceOneResult ReplaceOne<TFieldValue>(string collectionName, TFieldValue Id, TDocument document, bool isUpsert = true);
+        ReplaceOneResult ReplaceOne<TFieldValue>(TFieldValue Id, TDocument document, bool isUpsert = true);
 
         Task ReplaceOneAsync<TFieldValue>(TFieldValue Id, TDocument document, bool isUpsert = true);
 

@@ -123,17 +123,17 @@ namespace Adverthouse.Common.Data.MongoDB
               IsUpsert =isUpsert
             });
 
-        public void ReplaceOne<TFieldValue>(TFieldValue Id, TDocument document, 
+        public ReplaceOneResult ReplaceOne<TFieldValue>(TFieldValue Id, TDocument document, 
             bool isUpsert = true)
         {
             var filter = Builders<TDocument>.Filter.Eq("_id", Id);
-            _collection.ReplaceOne(filter, document,new ReplaceOptions() { IsUpsert = isUpsert });
+            return _collection.ReplaceOne(filter, document,new ReplaceOptions() { IsUpsert = isUpsert });
         }
-        public void ReplaceOne<TFieldValue>(string collectionName,TFieldValue Id, TDocument document, bool isUpsert = true)
+        public ReplaceOneResult ReplaceOne<TFieldValue>(string collectionName,TFieldValue Id, TDocument document, bool isUpsert = true)
         {
             ChangeCollection(collectionName);
             var filter = Builders<TDocument>.Filter.Eq("_id", Id);
-            _collection.ReplaceOne(filter, document, new ReplaceOptions() { IsUpsert = isUpsert });
+            return _collection.ReplaceOne(filter, document, new ReplaceOptions() { IsUpsert = isUpsert });
         }
         public virtual async Task ReplaceOneAsync<TFieldValue>(TFieldValue Id, TDocument document, bool isUpsert = true)
         {
