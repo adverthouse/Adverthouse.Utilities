@@ -21,7 +21,10 @@ namespace Adverthouse.Utility
                 if ((_Attribs != null && _Attribs.Count() > 0))
                 {
                     var attr = ((EnumAttribute)_Attribs.ElementAt(0));
-                    content.AppendHtml(String.Format($"<{tag} class=\"label label-{attr.ClassName}\">{attr.Description}</{tag}>"));
+                    if (string.IsNullOrWhiteSpace(tag))
+                        content.AppendHtml(attr.Description);
+                    else 
+                        content.AppendHtml(String.Format($"<{tag} class=\"label label-{attr.ClassName}\">{attr.Description}</{tag}>"));
                     return content;
                 }
             }
