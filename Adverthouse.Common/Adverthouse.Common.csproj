@@ -2,26 +2,26 @@
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>1.1.67</Version>
+		<Version>1.1.68</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>MongoDB,ElasticSearch,Redis,SQL Server</PackageTags>
 		<RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
 	</PropertyGroup>
 	<ItemGroup>
-		<None Remove="Data\EntityRepository.cs~RFfc05a1a.TMP"/>
+		<None Remove="Data\EntityRepository.cs~RFfc05a1a.TMP" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Dapper" Version="2.0.123"/>
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.1"/>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.1"/>
-		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0"/>
-		<PackageReference Include="MongoDB.Driver" Version="2.14.1"/>
-		<PackageReference Include="NEST" Version="7.16.0"/>
-		<PackageReference Include="StackExchange.Redis" Version="2.2.88"/>
-		<PackageReference Include="System.Data.SqlClient" Version="4.8.3"/>
-		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.15"/>
+		<PackageReference Include="Dapper" Version="2.0.123" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+		<PackageReference Include="MongoDB.Driver" Version="2.14.1" />
+		<PackageReference Include="NEST" Version="7.16.0" />
+		<PackageReference Include="StackExchange.Redis" Version="2.2.88" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.15" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\Adverthouse.Core\Adverthouse.Core.csproj"/>
+		<ProjectReference Include="..\Adverthouse.Core\Adverthouse.Core.csproj" />
 	</ItemGroup>
 </Project>
