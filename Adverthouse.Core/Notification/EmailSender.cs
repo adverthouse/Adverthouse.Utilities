@@ -22,7 +22,7 @@ namespace Adverthouse.Core.Notification
             string emailBody = emailData.EmailBody;
             var msg = new MailMessage
             {
-                From = new MailAddress(_smtpConfig.FromAddress, emailData.EmailSubject)
+                From = new MailAddress(_smtpConfig.FromAddress, _smtpConfig.FromName)
             };
             if (!String.IsNullOrWhiteSpace(emailData.CCAddresses))
             {
