@@ -9,6 +9,7 @@ using Adverthouse.Core.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -64,6 +65,26 @@ namespace Test.WebUI
 
             services.AddScoped<ICategoryService, CategoryService>();
 
+            services.AddResponseCaching(options =>
+            {
+                options.UseCaseSensitivePaths = false;
+                options.MaximumBodySize = 1024;
+                options.SizeLimit = 100 * 1024 * 1024;
+            });
+
+            services.AddControllersWithViews(options =>
+            {
+                options.CacheProfiles.Add("default", new CacheProfile
+                {
+                    Duration = 60
+                });
+
+                options.CacheProfiles.Add("test", new CacheProfile
+                {
+                    Duration = 30
+                });
+            });
+
             services.AddMvc()
               .AddControllersAsServices()
               .AddRazorRuntimeCompilation();
@@ -85,6 +106,9 @@ namespace Test.WebUI
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseResponseCaching(); // response caching
+
 
             app.UseRouting();
 

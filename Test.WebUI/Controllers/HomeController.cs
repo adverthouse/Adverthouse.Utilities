@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Test.WebUI.Models;
 using Test.WebUI.Models.Services;
 using Test.WebUI.PSFs;
@@ -79,18 +81,39 @@ namespace Test.WebUI.Controllers
 
             return Ok("");
         }
+        private static long _lockFlag = DateTime.Now.Ticks; // 0 - free
+
+        private static string abc = "deneme";
+
+        [ResponseCache(CacheProfileName = "default")]
         public IActionResult Index()
-        {
+        {            
+            if (Interlocked.CompareExchange(ref _lockFlag, 1, 0) == 0)
+            {
+                // only 1 thread will enter here without locking the object/put the
+                // other threads to sleep.
+
+                 abc += DateTime.Now.ToString();
+                //  Monitor.Enter(yourLockObject);
+
+                Task.Run(() =>
+                {
+                    System.Threading.Thread.Sleep(3000); // Make dozens of work.
+
+                    // free the lock.                    
+                    Interlocked.Decrement(ref _lockFlag);
+                });
+                
+            } else
+            {
+                abc = "deneme";
+            }
 
             var lad = DateTime.Now;
+
             TTLExtendableCacheObject<DateTime> saat() {
                 return new TTLExtendableCacheObject<DateTime>(lad, lad);    
-            }
-            List<String> tem = new List<string>();
-            tem.Add("deneme");
-            tem.Add("deneme 2");
-
-      
+            }      
 
             var cacheKey = _cacheManager.PrepareKeyForDefaultCache(AdminDefaults.RoleByIDCacheKey, 1);
             cacheKey.CacheTime = TimeSpan.FromHours(1);
@@ -102,14 +125,9 @@ namespace Test.WebUI.Controllers
                 lad; 
 
             TTLExtendableCacheObject<DateTime> dt = _cacheManager.GetOrCreate(cacheKey,
-                saat,cacheRefreshKey,LastUpdateDate); 
+                saat,cacheRefreshKey,LastUpdateDate);
 
-            ViewBag.dt = dt.CacheObject;
-
-            PSFMember pSFMember = new PSFMember();
-            pSFMember.FFirstName = "Yunus";
-
-            string temp = pSFMember.Filter;
+            ViewBag.dt = abc;         
          
             return View();
         }

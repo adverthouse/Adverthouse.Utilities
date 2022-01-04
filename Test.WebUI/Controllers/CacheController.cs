@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Test.WebUI.Controllers
 {
-    public class RedisController : Controller
+    public class CacheController : Controller
     {
         private readonly ICacheManager<MemoryCacheManager> _cacheManager;
 
-        public RedisController(ICacheManager<MemoryCacheManager> cacheManager)
+        public CacheController(ICacheManager<MemoryCacheManager> cacheManager)
         {
             _cacheManager = cacheManager;
         }
@@ -40,6 +40,17 @@ namespace Test.WebUI.Controllers
         
 
             NoSQLKey CategoriesByLangCacheKey = new NoSQLKey("Redis.CategoriesByLang-{0}");
+            return View();
+        }
+
+        public IActionResult Index2()
+        {
+
+            DateTime LastUpdateDate() =>
+                DateTime.Now;
+
+            ViewBag.dt = LastUpdateDate();
+
             return View();
         }
     }
