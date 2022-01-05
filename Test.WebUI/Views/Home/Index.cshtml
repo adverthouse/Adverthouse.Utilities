@@ -11,8 +11,9 @@
   	});
     </script>
 }
-<h1 class="display-4">Welcome Cache @ViewBag.dt</h1>
-<h1 class="display-4">Welcome @DateTime.Now</h1>
+
+<h1 class="display-4">Total item count is @Test.WebUI.Models.CoreData.TotalItemCount</h1>
+
 
 <cache expires-after="@TimeSpan.FromMinutes(1)">
         <div class="text-center">

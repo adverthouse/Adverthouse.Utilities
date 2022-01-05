@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Test.WebUI.Models;
 
 namespace Test.WebUI.Controllers
 {
@@ -45,13 +47,43 @@ namespace Test.WebUI.Controllers
 
         public IActionResult Index2()
         {
+            Task.Run(() =>
+            {
+                if (Interlocked.CompareExchange(ref CoreData.LockTIC, 1, 0) == 0)
+                {
+                    var cacheKey = _cacheManager.PrepareKeyForDefaultCache(AdminDefaults.LastUpdateDateTIC);
+                    cacheKey.CacheTime = TimeSpan.FromMinutes(1);
 
-            DateTime LastUpdateDate() =>
-                DateTime.Now;
+                    DateTime updateData()
+                    {
+                        var FakeDBLastUpdateDate = DateTime.Now; // take lad from db
 
-            ViewBag.dt = LastUpdateDate();
+                        if (CoreData.LastUpdateDate != FakeDBLastUpdateDate)
+                        {
+                            // Get DB records
+
+                            CoreData.TotalItemCount += 102;
+                            CoreData.LastUpdateDate = FakeDBLastUpdateDate;
+                        
+                        }
+                        Interlocked.Decrement(ref CoreData.LockTIC);
+                        return FakeDBLastUpdateDate;
+                    }
+
+                    _cacheManager.GetOrCreate<DateTime>(cacheKey, updateData);
+                }
+            });
+
+            ViewBag.TotalItemCount = CoreData.TotalItemCount;
 
             return View();
+        }
+
+        public IActionResult UpdateLastUpdateDate()
+        {
+            // This is update lastUpdate date for trigger.
+            CoreData.LastUpdateDate = DateTime.Now;
+            return Content("");
         }
     }
 }

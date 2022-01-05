@@ -8,7 +8,7 @@ using System.Text;
 namespace Adverthouse.Common.NoSQL
 {
     public class NoSQLKey
-    {        
+    { 
         public string Key { get; protected set; }
         public List<string> Prefixes { get; protected set; } = new List<string>();       
         

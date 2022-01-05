@@ -19,7 +19,7 @@ namespace Adverthouse.Common.Data.Caching
         /// <summary>
         /// Cache object
         /// </summary>
-        public T CacheObject { get; set; }
+        public T CacheObject { get; set; } 
 
         public TTLExtendableCacheObject(DateTime lastUpdateDate,T cacheObject)
         {

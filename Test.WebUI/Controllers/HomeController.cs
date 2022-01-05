@@ -21,6 +21,8 @@ namespace Test.WebUI.Controllers
     {
         public static NoSQLKey RoleByIDCacheKey => new NoSQLKey("Mem.RolesByID-{0}");
         public static NoSQLKey RefreshRoleByIDCacheKey => new NoSQLKey("Mem.Refresh.RolesByID-{0}");
+
+        public static NoSQLKey LastUpdateDateTIC => new NoSQLKey("Mem.TotalItemCount");
     }
     public class HomeController : Controller
     {
@@ -88,27 +90,6 @@ namespace Test.WebUI.Controllers
         [ResponseCache(CacheProfileName = "default")]
         public IActionResult Index()
         {            
-            if (Interlocked.CompareExchange(ref _lockFlag, 1, 0) == 0)
-            {
-                // only 1 thread will enter here without locking the object/put the
-                // other threads to sleep.
-
-                 abc += DateTime.Now.ToString();
-                //  Monitor.Enter(yourLockObject);
-
-                Task.Run(() =>
-                {
-                    System.Threading.Thread.Sleep(3000); // Make dozens of work.
-
-                    // free the lock.                    
-                    Interlocked.Decrement(ref _lockFlag);
-                });
-                
-            } else
-            {
-                abc = "deneme";
-            }
-
             var lad = DateTime.Now;
 
             TTLExtendableCacheObject<DateTime> saat() {
