@@ -17,7 +17,7 @@ namespace Adverthouse.Common.Data.Caching
 
         private int LockCount = 0;
 
-        public T Data { private set; get; }
+        public T Data { get; private set; }
 
         public DateTime LastModifiedDateOfData { get; private set; } = DateTime.MinValue;
 
@@ -31,17 +31,6 @@ namespace Adverthouse.Common.Data.Caching
             }
         }
 
-        private void SetData(Func<T> acquire, Func<DateTime> lastModifiedDateOfData)
-        {
-            var lad = lastModifiedDateOfData();
-            if (lad != LastModifiedDateOfData)
-            {
-                Data = acquire();
-                LastModifiedDateOfData = lad;
-            }
-            LastDateOfRefresh = DateTime.Now;
-        }
-
         public T GetFreshData(Func<T> acquire, Func<DateTime> lastModifiedDateOfData)
         {
             if (NextDateOfRefresh > DateTime.Now) return Data;
@@ -50,7 +39,13 @@ namespace Adverthouse.Common.Data.Caching
             {
                 try
                 {
-                    SetData(acquire, lastModifiedDateOfData);
+                    var lad = lastModifiedDateOfData();
+                    if (lad != LastModifiedDateOfData)
+                    {
+                        Data = acquire();
+                        LastModifiedDateOfData = lad;
+                    }
+                    LastDateOfRefresh = DateTime.Now;
                     return Data;
                 }
                 finally

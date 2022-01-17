@@ -19,7 +19,9 @@ namespace Adverthouse.Common.Data.ElasticSearch
            if (String.IsNullOrWhiteSpace(str)) return str;
            string temp = str;
            string[] escapeChars = {"+", "-", "=", "&&", "||", ">", "<", "!", "(", ")", "{", "}", "[", "]", "^", "\"", "~", "*", "?", ":", @"\", "/"};
-           foreach(var escapeChar in escapeChars)
+           temp = temp.Replace(@"\\", "");
+
+           foreach (var escapeChar in escapeChars)
            {
               if (temp.Contains(escapeChar))
                   temp = temp.Replace(escapeChar, @"\\" + escapeChar);
