@@ -73,12 +73,18 @@ namespace Adverthouse.Common.Data.Caching
             return Data;
         }
 
-        public RefreshableStaticData(TimeSpan refreshInterval, Func<T> acquire, Func<DateTime> lastModifiedDateOfData, bool willSeedData = true)
+        public RefreshableStaticData(TimeSpan refreshInterval, Func<T> acquire, Func<DateTime> lastModifiedDateOfData, bool willSeedData = true, bool seedDataAsync = false)
         {
             _refreshInterval = refreshInterval;
             _acquire = acquire;
             _lastModifiedDateOfData = lastModifiedDateOfData;
-            if (willSeedData) SeedData();
+            if (willSeedData)
+            {
+                if (seedDataAsync)
+                    Task.Run(() => SeedData());
+                else
+                    SeedData();
+            }
         }
         public RefreshableStaticData(TimeSpan refreshInterval, Func<T> acquire, Func<DateTime> lastModifiedDateOfData, T data)
         {
