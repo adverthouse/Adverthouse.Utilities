@@ -16,24 +16,25 @@ namespace Adverthouse.Common.Data.Caching
         private TimeSpan _refreshInterval;
 
         private int LockCount = 0;
+        private object _assignmentLock = new object();
 
         public T Data { get; private set; }
 
         public DateTime LastModifiedDateOfData { get; private set; } = DateTime.MinValue;
 
-        public DateTime LastDateOfRefresh { get; private set; } = DateTime.MinValue;
+        public DateTime LastDateOfRefreshControl { get; private set; } = DateTime.MinValue;
 
-        public DateTime NextDateOfRefresh
+        public DateTime NextDateOfRefreshControl
         {
             get
             {
-                return this.LastDateOfRefresh.Add(_refreshInterval);
+                return this.LastDateOfRefreshControl.Add(_refreshInterval);
             }
         }
 
         public T GetFreshData(Func<T> acquire, Func<DateTime> lastModifiedDateOfData)
         {
-            if (NextDateOfRefresh > DateTime.Now) return Data;
+            if (NextDateOfRefreshControl > DateTime.Now) return Data;
 
             if (Interlocked.CompareExchange(ref LockCount, 1, 0) == 0)
             {
@@ -42,10 +43,20 @@ namespace Adverthouse.Common.Data.Caching
                     var lad = lastModifiedDateOfData();
                     if (lad != LastModifiedDateOfData)
                     {
-                        Data = acquire();
-                        LastModifiedDateOfData = lad;
+                        var result = acquire();
+
+                        lock (_assignmentLock)
+                        {
+                            Data = result;
+                            LastModifiedDateOfData = lad;
+                        }
                     }
-                    LastDateOfRefresh = DateTime.Now;
+
+                    lock (_assignmentLock)
+                    {
+                        LastDateOfRefreshControl = DateTime.Now;
+                    }
+
                     return Data;
                 }
                 finally
