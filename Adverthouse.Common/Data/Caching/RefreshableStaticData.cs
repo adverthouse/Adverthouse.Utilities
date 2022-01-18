@@ -91,6 +91,10 @@ namespace Adverthouse.Common.Data.Caching
             _refreshInterval = refreshInterval;
             _acquire = acquire;
             _lastModifiedDateOfData = lastModifiedDateOfData;
+
+            LastModifiedDateOfData = DateTime.Now;
+            LastDateOfRefreshControl = LastModifiedDateOfData;
+
             Data = data;
         }
     }
