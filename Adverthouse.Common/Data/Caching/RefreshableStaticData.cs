@@ -15,8 +15,11 @@ namespace Adverthouse.Common.Data.Caching
     {
         private TimeSpan _refreshInterval;
 
+        private Func<T> _acquire;
+        private Func<DateTime> _lastModifiedDateOfData;
+
         private int LockCount = 0;
-        private object _assignmentLock = new object();
+        private readonly object _assignmentLock = new object();
 
         public T Data { get; private set; }
 
@@ -31,8 +34,27 @@ namespace Adverthouse.Common.Data.Caching
                 return this.LastDateOfRefreshControl.Add(_refreshInterval);
             }
         }
+        private void SeedData()
+        {
+            var lad = _lastModifiedDateOfData();
+            if (lad != LastModifiedDateOfData)
+            {
+                var result = _acquire();
 
-        public T GetFreshData(Func<T> acquire, Func<DateTime> lastModifiedDateOfData)
+                lock (_assignmentLock)
+                {
+                    Data = result;
+                    LastModifiedDateOfData = lad;
+                }
+            }
+
+            lock (_assignmentLock)
+            {
+                LastDateOfRefreshControl = DateTime.Now;
+            }
+        }
+
+        public T GetFreshData()
         {
             if (NextDateOfRefreshControl > DateTime.Now) return Data;
 
@@ -40,36 +62,30 @@ namespace Adverthouse.Common.Data.Caching
             {
                 try
                 {
-                    var lad = lastModifiedDateOfData();
-                    if (lad != LastModifiedDateOfData)
-                    {
-                        var result = acquire();
-
-                        lock (_assignmentLock)
-                        {
-                            Data = result;
-                            LastModifiedDateOfData = lad;
-                        }
-                    }
-
-                    lock (_assignmentLock)
-                    {
-                        LastDateOfRefreshControl = DateTime.Now;
-                    }
-
-                    return Data;
+                    SeedData();
                 }
                 finally
                 {
                     Interlocked.Decrement(ref LockCount);
                 }
             }
-            else return Data;
+            
+            return Data;
         }
 
-        public RefreshableStaticData(TimeSpan refreshInterval)
+        public RefreshableStaticData(TimeSpan refreshInterval, Func<T> acquire, Func<DateTime> lastModifiedDateOfData, bool willSeedData = true)
         {
             _refreshInterval = refreshInterval;
+            _acquire = acquire;
+            _lastModifiedDateOfData = lastModifiedDateOfData;
+            if (willSeedData) SeedData();
+        }
+        public RefreshableStaticData(TimeSpan refreshInterval, Func<T> acquire, Func<DateTime> lastModifiedDateOfData, T data)
+        {
+            _refreshInterval = refreshInterval;
+            _acquire = acquire;
+            _lastModifiedDateOfData = lastModifiedDateOfData;
+            Data = data;
         }
     }
 }
