@@ -21,33 +21,33 @@ namespace Adverthouse.Common.Data.RocksDB
             }
         }
 
-        public static async Task<StatusInfo> GetAsync(string key)
+        public static async Task<RocksDBResponse<T>> GetAsync<T>(string key)
         {
-            StatusInfo value = null;
+            RocksDBResponse<T> value = null;
             HttpResponseMessage response = await client.GetAsync($"get/{key}");
             if (response.IsSuccessStatusCode)
             {
-                value = await response.Content.ReadAsAsync<StatusInfo>();
+                value = await response.Content.ReadAsAsync<RocksDBResponse<T>>();
             }
             return value;
         }
-        public static async Task<StatusInfo> AddAsync(string key, string value)
+        public static async Task<RocksDBResponse<T>> AddAsync<T>(string key, string value)
         {
 
             HttpResponseMessage response = await client.PutAsJsonAsync(
                 $"Add", new KeyValuePair<string, string>(key, value));
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadAsAsync<StatusInfo>();
+            return await response.Content.ReadAsAsync<RocksDBResponse<T>>();
         }
 
-        public static async Task<StatusInfo> DeleteAsync(string key)
+        public static async Task<RocksDBResponse<T>> DeleteAsync<T>(string key)
         {
-            StatusInfo value = null;
+            RocksDBResponse<T> value = null;
             HttpResponseMessage response = await client.DeleteAsync($"delete/{key}");
             if (response.IsSuccessStatusCode)
             {
-                value = await response.Content.ReadAsAsync<StatusInfo>();
+                value = await response.Content.ReadAsAsync<RocksDBResponse<T>>();
             }
             return value;
         }
