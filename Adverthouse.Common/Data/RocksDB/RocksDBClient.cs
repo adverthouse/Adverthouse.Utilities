@@ -31,7 +31,7 @@ namespace Adverthouse.Common.Data.RocksDB
             }
             return value;
         }
-        public static async Task<RocksDBResponse> AddAsync<T>(string key, string value)
+        public static async Task<RocksDBResponse> AddAsync(string key, string value)
         {
 
             HttpResponseMessage response = await client.PutAsJsonAsync(
@@ -41,7 +41,7 @@ namespace Adverthouse.Common.Data.RocksDB
             return await response.Content.ReadAsAsync<RocksDBResponse>();
         }
 
-        public static async Task<RocksDBResponse> DeleteAsync<T>(string key)
+        public static async Task<RocksDBResponse> DeleteAsync(string key)
         {
             RocksDBResponse value = null;
             HttpResponseMessage response = await client.DeleteAsync($"delete/{key}");
