@@ -2,12 +2,12 @@
 
 namespace Adverthouse.Common.Data.RocksDB
 {
-    public class RocksDBResponse<T>
+    public class RocksDBResponse
     {
         public int StatusCode { get; set; }
         public string StatusMessage { get; set; }
         public int ID { get; set; }
-        public T Data { get; set; }
+        public string Data { get; set; }
 
         public RocksDBResponse()
         {
