@@ -8,7 +8,11 @@ namespace Adverthouse.Common.Data.RocksDB
 {
     public class RocksDBClient
     {
-        private static HttpClient client = new HttpClient();
+        private static HttpClient client = new HttpClient(new HttpClientHandler()
+        {            
+            Proxy = null,
+            UseProxy = false
+        });
 
         public RocksDBClient(string serverUrlBase = "https://localhost:3800/")
         {
@@ -21,33 +25,33 @@ namespace Adverthouse.Common.Data.RocksDB
             }
         }
 
-        public static async Task<RocksDBResponse<T>> GetAsync<T>(string key)
+        public static async Task<RocksDBResponse> GetAsync(string key)
         {
-            RocksDBResponse<T> value = null;
+            RocksDBResponse value = null;
             HttpResponseMessage response = await client.GetAsync($"get/{key}");
             if (response.IsSuccessStatusCode)
             {
-                value = await response.Content.ReadAsAsync<RocksDBResponse<T>>();
+                value = await response.Content.ReadAsAsync<RocksDBResponse>();
             }
             return value;
         }
-        public static async Task<RocksDBResponse<T>> AddAsync<T>(string key, string value)
+        public static async Task<RocksDBResponse> AddAsync(string key, string value)
         {
 
             HttpResponseMessage response = await client.PutAsJsonAsync(
                 $"Add", new KeyValuePair<string, string>(key, value));
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadAsAsync<RocksDBResponse<T>>();
+            return await response.Content.ReadAsAsync<RocksDBResponse>();
         }
 
-        public static async Task<RocksDBResponse<T>> DeleteAsync<T>(string key)
+        public static async Task<RocksDBResponse> DeleteAsync(string key)
         {
-            RocksDBResponse<T> value = null;
+            RocksDBResponse value = null;
             HttpResponseMessage response = await client.DeleteAsync($"delete/{key}");
             if (response.IsSuccessStatusCode)
             {
-                value = await response.Content.ReadAsAsync<RocksDBResponse<T>>();
+                value = await response.Content.ReadAsAsync<RocksDBResponse>();
             }
             return value;
         }
