@@ -7,17 +7,18 @@ using System.Threading.Tasks;
 namespace Adverthouse.Common.Data.RocksDB
 {
     public class RocksDBClient
-    {
-        private static HttpClient client = new HttpClient(new HttpClientHandler()
+    {  private static HttpClient client = new HttpClient(new HttpClientHandler()
         {            
             Proxy = null,
-            UseProxy = false
+            UseProxy = false,
+            MaxConnectionsPerServer = int.MaxValue,
+            AllowAutoRedirect = false,
         });
 
         public RocksDBClient(string serverUrlBase = "https://localhost:3800/")
         {
             if (client.BaseAddress == null)
-            {
+            { 
                 client.BaseAddress = new Uri(serverUrlBase);
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(
