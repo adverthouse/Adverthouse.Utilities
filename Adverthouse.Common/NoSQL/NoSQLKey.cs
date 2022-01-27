@@ -12,7 +12,7 @@ namespace Adverthouse.Common.NoSQL
         public string Key { get; protected set; }
         public List<string> Prefixes { get; protected set; } = new List<string>();       
         
-        public TimeSpan CacheTime { get; set; } = TimeSpan.FromMinutes(Singleton<AppSettings>.Instance.RedisConfig.DefaultCacheTime);
+        public TimeSpan CacheTime { get; set; } = TimeSpan.FromMinutes(Singleton<AppSettings>.Instance.RedisConfig.DefaultCacheTime);        
 
         public NoSQLKey(string key, params string[] prefixes)
         {
