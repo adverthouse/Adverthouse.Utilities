@@ -16,7 +16,7 @@ namespace Adverthouse.Common.Data.RocksDB
             UseCookies = false
         });
 
-        public RocksDBClient(string serverUrlBase = "https://localhost:3800/")
+        public RocksDBClient(string serverUrlBase = "http://localhost:3800/")
         {
             if (client.BaseAddress == null)
             { 
