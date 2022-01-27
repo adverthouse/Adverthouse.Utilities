@@ -13,6 +13,7 @@ namespace Adverthouse.Common.Data.RocksDB
             UseProxy = false,
             MaxConnectionsPerServer = int.MaxValue,
             AllowAutoRedirect = false,
+            UseCookies = false
         });
 
         public RocksDBClient(string serverUrlBase = "https://localhost:3800/")
@@ -29,7 +30,17 @@ namespace Adverthouse.Common.Data.RocksDB
         public static async Task<RocksDBResponse> GetAsync(string key)
         {
             RocksDBResponse value = null;
-            HttpResponseMessage response = await client.GetAsync($"get/{key}");
+            HttpResponseMessage response = await client.GetAsync($"api/get/{key}");
+            if (response.IsSuccessStatusCode)
+            {
+                value = await response.Content.ReadAsAsync<RocksDBResponse>();
+            }
+            return value;
+        }
+        public static async Task<RocksDBResponse> GetAsync(string dbName,string key)
+        {
+            RocksDBResponse value = null;
+            HttpResponseMessage response = await client.GetAsync($"api/get/{dbName}/{key}");
             if (response.IsSuccessStatusCode)
             {
                 value = await response.Content.ReadAsAsync<RocksDBResponse>();
@@ -40,16 +51,34 @@ namespace Adverthouse.Common.Data.RocksDB
         {
 
             HttpResponseMessage response = await client.PutAsJsonAsync(
-                $"Add", new KeyValuePair<string, string>(key, value));
+                $"api/Add", new KeyValuePair<string, string>(key, value));
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsAsync<RocksDBResponse>();
         }
+        public static async Task<RocksDBResponse> AddAsync(string dbName,string key, string value)
+        {
 
+            HttpResponseMessage response = await client.PutAsJsonAsync(
+                $"api/Add/{dbName}", new KeyValuePair<string, string>(key, value));
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadAsAsync<RocksDBResponse>();
+        }
         public static async Task<RocksDBResponse> DeleteAsync(string key)
         {
             RocksDBResponse value = null;
-            HttpResponseMessage response = await client.DeleteAsync($"delete/{key}");
+            HttpResponseMessage response = await client.DeleteAsync($"api/delete/{key}");
+            if (response.IsSuccessStatusCode)
+            {
+                value = await response.Content.ReadAsAsync<RocksDBResponse>();
+            }
+            return value;
+        }
+        public static async Task<RocksDBResponse> DeleteAsync(string dbName,string key)
+        {
+            RocksDBResponse value = null;
+            HttpResponseMessage response = await client.DeleteAsync($"api/delete/{dbName}/{key}");
             if (response.IsSuccessStatusCode)
             {
                 value = await response.Content.ReadAsAsync<RocksDBResponse>();

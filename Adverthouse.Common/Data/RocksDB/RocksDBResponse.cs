@@ -6,7 +6,7 @@ namespace Adverthouse.Common.Data.RocksDB
     {
         public int StatusCode { get; set; }
         public string StatusMessage { get; set; }
-        public int ID { get; set; }
+        public bool IsFromCache { get; set; } = false;
         public string Data { get; set; }
 
         public RocksDBResponse()
