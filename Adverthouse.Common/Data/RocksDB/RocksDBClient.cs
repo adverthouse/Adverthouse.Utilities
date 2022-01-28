@@ -53,7 +53,7 @@ namespace Adverthouse.Common.Data.RocksDB
         public static async Task<string> GetStringAsync(string dbName, string key)
         {
             RocksDBResponse value = new RocksDBResponse();
-            var response = await client.GetStringAsync($"api/get/{dbName}/{key}");
+            var response = await client.GetStringAsync($"api/GetAsString/{dbName}/{key}");
 
             return response;
         }
