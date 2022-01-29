@@ -24,8 +24,6 @@ namespace Adverthouse.Common.Data.RocksDB
             { 
                 client.BaseAddress = new Uri(serverUrlBase);
                 client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(
-                    new MediaTypeWithQualityHeaderValue("application/json"));
             }
         }
 
@@ -52,10 +50,13 @@ namespace Adverthouse.Common.Data.RocksDB
     
         public static async Task<string> GetStringAsync(string dbName, string key)
         {
-            RocksDBResponse value = new RocksDBResponse();
-            var response = await client.GetStringAsync($"api/GetAsString/{dbName}/{key}");
-
-            return response;
+            string value = "";
+            var response = await client.GetAsync($"api/GetAsString/{dbName}/{key}");
+            if (response.IsSuccessStatusCode)
+            {
+                value = await response.Content.ReadAsStringAsync();
+            }
+            return value;
         }
         public static async Task<T> GetAsByteAsync<T>(string dbName, string key) where T : class
         {
