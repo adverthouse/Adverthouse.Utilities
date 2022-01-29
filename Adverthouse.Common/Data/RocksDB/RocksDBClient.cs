@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -17,6 +18,8 @@ namespace Adverthouse.Common.Data.RocksDB
             AllowAutoRedirect = false,
             UseCookies = false
         });
+
+        private static JsonSerializer serializer = new JsonSerializer();
 
         public RocksDBClient(string serverUrlBase = "http://localhost:3800/")
         {
@@ -49,14 +52,24 @@ namespace Adverthouse.Common.Data.RocksDB
         }
     
         public static async Task<string> GetStringAsync(string dbName, string key)
-        {
+        {            
             string value = "";
-            var response = await client.GetAsync($"api/GetAsString/{dbName}/{key}");
+            HttpResponseMessage response = await client.GetAsync($"api/GetAsString/{dbName}/{key}");
             if (response.IsSuccessStatusCode)
             {
                 value = await response.Content.ReadAsStringAsync();
             }
             return value;
+        }
+
+        public static async Task<T> GetStringAsObjectAsync<T>(string dbName, string key)
+        {            
+            using (Stream s = await client.GetStreamAsync($"api/GetAsString/{dbName}/{key}"))
+            using (StreamReader sr = new StreamReader(s))
+            using (JsonReader reader = new JsonTextReader(sr))
+            {
+                return serializer.Deserialize<T>(reader);
+            }
         }
         public static async Task<T> GetAsByteAsync<T>(string dbName, string key) where T : class
         {
