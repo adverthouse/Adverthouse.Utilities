@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;  
 
@@ -20,16 +21,38 @@ namespace Adverthouse.Common.Data.RocksDB
         });
 
         private static JsonSerializer serializer = new JsonSerializer();
+        private static string ServerUrlBase = "";
 
-        public RocksDBClient(string serverUrlBase = "http://localhost:3800/")
+        public RocksDBClient(string serverUrlBase = "localhost")
         {
+            ServerUrlBase = serverUrlBase;
             if (client.BaseAddress == null)
             { 
-                client.BaseAddress = new Uri(serverUrlBase);
+                client.BaseAddress = new Uri("http://" + serverUrlBase + ":3800/");
                 client.DefaultRequestHeaders.Accept.Clear();
             }
         }
 
+        public static T? GetDataOverTCP<T>(string command)
+        {
+            using (TcpClient tcpClient = new TcpClient(ServerUrlBase, 3866))
+            {
+                byte[] sendData = Encoding.ASCII.GetBytes(command);
+
+                using (NetworkStream stream = tcpClient.GetStream())
+                {
+                    stream.Write(sendData, 0, sendData.Length);
+
+                    using (StreamReader sr = new StreamReader(stream))
+                    {
+                        using (JsonReader reader = new JsonTextReader(sr))
+                        {
+                            return serializer.Deserialize<T>(reader);
+                        }
+                    }
+                }
+            }
+        }
         public static async Task<RocksDBResponse> GetAsync(string key)
         {
             RocksDBResponse value = new RocksDBResponse();
