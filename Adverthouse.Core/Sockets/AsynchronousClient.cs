@@ -12,7 +12,7 @@ namespace Adverthouse.Core.Sockets
 {
     public class AsynchronousClient
     {
-        private static int port = 3866;
+        private static int port = 38660;
         private static readonly object syncLock = new object();
         private static readonly object deleteLock = new object();
         private static ConcurrentDictionary<int, StateObject> clients = new();

@@ -35,7 +35,7 @@ namespace Adverthouse.Common.Data.RocksDB
                 client.DefaultRequestHeaders.Accept.Clear();
             }
 
-            asyncClient =  new AsynchronousClient(ServerUrlBase, 3866);
+            asyncClient =  new AsynchronousClient(ServerUrlBase, 38660);
         }
 
         public static T? GetDataOverTCP<T>(string command)
