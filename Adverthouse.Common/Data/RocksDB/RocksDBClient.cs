@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Adverthouse.Core.Sockets;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,6 +23,8 @@ namespace Adverthouse.Common.Data.RocksDB
 
         private static JsonSerializer serializer = new JsonSerializer();
         private static string ServerUrlBase = "";
+        private static AsynchronousClient asyncClient;
+
 
         public RocksDBClient(string serverUrlBase = "localhost")
         {
@@ -31,28 +34,15 @@ namespace Adverthouse.Common.Data.RocksDB
                 client.BaseAddress = new Uri("http://" + serverUrlBase + ":3800/");
                 client.DefaultRequestHeaders.Accept.Clear();
             }
+
+            asyncClient =  new AsynchronousClient(ServerUrlBase, 3866);
         }
 
         public static T? GetDataOverTCP<T>(string command)
         {
-            using (TcpClient tcpClient = new TcpClient(ServerUrlBase, 3866))
-            {
-                byte[] sendData = Encoding.ASCII.GetBytes(command);
-
-                using (NetworkStream stream = tcpClient.GetStream())
-                {
-                    stream.Write(sendData, 0, sendData.Length);
-
-                    using (StreamReader sr = new StreamReader(stream))
-                    {
-                        using (JsonReader reader = new JsonTextReader(sr))
-                        {
-                            return serializer.Deserialize<T>(reader);
-                        }
-                    }
-                }
-            }
+            return AsynchronousClient.SendCommand<T>(command);
         }
+
         public static async Task<RocksDBResponse> GetAsync(string key)
         {
             RocksDBResponse value = new RocksDBResponse();
