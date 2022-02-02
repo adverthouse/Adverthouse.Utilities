@@ -1,5 +1,3 @@
-using System;
-
 namespace Test.WebUI.Models
 {
     public class ErrorViewModel

@@ -1,8 +1,4 @@
 ﻿using Adverthouse.Utility.Validation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Test.WebUI.Models;
 
 namespace Test.WebUI.Validators

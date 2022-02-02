@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Adverthouse.Core.Infrastructure
+﻿namespace Adverthouse.Core.Infrastructure
 {
     public class Singleton<T> : BaseSingleton
     {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Adverthouse.Common
+﻿namespace Adverthouse.Common
 {
     public enum SortDirection
     {

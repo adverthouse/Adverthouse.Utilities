@@ -5,11 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Linq.Dynamic.Core;
-using Microsoft.Extensions.Options;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Adverthouse.Common.Data
-{ 
+{
 
     public class EntityRepository<TEntity> : IRepository<TEntity> where TEntity : class, IEntity
     {

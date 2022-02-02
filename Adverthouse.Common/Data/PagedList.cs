@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Linq.Dynamic;
+﻿using System.Collections.Generic;
 
 namespace Adverthouse.Common.Data
 {

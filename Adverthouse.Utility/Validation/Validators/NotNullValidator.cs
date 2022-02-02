@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Adverthouse.Utility.Validation.Validators
+﻿namespace Adverthouse.Utility.Validation.Validators
 {
     public class NotNullValidator : IPropertyValidator
     {

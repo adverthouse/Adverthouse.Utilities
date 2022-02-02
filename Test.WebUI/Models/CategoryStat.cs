@@ -1,11 +1,6 @@
 ﻿using Adverthouse.Common.Data.MongoDB;
 using Adverthouse.Common.Interfaces;
-using MongoDB.Bson.Serialization.Attributes;
 using Nest;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Test.WebUI.Models
 {

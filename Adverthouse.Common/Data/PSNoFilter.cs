@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Adverthouse.Common.Data
+﻿namespace Adverthouse.Common.Data
 {
     public class PSNoFilter : PSFBase
     {

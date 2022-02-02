@@ -1,12 +1,10 @@
-﻿using Adverthouse.Common.Interfaces;
-using Adverthouse.Common.NoSQL;
+﻿using Adverthouse.Common.NoSQL;
 using Adverthouse.Core.Configuration;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
 
 namespace Adverthouse.Common.Data.Caching
 {

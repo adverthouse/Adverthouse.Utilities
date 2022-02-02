@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Adverthouse.Common.Data
-{ 
+﻿namespace Adverthouse.Common.Data
+{
     public enum StatusInfoCodes
     {
         Error = 5000,

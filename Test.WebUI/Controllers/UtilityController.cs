@@ -1,10 +1,7 @@
 ﻿using Adverthouse.Utility;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using Test.WebUI.Models;
 
 namespace Test.WebUI.Controllers

@@ -3,16 +3,10 @@ using Adverthouse.Common.NoSQL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Test.WebUI.Models;
 using Test.WebUI.Models.Services;
-using Test.WebUI.PSFs;
 using Test.WebUI.Validators;
 
 namespace Test.WebUI.Controllers

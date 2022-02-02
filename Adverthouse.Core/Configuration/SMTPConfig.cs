@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Mail;
-using System.Text;
-
-namespace Adverthouse.Core.Configuration
+﻿namespace Adverthouse.Core.Configuration
 {
     public class SMTPConfig : IConfig
     {

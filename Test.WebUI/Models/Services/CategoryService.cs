@@ -1,10 +1,7 @@
 ﻿using Adverthouse.Common.Data.ElasticSearch;
 using Adverthouse.Common.Data.MongoDB;
 using MongoDB.Driver;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Test.WebUI.Models.Services
 {

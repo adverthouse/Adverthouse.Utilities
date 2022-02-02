@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Adverthouse.Core.Security
+﻿namespace Adverthouse.Core.Security
 {
     public enum PermissionType
     {

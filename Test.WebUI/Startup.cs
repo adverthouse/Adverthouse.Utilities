@@ -3,12 +3,10 @@ using Adverthouse.Common.Data.Caching;
 using Adverthouse.Common.Data.ElasticSearch;
 using Adverthouse.Common.Data.MongoDB;
 using Adverthouse.Common.Interfaces;
-using Adverthouse.Common.NoSQL;
 using Adverthouse.Core.Configuration;
 using Adverthouse.Core.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,8 +16,6 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Test.WebUI.Models.Services;
 
 namespace Test.WebUI

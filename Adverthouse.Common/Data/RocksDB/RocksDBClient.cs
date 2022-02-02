@@ -1,13 +1,11 @@
-﻿using Adverthouse.Core.Sockets;
+﻿using Adverthouse.Core.SocketPooling;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;  
+using System.Threading.Tasks;
 
 namespace Adverthouse.Common.Data.RocksDB
 {
@@ -21,27 +19,40 @@ namespace Adverthouse.Common.Data.RocksDB
             UseCookies = false
         });
 
+        private const int PORT = 38660;
+
         private static JsonSerializer serializer = new JsonSerializer();
-        private static string ServerUrlBase = "";
-        private static AsynchronousClient asyncClient;
+        private static string _tcpHostAddress = "";
+
+        private static ServerPool serverPool;
+        private static SocketPool socketPool;
 
 
-        public RocksDBClient(string serverUrlBase = "localhost")
+        public RocksDBClient(string tcpHostAdress = "127.0.0.1", uint minPoolSize = 1, uint maxPoolSize = 8, int sendReceiveTimeout = 2000, int socketRecycleAgeAsMinute = 30)
         {
-            ServerUrlBase = serverUrlBase;
+            _tcpHostAddress = tcpHostAdress;
             if (client.BaseAddress == null)
-            { 
-                client.BaseAddress = new Uri("http://" + serverUrlBase + ":3800/");
+            {
+                client.BaseAddress = new Uri("http://" + tcpHostAdress + ":3800/");
                 client.DefaultRequestHeaders.Accept.Clear();
             }
 
-            asyncClient =  new AsynchronousClient(ServerUrlBase, 38660);
+            serverPool = new ServerPool(new string[] { _tcpHostAddress + ":" + PORT })
+            {
+                MinPoolSize = minPoolSize,
+                MaxPoolSize = maxPoolSize,
+                SendReceiveTimeout = sendReceiveTimeout,
+                SocketRecycleAge = TimeSpan.FromMinutes(socketRecycleAgeAsMinute)
+            };
+            socketPool = new SocketPool(serverPool, _tcpHostAddress);
         }
 
-        public static T? GetDataOverTCP<T>(string command)
+        public static T GetDataOverSocket<T>(string dbName, string key)
         {
-            return AsynchronousClient.SendCommand<T>(command);
+            var pooledSocket = socketPool.Acquire();
+            return pooledSocket.WriteGet<T>($"get {dbName} {key}<EOF>");
         }
+
 
         public static async Task<RocksDBResponse> GetAsync(string key)
         {
