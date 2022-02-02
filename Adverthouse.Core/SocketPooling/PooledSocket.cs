@@ -10,7 +10,7 @@ namespace Adverthouse.Core.SocketPooling
 {
     public class PooledSocket : IDisposable
     {
-
+        private const int BUFFER = 1024;    
         private SocketPool socketPool;
         private Socket socket;
         private Stream stream;
@@ -101,44 +101,35 @@ namespace Adverthouse.Core.SocketPooling
             stream.Flush();
         }
 
-        public T WriteGet<T>(string command)
+        /// <summary>
+        /// Writesdata and get result as string
+        /// </summary>
+         public string WriteGet(string command)
         {
             try
             {
                 byte[] byteData = Encoding.UTF8.GetBytes(command);
                 socket.Send(byteData);
 
-                byte[] receivedByte = new byte[1024 * 5];
-                int bytesRec = socket.Receive(receivedByte);
+                int bytesRec = BUFFER;               
 
-                string response = Encoding.UTF8.GetString(receivedByte, 0, bytesRec);
-                return JsonConvert.DeserializeObject<T>(response);
+                string response = "";
+                while(bytesRec >= BUFFER) 
+                {
+                   byte[] receivedByte = new byte[BUFFER];
+                   bytesRec = socket.Receive(receivedByte, SocketFlags.None);
+                   response += Encoding.UTF8.GetString(receivedByte,0,bytesRec);                     
+                }
+
+                if (response == "error") return null;                
+                return response;
             }
             catch
             {
-                return default(T);
+                return null;
             }
         }
-
-        public async Task<T> WriteGetAsync<T>(string command)
-        {
-            try
-            {
-                byte[] byteData = Encoding.UTF8.GetBytes(command);
-                await socket.SendAsync(byteData, SocketFlags.None);
-
-                byte[] receivedByte = new byte[1024 * 5];
-                int bytesRec = await socket.ReceiveAsync(receivedByte, SocketFlags.None);
-
-                string response = Encoding.UTF8.GetString(receivedByte, 0, bytesRec);
-                return JsonConvert.DeserializeObject<T>(response);
-            }
-            catch
-            {
-                return default(T);
-            }
-        }
-
+ 
         /// <summary>
         /// Reads from the socket until the sequence '\r\n' is encountered, 
         /// and returns everything up to but not including that sequence as a UTF8-encoded string

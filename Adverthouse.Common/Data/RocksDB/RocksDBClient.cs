@@ -50,12 +50,16 @@ namespace Adverthouse.Common.Data.RocksDB
         public static T GetDataOverSocket<T>(string dbName, string key)
         {
             var pooledSocket = socketPool.Acquire();
-            return pooledSocket.WriteGet<T>($"get {dbName} {key}<EOF>");
+            string result = pooledSocket.WriteGet($"get {dbName} {key}<EOF>");
+            
+            return String.IsNullOrWhiteSpace(result) ? default(T) : JsonConvert.DeserializeObject<T>(result);
         }
         public static async Task<T> GetDataOverSocketAsync<T>(string dbName, string key)
         {
             var pooledSocket = socketPool.Acquire();
-            return await pooledSocket.WriteGetAsync<T>($"get {dbName} {key}<EOF>");
+            string result = pooledSocket.WriteGet($"get {dbName} {key}<EOF>");
+            
+            return await Task.Run(() =>String.IsNullOrWhiteSpace(result) ? default(T) :  JsonConvert.DeserializeObject<T>(result));
         }
 
         public static async Task<RocksDBResponse> GetAsync(string key)
