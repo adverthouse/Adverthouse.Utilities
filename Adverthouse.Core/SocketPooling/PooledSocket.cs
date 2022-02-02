@@ -111,13 +111,12 @@ namespace Adverthouse.Core.SocketPooling
                 byte[] byteData = Encoding.UTF8.GetBytes(command);
                 socket.Send(byteData);
 
-                int bytesRec = BUFFER;               
-
+                int bytesRec = BUFFER;   
                 string response = "";
                 while(bytesRec >= BUFFER) 
                 {
                    byte[] receivedByte = new byte[BUFFER];
-                   bytesRec = socket.Receive(receivedByte, SocketFlags.None);
+                   bytesRec = socket.Receive(receivedByte);
                    response += Encoding.UTF8.GetString(receivedByte,0,bytesRec);                     
                 }
 
