@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Adverthouse.Core.SocketPooling
 {
@@ -109,6 +110,25 @@ namespace Adverthouse.Core.SocketPooling
 
                 byte[] receivedByte = new byte[1024 * 5];
                 int bytesRec = socket.Receive(receivedByte);
+
+                string response = Encoding.UTF8.GetString(receivedByte, 0, bytesRec);
+                return JsonConvert.DeserializeObject<T>(response);
+            }
+            catch
+            {
+                return default(T);
+            }
+        }
+
+        public async Task<T> WriteGetAsync<T>(string command)
+        {
+            try
+            {
+                byte[] byteData = Encoding.UTF8.GetBytes(command);
+                await socket.SendAsync(byteData, SocketFlags.None);
+
+                byte[] receivedByte = new byte[1024 * 5];
+                int bytesRec = await socket.ReceiveAsync(receivedByte, SocketFlags.None);
 
                 string response = Encoding.UTF8.GetString(receivedByte, 0, bytesRec);
                 return JsonConvert.DeserializeObject<T>(response);

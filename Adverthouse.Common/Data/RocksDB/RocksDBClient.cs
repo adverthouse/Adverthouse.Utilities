@@ -52,7 +52,11 @@ namespace Adverthouse.Common.Data.RocksDB
             var pooledSocket = socketPool.Acquire();
             return pooledSocket.WriteGet<T>($"get {dbName} {key}<EOF>");
         }
-
+        public static async Task<T> GetDataOverSocketAsync<T>(string dbName, string key)
+        {
+            var pooledSocket = socketPool.Acquire();
+            return await pooledSocket.WriteGetAsync<T>($"get {dbName} {key}<EOF>");
+        }
 
         public static async Task<RocksDBResponse> GetAsync(string key)
         {
