@@ -20,7 +20,7 @@ namespace Adverthouse.Common.Data.RocksDB
             UseCookies = false
         });
 
-        private const int PORT = 38660;
+        private const int PORT = 38670;
 
         private static JsonSerializer serializer = new JsonSerializer();
         private static string _tcpHostAddress = "";

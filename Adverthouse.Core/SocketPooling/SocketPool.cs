@@ -59,7 +59,7 @@ namespace Adverthouse.Core.SocketPooling
         private static IPEndPoint getEndPoint(string host)
         {
             //Parse port, default to 11211.
-            int port = 38660;
+            int port = 38670;
             if (host.Contains(":"))
             {
                 string[] split = host.Split(new char[] { ':' });

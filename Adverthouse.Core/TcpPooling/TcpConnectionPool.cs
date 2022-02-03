@@ -113,6 +113,7 @@ namespace Adverthouse.Core.TcpPooling
         {
             socket.Close();
             socket.Dispose();
+            TcpConnectionPool.availableSockets.Enqueue(OpenSocket());
         }
 
         public static void DisposeAllSockets()
