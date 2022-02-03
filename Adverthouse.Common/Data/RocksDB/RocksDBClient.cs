@@ -1,9 +1,10 @@
-﻿using Adverthouse.Core.SocketPooling;
+﻿using Adverthouse.Core.TcpPooling;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,11 +25,7 @@ namespace Adverthouse.Common.Data.RocksDB
         private static JsonSerializer serializer = new JsonSerializer();
         private static string _tcpHostAddress = "";
 
-        private static ServerPool serverPool;
-        private static SocketPool socketPool;
-
-
-        public RocksDBClient(string tcpHostAdress = "127.0.0.1", uint minPoolSize = 1, uint maxPoolSize = 8, int sendReceiveTimeout = 2000, int socketRecycleAgeAsMinute = 30)
+        public RocksDBClient(string tcpHostAdress = "127.0.0.1", int minPoolSize = 20, int maxPoolSize = 5000, int socketRecycleAgeAsMinute = 15)
         {
             _tcpHostAddress = tcpHostAdress;
             if (client.BaseAddress == null)
@@ -37,29 +34,58 @@ namespace Adverthouse.Common.Data.RocksDB
                 client.DefaultRequestHeaders.Accept.Clear();
             }
 
-            serverPool = new ServerPool(new string[] { _tcpHostAddress + ":" + PORT })
-            {
-                MinPoolSize = minPoolSize,
-                MaxPoolSize = maxPoolSize,
-                SendReceiveTimeout = sendReceiveTimeout,
-                SocketRecycleAge = TimeSpan.FromMinutes(socketRecycleAgeAsMinute)
-            };
-            socketPool = new SocketPool(serverPool, _tcpHostAddress);
+            TcpConnectionPool.InitializeConnectionPool(tcpHostAdress, PORT, minPoolSize, maxPoolSize, socketRecycleAgeAsMinute);
         }
 
-        public static T GetDataOverSocket<T>(string dbName, string key)
+        public static T GetDataOverTCP<T>(string dbName, string key)
         {
-            var pooledSocket = socketPool.Acquire();
-            string result = pooledSocket.WriteGet($"get {dbName} {key}<EOF>");
+            var CustomSocket = TcpConnectionPool.GetSocket();
             
-            return String.IsNullOrWhiteSpace(result) ? default(T) : JsonConvert.DeserializeObject<T>(result);
+            try
+            {
+                byte[] sendData = Encoding.ASCII.GetBytes($"get {dbName} {key}");
+                using (NetworkStream stream = CustomSocket.GetStream())
+                {
+                    stream.Write(sendData, 0, sendData.Length);
+
+                    using (StreamReader sr = new StreamReader(stream))
+                    {
+                        using (JsonReader reader = new JsonTextReader(sr))
+                        {
+                            return serializer.Deserialize<T>(reader);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                TcpConnectionPool.PutSocket(CustomSocket);
+            }
         }
-        public static async Task<T> GetDataOverSocketAsync<T>(string dbName, string key)
+        public static async Task<T> GetDataOverTCPAsync<T>(string dbName, string key)
         {
-            var pooledSocket = socketPool.Acquire();
-            string result = pooledSocket.WriteGet($"get {dbName} {key}<EOF>");
-            
-            return await Task.Run(() =>String.IsNullOrWhiteSpace(result) ? default(T) :  JsonConvert.DeserializeObject<T>(result));
+            var CustomSocket = TcpConnectionPool.GetSocket();
+
+            try
+            {
+                byte[] sendData = Encoding.ASCII.GetBytes($"get {dbName} {key}");
+                using (NetworkStream stream = CustomSocket.GetStream())
+                {
+                    await stream.WriteAsync(sendData, 0, sendData.Length);
+
+                    using (StreamReader sr = new StreamReader(stream))
+                    {
+                        using (JsonReader reader = new JsonTextReader(sr))
+                        {
+                            return serializer.Deserialize<T>(reader);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                TcpConnectionPool.PutSocket(CustomSocket);
+            }
         }
 
         public static async Task<RocksDBResponse> GetAsync(string key)
