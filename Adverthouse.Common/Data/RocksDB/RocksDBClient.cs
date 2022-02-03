@@ -44,18 +44,22 @@ namespace Adverthouse.Common.Data.RocksDB
             try
             {
                 byte[] sendData = Encoding.ASCII.GetBytes($"get {dbName} {key}");
+                string response;
                 using (NetworkStream stream = CustomSocket.GetStream())
                 {
                     stream.Write(sendData, 0, sendData.Length);
-
-                    using (StreamReader sr = new StreamReader(stream))
+ 
+                    using(MemoryStream buffer = new MemoryStream())
                     {
-                        using (JsonReader reader = new JsonTextReader(sr))
+                        int b; 
+                        while ((b = stream.ReadByte()) != -1)
                         {
-                            return serializer.Deserialize<T>(reader);
-                        }
+                            buffer.WriteByte((byte)b);
+                        } 
+                        response = Encoding.UTF8.GetString(buffer.GetBuffer());
                     }
                 }
+                return JsonConvert.DeserializeObject<T>(response);
             }
             finally
             {
@@ -69,23 +73,27 @@ namespace Adverthouse.Common.Data.RocksDB
             try
             {
                 byte[] sendData = Encoding.ASCII.GetBytes($"get {dbName} {key}");
+                string response;
                 using (NetworkStream stream = CustomSocket.GetStream())
                 {
                     await stream.WriteAsync(sendData, 0, sendData.Length);
-
-                    using (StreamReader sr = new StreamReader(stream))
+ 
+                    using(MemoryStream buffer = new MemoryStream())
                     {
-                        using (JsonReader reader = new JsonTextReader(sr))
+                        int b; 
+                        while ((b = stream.ReadByte()) != -1)
                         {
-                            return serializer.Deserialize<T>(reader);
-                        }
+                            buffer.WriteByte((byte)b);
+                        } 
+                        response = Encoding.UTF8.GetString(buffer.GetBuffer());
                     }
                 }
+                return JsonConvert.DeserializeObject<T>(response);
             }
             finally
             {
                 TcpConnectionPool.PutSocket(CustomSocket);
-            }
+            } 
         }
 
         public static async Task<RocksDBResponse> GetAsync(string key)
