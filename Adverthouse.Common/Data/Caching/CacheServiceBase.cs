@@ -36,7 +36,6 @@ namespace Adverthouse.Common.NoSQL
             key.CacheTime = TimeSpan.FromMinutes(_appSettings.RedisConfig.DefaultCacheTime);
 
             return key;
-        }
-         
+        }         
     }
 }

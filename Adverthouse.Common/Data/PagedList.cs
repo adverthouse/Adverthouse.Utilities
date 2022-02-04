@@ -6,6 +6,7 @@ namespace Adverthouse.Common.Data
     {
         public IEnumerable<T> Data { get; set; }
         public PSF PagingInfo { get; set; }
+                
         public PagedList() { }
         public PagedList(PSF pagingInfo, IEnumerable<T> data)
         {

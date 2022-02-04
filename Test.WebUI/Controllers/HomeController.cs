@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using Test.WebUI.Models;
 using Test.WebUI.Models.Services;
@@ -81,30 +82,40 @@ namespace Test.WebUI.Controllers
 
         private static string abc = "deneme";
 
+        private static DateTime lad = DateTime.Now;
+        TTLExtendableCacheObject<DateTime> saat(int i)
+        {
+            return new TTLExtendableCacheObject<DateTime>(lad, lad);
+        }
+
         [ResponseCache(CacheProfileName = "default")]
         public IActionResult Index()
         {            
-            var lad = DateTime.Now;
-
-            TTLExtendableCacheObject<DateTime> saat() {
-                return new TTLExtendableCacheObject<DateTime>(lad, lad);    
-            }      
-
             var cacheKey = _cacheManager.PrepareKeyForDefaultCache(AdminDefaults.RoleByIDCacheKey, 1);
             cacheKey.CacheTime = TimeSpan.FromHours(1);
 
             var cacheRefreshKey = _cacheManager.PrepareKeyForDefaultCache(AdminDefaults.RefreshRoleByIDCacheKey, 1);
             cacheRefreshKey.CacheTime = TimeSpan.FromSeconds(10);
 
-            DateTime LastUpdateDate() =>
-                lad; 
+            DateTime LastUpdateDate() => lad;
+             
+            TTLExtendableCacheObject<DateTime> dt = _cacheManager.GetOrCreate(cacheKey, () => saat(1), cacheRefreshKey,LastUpdateDate);
 
-            TTLExtendableCacheObject<DateTime> dt = _cacheManager.GetOrCreate(cacheKey,
-                saat,cacheRefreshKey,LastUpdateDate);
+            ConcurrentDictionary<int, string> tete = new ConcurrentDictionary<int, string>();
+
+            tete.AddOrUpdate(1, "one", (int key, string value) =>
+              {
+                  return key.ToString();
+              });
 
             ViewBag.dt = abc;         
          
             return View();
+        }
+
+        private Func<TTLExtendableCacheObject<DateTime>> Func<T>(Func<object, TTLExtendableCacheObject<DateTime>> p)
+        {
+            throw new NotImplementedException();
         }
 
         public IActionResult Privacy()

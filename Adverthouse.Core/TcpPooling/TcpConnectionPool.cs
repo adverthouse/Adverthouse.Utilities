@@ -115,15 +115,7 @@ namespace Adverthouse.Core.TcpPooling
             socket.Dispose();
             TcpConnectionPool.availableSockets.Enqueue(OpenSocket());
         }
-
-        public static void DisposeAllSockets()
-        {
-            foreach (var socket in TcpConnectionPool.availableSockets)
-            {
-                socket.Close();
-                socket.Dispose();
-            }
-        }
+         
         /// <summary>
         /// Open a new socket connection.
         /// </summary>
