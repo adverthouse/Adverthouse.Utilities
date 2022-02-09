@@ -73,7 +73,7 @@ namespace Adverthouse.Core.TcpPooling
                     while (TcpConnectionPool.availableSockets.Count > 0)
                     {
                         var socket = TcpConnectionPool.availableSockets.Dequeue();
-
+                        
                         if (socket.Connected)
                             return socket;
                         else DisposeSocket(socket);

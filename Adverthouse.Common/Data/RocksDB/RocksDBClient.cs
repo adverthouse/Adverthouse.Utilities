@@ -18,23 +18,19 @@ namespace Adverthouse.Common.Data.RocksDB
             MaxConnectionsPerServer = int.MaxValue,
             AllowAutoRedirect = false,
             UseCookies = false
-        });
+        });         
 
-        private const int PORT = 38670;
+        private static JsonSerializer serializer = new JsonSerializer(); 
 
-        private static JsonSerializer serializer = new JsonSerializer();
-        private static string _tcpHostAddress = "";
-
-        public RocksDBClient(string tcpHostAdress = "127.0.0.1", int minPoolSize = 20, int maxPoolSize = 5000, int socketRecycleAgeAsMinute = 15)
-        {
-            _tcpHostAddress = tcpHostAdress;
+        public RocksDBClient(string tcpHostAdress = "127.0.0.1",int port = 38670, int minPoolSize = 20, int maxPoolSize = 5000, int socketRecycleAgeAsMinute = 15)
+        { 
             if (client.BaseAddress == null)
             {
                 client.BaseAddress = new Uri("http://" + tcpHostAdress + ":3800/");
                 client.DefaultRequestHeaders.Accept.Clear();
             }
 
-            TcpConnectionPool.InitializeConnectionPool(tcpHostAdress, PORT, minPoolSize, maxPoolSize, socketRecycleAgeAsMinute);
+            TcpConnectionPool.InitializeConnectionPool(tcpHostAdress, port, minPoolSize, maxPoolSize, socketRecycleAgeAsMinute);
         }
 
         public static T GetDataOverTCP<T>(string dbName, string key)
