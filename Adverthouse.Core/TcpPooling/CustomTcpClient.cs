@@ -15,9 +15,9 @@ namespace Adverthouse.Core.TcpPooling
         {
             TimeCreated = DateTime.Now;
             Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.KeepAlive, false);
-            Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, 5);
+            Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, 1);
             Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, 5);
-            Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, 5);
+            Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, 1);
         }
     }
 }
