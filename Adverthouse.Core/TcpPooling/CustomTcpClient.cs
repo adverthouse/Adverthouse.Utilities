@@ -14,6 +14,10 @@ namespace Adverthouse.Core.TcpPooling
         public CustomTcpClient(string host, int port) : base(host, port)
         {
             TimeCreated = DateTime.Now;
+            Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.KeepAlive, false);
+            Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveTime, 5);
+            Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveInterval, 5);
+            Client.SetSocketOption(SocketOptionLevel.Tcp, SocketOptionName.TcpKeepAliveRetryCount, 5);
         }
     }
 }
