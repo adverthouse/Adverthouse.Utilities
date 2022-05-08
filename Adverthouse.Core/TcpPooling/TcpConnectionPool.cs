@@ -116,6 +116,16 @@ namespace Adverthouse.Core.TcpPooling
             TcpConnectionPool.availableSockets.Enqueue(OpenSocket());
         }
          
+        public static void DisposeAllSockets()
+        {
+            if (TcpConnectionPool.availableSockets == null) return;
+            
+            foreach (var socket in TcpConnectionPool.availableSockets)
+            {
+                socket.Close();
+                socket.Dispose();
+            }
+        }
         /// <summary>
         /// Open a new socket connection.
         /// </summary>
