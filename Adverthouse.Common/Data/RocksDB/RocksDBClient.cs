@@ -21,20 +21,32 @@ namespace Adverthouse.Common.Data.RocksDB
         });         
 
         private static JsonSerializer serializer = new JsonSerializer(); 
+        private static string _tcpHostAddress = "";
+        private static int  _minPoolSize = 20;
+        private static int  _maxPoolSize = 500;
+        private static int  _socketRecycleAgeAsMinute = 15;
+        private static int  _port = 38670;
 
-        public RocksDBClient(string tcpHostAdress = "127.0.0.1",int port = 38670, int minPoolSize = 20, int maxPoolSize = 5000, int socketRecycleAgeAsMinute = 15)
-        { 
+        public RocksDBClient(string tcpHostAdress = "127.0.0.1", int port = 38670, int minPoolSize = 20, int maxPoolSize = 5000, int socketRecycleAgeAsMinute = 15)
+        {
+            _tcpHostAddress = tcpHostAdress;
+            _minPoolSize = minPoolSize;
+            _maxPoolSize = maxPoolSize;
+            _socketRecycleAgeAsMinute = socketRecycleAgeAsMinute;
+            _port = port;
+
             if (client.BaseAddress == null)
             {
                 client.BaseAddress = new Uri("http://" + tcpHostAdress + ":3800/");
                 client.DefaultRequestHeaders.Accept.Clear();
-            }
-
-            TcpConnectionPool.InitializeConnectionPool(tcpHostAdress, port, minPoolSize, maxPoolSize, socketRecycleAgeAsMinute);
+            } 
         }
 
         public static T GetDataOverTCP<T>(string dbName, string key)
-        {
+        {  
+             if (!TcpConnectionPool.Initialized) 
+                 TcpConnectionPool.InitializeConnectionPool(_tcpHostAddress, _port, _minPoolSize, _maxPoolSize, _socketRecycleAgeAsMinute);
+
             var CustomSocket = TcpConnectionPool.GetSocket();
             
             try
@@ -63,7 +75,10 @@ namespace Adverthouse.Common.Data.RocksDB
             }
         }
         public static async Task<T> GetDataOverTCPAsync<T>(string dbName, string key)
-        {
+        {  
+             if (!TcpConnectionPool.Initialized) 
+                 TcpConnectionPool.InitializeConnectionPool(_tcpHostAddress, _port, _minPoolSize, _maxPoolSize, _socketRecycleAgeAsMinute);
+
             var CustomSocket = TcpConnectionPool.GetSocket();
 
             try
