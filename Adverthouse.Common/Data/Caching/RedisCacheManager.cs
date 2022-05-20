@@ -16,8 +16,14 @@ namespace Adverthouse.Common.Data.Caching
         private Core.Configuration.RedisConfig _redisConfig;
         public RedisCacheManager(AppSettings appSettings):base(appSettings)
         {
-            _redisConfig = appSettings.RedisConfig; 
-            _connectionMultiplexer = ConnectionMultiplexer.Connect($"{ _redisConfig.RedisHost}:{ _redisConfig.RedisPort}");
+            _redisConfig = appSettings.RedisConfig;
+            var configurationOptions = new ConfigurationOptions
+            {
+                EndPoints = { $"{_redisConfig.RedisHost}:{_redisConfig.RedisPort}" },
+                Ssl = _redisConfig.Ssl,
+                AbortOnConnectFail = _redisConfig.AbortOnConnectFail,
+            };
+            _connectionMultiplexer = ConnectionMultiplexer.Connect(configurationOptions);
             _database = _connectionMultiplexer.GetDatabase(_currentDatabaseID);
         }
 
