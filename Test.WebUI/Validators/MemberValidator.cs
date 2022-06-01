@@ -3,20 +3,27 @@ using Test.WebUI.Models;
 
 namespace Test.WebUI.Validators
 {
-    public class MemberValidator : ValidatorBase<Member>
+    public class MemberValidator : ValidatorBase<VMMember>
     {
         public MemberValidator(string formID) : base(formID)
         {
-            AddRule(a => a.FirstName).Required();
+            AddRule(a => a.FirstName).Required("First name required");
             AddRule(a => a.LastName).Required();
 
-            AddRule(a => a.UserName).Required(); 
+            AddRule(a => a.UserName).Required().Email();
 
             AddRule(a => a.Password).Required()
-                                  .MinMaxLength(4, null, "Min length is 4 letter.");
+                                    .MinMaxLength(4, null, "Min length is 4 letter.");
 
-            AddRule(a => a.Age).Required().
-                Integer("Age must be numeric");
+            AddRule(a => a.Age).Required().Integer("Age must be numeric");
+        }
+
+        public void AdditionalMethods()
+        {
+            AddRule(a=>a.Password2)
+                .CompareValue(AddRule(a=>a.Password),"Password must be same with each other")
+                .Required()
+                .MinMaxLength(4, null, "Min length is 4 letter.");
         }
     }
 }

@@ -22,12 +22,10 @@ namespace Adverthouse.Utility.Validation.Validators
 
         public bool IsValid(object value)
         {
-            if (string.IsNullOrWhiteSpace(Convert.ToString(value)))
-            {
-                return false;
-            }
+            if (string.IsNullOrWhiteSpace(Convert.ToString(value))) return false; 
+
             value = value.ToString().Trim();
-            return !Regex.IsMatch(value.ToString(), Pattern, RegexOptions.IgnoreCase);
+            return Regex.IsMatch(value.ToString(), Pattern, RegexOptions.IgnoreCase);
         }
         public RegexValidator(string propertName)
         {

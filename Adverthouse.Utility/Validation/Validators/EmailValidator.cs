@@ -8,10 +8,7 @@ namespace Adverthouse.Utility.Validation.Validators
         private string _errorMessage;
         public string ErrorMessage
         {
-            get
-            {
-                return _errorMessage == null ? $"{ProperyName} not a valid email" : _errorMessage;
-            }
+            get => _errorMessage == null ? $"{ProperyName} not a valid email" : _errorMessage;
         }
         public string ScriptRule => $" email : true";
         public string ScriptMessage => $" email :\"{ErrorMessage.Replace("\"", "'")}\"";

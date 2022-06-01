@@ -35,6 +35,7 @@ namespace Adverthouse.Utility.Validation
             return ruleBuilder;
         }
 
+
         public bool IsValid(T entity)
         {
             _isValid = true;
@@ -98,16 +99,16 @@ namespace Adverthouse.Utility.Validation
             return new HtmlString(validationCode);
         }
 
-        public HtmlString GetValidationErrors()
+        public HtmlString GetValidationErrors(string title = "Validation Error")
         {
             if (ValidationErrors.Count() > 0)
             {
                 var temp = "";
                 temp += "<ul class=\"alert alert-danger list-unstyled\">";
-                temp += String.Format("<li><h3 class=\"text-danger\"><i class=\"fa fa-exclamation-triangle\"></i>{0}</h3></li>", "Validation error");
+                temp += String.Format("<li><h3 class=\"text-danger\"><i class=\"fa fa-exclamation-triangle\"></i>{0}</h3></li>", title);
                 foreach (ValidationError el in ValidationErrors)
                 {
-                    temp += String.Format("<li><strong>{0} : </strong> {1}</li>", el.ErrorField, el.ErrorMessage);
+                    temp += $"<li><strong>{el.ErrorField} : </strong> {el.ErrorMessage}</li>";
                 }
                 temp += "</ul>";
                 return new HtmlString(temp);

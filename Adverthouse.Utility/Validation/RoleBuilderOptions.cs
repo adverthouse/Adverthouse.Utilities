@@ -1,4 +1,6 @@
 ﻿using Adverthouse.Utility.Validation.Validators;
+using System;
+using System.Linq.Expressions;
 
 namespace Adverthouse.Utility.Validation
 {
@@ -43,15 +45,22 @@ namespace Adverthouse.Utility.Validation
             ruleBuilder.AddRule(new MinMaxLengthValidator(minLenght, maxLength, ruleBuilder.ValidationRule.PropertyName, errorMessage));
             return ruleBuilder;
         }
+
+        public static IRuleBuilder Email(this IRuleBuilder ruleBuilder)
+        {
+            ruleBuilder.AddRule(new EmailValidator(ruleBuilder.ValidationRule.PropertyName));
+            return ruleBuilder;
+        }
+
         public static IRuleBuilder Email(this IRuleBuilder ruleBuilder, string errorMessage)
         {
             ruleBuilder.AddRule(new EmailValidator(ruleBuilder.ValidationRule.PropertyName, errorMessage));
             return ruleBuilder;
         }
-        public static IRuleBuilder CompareValue(this IRuleBuilder ruleBuilder,
-            string comparePropertyName, string errorMessage)
-        {
-            ruleBuilder.AddRule(new CompareValidator(ruleBuilder.ValidationRule.PropertyName, comparePropertyName, errorMessage));
+
+        public static IRuleBuilder CompareValue(this IRuleBuilder ruleBuilder, IRuleBuilder ruleBuilder2, string errorMessage)
+        {       
+            ruleBuilder.AddRule(new CompareValidator(ruleBuilder.ValidationRule.PropertyName, ruleBuilder2.ValidationRule.PropertyName, errorMessage));
             return ruleBuilder;
         }
         public static IRuleBuilder IsChecked(this IRuleBuilder ruleBuilder, string errorMessage)

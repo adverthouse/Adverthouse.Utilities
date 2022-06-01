@@ -22,7 +22,7 @@ namespace Test.WebUI.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private MemberValidator _memberValidator;
+    
         private readonly ICacheManager<MemoryCacheManager> _cacheManager;
         private readonly ICategoryService _categoryService;
         private readonly IMemoryCache _memoryCache;
@@ -31,7 +31,6 @@ namespace Test.WebUI.Controllers
             ICacheManager<MemoryCacheManager> cacheManager, ICategoryService categoryService, IMemoryCache memoryCache)
         {
             _logger = logger;
-            _memberValidator = new MemberValidator("#EditForm");
             _cacheManager = cacheManager;
             _categoryService = categoryService;
             _memoryCache = memoryCache;
@@ -128,24 +127,7 @@ namespace Test.WebUI.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+         
 
-        public ActionResult Create()
-        {
-            ViewBag.ValidationScript = _memberValidator.GetValidationScript();
-            return View();
-        }
-
-        [HttpPost] 
-        public IActionResult Create(Member member, string password2)
-        {
-            ViewBag.ValidationScript = _memberValidator.GetValidationScript();
-            if (_memberValidator.IsValid(member))
-            { 
-                return RedirectToAction("Index");
-            }
-            ViewBag.ValidationScript = _memberValidator.GetValidationScript();
-            ViewBag.ErrorLines = _memberValidator.GetValidationErrors();
-            return View(member);
-        }
     }
 }

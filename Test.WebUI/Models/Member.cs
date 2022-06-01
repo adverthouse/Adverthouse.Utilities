@@ -12,4 +12,9 @@ namespace Test.WebUI.Models
 
         public int Age { get; set; }        
     }
+
+    public class VMMember : Member
+    {
+        public string Password2 { get; set; }
+    }
 }
