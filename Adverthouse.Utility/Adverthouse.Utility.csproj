@@ -11,7 +11,7 @@
     <NeutralLanguage>en</NeutralLanguage>
     <PackageIcon> </PackageIcon>
     <RepositoryUrl>https://github.com/adverthouse/Adverthouse.Utilities/tree/master/Adverthouse.Utility</RepositoryUrl>
-    <Version>1.1.22</Version>
+    <Version>1.1.24</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="jQuery.Validation" Version="1.19.3" />
+    <PackageReference Include="jQuery.Validation" Version="1.19.4" />
     <PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
