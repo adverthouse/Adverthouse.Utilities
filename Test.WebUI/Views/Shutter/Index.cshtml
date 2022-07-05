@@ -1,0 +1,8 @@
+﻿@using Test.WebUI.Models.Services
+@model ImageLst
+
+@foreach(var item in Model.data){
+    <img src="@item.assets.preview.url" />
+    <br />
+    @item.description<br />
+}

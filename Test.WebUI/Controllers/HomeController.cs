@@ -89,7 +89,8 @@ namespace Test.WebUI.Controllers
 
         [ResponseCache(CacheProfileName = "default")]
         public IActionResult Index()
-        {            
+        {
+
             var cacheKey = _cacheManager.PrepareKeyForDefaultCache(AdminDefaults.RoleByIDCacheKey, 1);
             cacheKey.CacheTime = TimeSpan.FromHours(1);
 
