@@ -1,28 +1,28 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>1.3.3</Version>
+		<Version>1.3.4</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>MongoDB,ElasticSearch,Redis,SQL Server</PackageTags>
 		<RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
 	</PropertyGroup>
 	<ItemGroup>
-		<None Remove="Data\EntityRepository.cs~RFfc05a1a.TMP" />
+		<None Remove="Data\EntityRepository.cs~RFfc05a1a.TMP"/>
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Dapper" Version="2.0.123" />
-		<PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.6" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.6" />
-		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
-		<PackageReference Include="MongoDB.Driver" Version="2.16.1" />
-		<PackageReference Include="NEST" Version="7.17.4" />
-		<PackageReference Include="StackExchange.Redis" Version="2.6.48" />
-		<PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
-		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.19" />
+		<PackageReference Include="Dapper" Version="2.0.123"/>
+		<PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9"/>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.7"/>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.7"/>
+		<PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0"/>
+		<PackageReference Include="MongoDB.Driver" Version="2.17.1"/>
+		<PackageReference Include="NEST" Version="7.17.4"/>
+		<PackageReference Include="StackExchange.Redis" Version="2.6.48"/>
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.3"/>
+		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.19"/>
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\Adverthouse.Core\Adverthouse.Core.csproj" />
+		<ProjectReference Include="..\Adverthouse.Core\Adverthouse.Core.csproj"/>
 	</ItemGroup>
 </Project>

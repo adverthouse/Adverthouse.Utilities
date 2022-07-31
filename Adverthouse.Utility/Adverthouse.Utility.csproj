@@ -1,35 +1,30 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>Adverthouse.Utility</RootNamespace>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Authors>Adverthouse</Authors>
-    <Description>Library for UI helpers.</Description>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageTags>C#, Utility</PackageTags>
-    <NeutralLanguage>en</NeutralLanguage>
-    <PackageIcon> </PackageIcon>
-    <RepositoryUrl>https://github.com/adverthouse/Adverthouse.Utilities/tree/master/Adverthouse.Utility</RepositoryUrl>
-    <Version>1.1.24</Version>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Include=" ">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="jQuery.Validation" Version="1.19.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Adverthouse.Common\Adverthouse.Common.csproj" />
-  </ItemGroup>
-
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<RootNamespace>Adverthouse.Utility</RootNamespace>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Authors>Adverthouse</Authors>
+		<Description>Library for UI helpers.</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageTags>C#, Utility</PackageTags>
+		<NeutralLanguage>en</NeutralLanguage>
+		<PackageIcon/>
+		<RepositoryUrl>https://github.com/adverthouse/Adverthouse.Utilities/tree/master/Adverthouse.Utility</RepositoryUrl>
+		<Version>1.1.25</Version>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Include=" ">
+			<Pack>True</Pack>
+			<PackagePath/>
+		</None>
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="jQuery.Validation" Version="1.19.5"/>
+		<PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.2.0"/>
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0"/>
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Adverthouse.Common\Adverthouse.Common.csproj"/>
+	</ItemGroup>
 </Project>
