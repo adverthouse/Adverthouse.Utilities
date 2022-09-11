@@ -13,6 +13,7 @@ namespace Adverthouse.Common.Data.ElasticSearch
 
         public QueryContainer queryPreFilter;
         public QueryContainer queryPostFilter;
+        public AggregationDictionary aggregationDictionary;
         
         private string NormalizeString(string str) { 
            if (String.IsNullOrWhiteSpace(str)) return str;
@@ -33,6 +34,7 @@ namespace Adverthouse.Common.Data.ElasticSearch
             queryPreFilter = new QueryContainer();
             queryPostFilter = new QueryContainer();
             PSF = psf;
+            aggregationDictionary = new AggregationDictionary();
 
             IndexName = indexName;
         }
@@ -81,6 +83,17 @@ namespace Adverthouse.Common.Data.ElasticSearch
                 };
             }
         }
-
+        
+        public void Aggregations_AddTerms(string aggregationKey,string field,int size){
+            if (!String.IsNullOrWhiteSpace(field))
+            {
+                aggregationDictionary.Add(aggregationKey,new AggregationContainer(){
+                    Terms = new TermsAggregation(field){
+                        Field = field,  
+                        Size = size
+                    }
+                });            
+            }
+        }
     }
 }

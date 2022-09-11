@@ -92,6 +92,8 @@ namespace Adverthouse.Common.Data.ElasticSearch
             searchRequest.Query = elasticSearchBuilder.queryPreFilter;
             searchRequest.PostFilter = elasticSearchBuilder.queryPostFilter;
 
+            searchRequest.Aggregations = elasticSearchBuilder.aggregationDictionary;
+
             if (elasticSearchBuilder.Sort != null)
                 searchRequest.Sort = elasticSearchBuilder.Sort; 
             
