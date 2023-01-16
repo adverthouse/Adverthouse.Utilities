@@ -1,22 +1,13 @@
 ﻿using System;
+using Microsoft.AspNetCore.Http;
 
 namespace Adverthouse.Common.Data
 {
-    public class StatusInfo
+    public class StatusInfo<T>
     {
-        public int StatusCode { get; set; }
+        public int StatusCode { get; set; } = StatusCodes.Status200OK;
         public string StatusMessage { get; set; }
         public int ID { get; set; }
-        public object Data { get; set; }
-
-        public StatusInfo()
-        {
-            StatusCode = (Int32)StatusInfoCodes.Error;
-        }
-
-        public StatusInfo(StatusInfoCodes statusCode)
-        {
-            StatusCode = (Int32)statusCode;
-        }
+        public T Data { get; set; }
     }
 }
