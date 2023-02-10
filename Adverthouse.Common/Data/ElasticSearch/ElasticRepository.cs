@@ -70,7 +70,13 @@ namespace Adverthouse.Common.Data.ElasticSearch
                    ).Refresh(Refresh.True)
                 );
         }
-         
+        public IndexResponse UpsertDocument(string indexName, T document, bool autoCreateIndex = true)
+        {
+            if (autoCreateIndex) CreateIndex(indexName);
+
+            return _elasticClient.IndexDocument(document);
+        }
+
         public DeleteIndexResponse DeleteIndex(string indexName)
         {
 

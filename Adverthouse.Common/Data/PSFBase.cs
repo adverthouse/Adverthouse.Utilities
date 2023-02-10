@@ -28,10 +28,10 @@ namespace Adverthouse.Common.Data
             }
         }
         public abstract string Filter { get; }
-        public PSFBase(string sortBy, bool sortAscending = false, int currentPage = 1, int pageSize = 20, bool setPageNumbers = true)
+        public PSFBase(string sortBy, bool sortAscending = false, int currentPage = 1, int itemPerPage = 20, bool setPageNumbers = true)
         {
             CurrentPage = currentPage;
-            ItemPerPage = pageSize;
+            ItemPerPage = itemPerPage;
             SortAscending = sortAscending;
             SortBy = sortBy;
             SetPageNumbers = setPageNumbers;
