@@ -1,4 +1,6 @@
 ﻿using Adverthouse.Common.Interfaces;
+using System;
+using System.Reflection.Metadata;
 
 namespace Adverthouse.Common.Data
 {
@@ -7,6 +9,9 @@ namespace Adverthouse.Common.Data
     /// </summary>
     public abstract class PSFBase : IPSFBase
     {
+        public static int MAX_ITEM_PER_PAGE = 100;
+        private int _itemPerPage = 20;
+
         public string SortBy { get; set; }
         public bool SortAscending { get; set; }
         public string SortExpression
@@ -17,7 +22,14 @@ namespace Adverthouse.Common.Data
             }
         }
         public int CurrentPage { get; set; }
-        public int ItemPerPage { get; set; }
+        public int ItemPerPage { 
+            get { 
+               return _itemPerPage;
+            } 
+            set {
+                _itemPerPage = Math.Min(MAX_ITEM_PER_PAGE, _itemPerPage);
+            } 
+        }
         public int TotalItemCount { get; set; }
         public bool SetPageNumbers { get; set; }
         public int PageCount

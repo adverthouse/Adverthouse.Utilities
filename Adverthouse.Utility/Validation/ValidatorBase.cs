@@ -12,7 +12,7 @@ namespace Adverthouse.Utility.Validation
     {
         public string FormID { get; private set; }
 
-        private bool _isValid;
+        private bool _isValid = false;
         public List<ValidationError> ValidationErrors { get; private set; }
         public List<RuleBuilder> ValidationRules { get; private set; }
 
@@ -52,10 +52,9 @@ namespace Adverthouse.Utility.Validation
                     {
                         ValidationErrors.Add(new ValidationError(validator.ErrorMessage, rule.ValidationRule.PropertyName));
                     }
-                    _isValid = _isValid != false && isValid;
                 }
             }
-            return _isValid;
+            return ValidationErrors.Count() == 0;
         }
 
         public HtmlString GetValidationScript()
