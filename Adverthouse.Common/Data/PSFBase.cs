@@ -27,7 +27,7 @@ namespace Adverthouse.Common.Data
                return _itemPerPage;
             } 
             set {
-                _itemPerPage = Math.Min(MAX_ITEM_PER_PAGE, _itemPerPage);
+                _itemPerPage = Math.Min(MAX_ITEM_PER_PAGE, value);
             } 
         }
         public int TotalItemCount { get; set; }
