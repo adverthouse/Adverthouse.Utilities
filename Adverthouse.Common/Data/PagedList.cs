@@ -2,15 +2,15 @@
 
 namespace Adverthouse.Common.Data
 {
-    public class PagedList<T, PSF>
+    public class PagedList<T, TPSF>
     {
         public IEnumerable<T> Data { get; set; }
-        public PSF PagingInfo { get; set; }
+        public TPSF PSF { get; set; }
                 
         public PagedList() { }
-        public PagedList(PSF pagingInfo, IEnumerable<T> data)
+        public PagedList(TPSF psf, IEnumerable<T> data)
         {
-            PagingInfo = pagingInfo;
+            PSF = psf;
             Data = data;
         } 
     }

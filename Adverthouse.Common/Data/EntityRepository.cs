@@ -18,54 +18,54 @@ namespace Adverthouse.Common.Data
 
         public IQueryable<TEntity> GetResult() => _db.Set<TEntity>();
         
-        public virtual PagedList<TEntity, PSF> GetResult<PSF>(PSF psfInfo, IQueryable<TEntity> preQuery) where PSF : IPSFBase 
+        public virtual PagedList<TEntity, PSF> GetResult<PSF>(PSF psf, IQueryable<TEntity> preQuery) where PSF : IPSFBase 
         {
             PagedList<TEntity, PSF> opRes = new();
             IQueryable<TEntity> filteredQuery = preQuery;
 
-            if (psfInfo != null)
+            if (psf != null)
             {
-                opRes.PagingInfo = psfInfo;
-                if (psfInfo.SetPageNumbers)
-                    psfInfo.TotalItemCount = filteredQuery.Count();
+                opRes.PSF = psf;
+                if (psf.SetPageNumbers)
+                    psf.TotalItemCount = filteredQuery.Count();
             }
 
-            opRes.Data = filteredQuery.OrderBy(psfInfo.SortExpression)
-                             .Skip((psfInfo.CurrentPage - 1) * psfInfo.ItemPerPage)
-                             .Take(psfInfo.ItemPerPage).ToList();
+            opRes.Data = filteredQuery.OrderBy(psf.SortExpression)
+                             .Skip((psf.CurrentPage - 1) * psf.ItemPerPage)
+                             .Take(psf.ItemPerPage).ToList();
 
             return opRes;
         }
 
-        public virtual async Task<PagedList<TEntity, PSF>> GetResultAsync<PSF>(PSF psfInfo, IQueryable<TEntity> preQuery) where PSF : IPSFBase
+        public virtual async Task<PagedList<TEntity, PSF>> GetResultAsync<PSF>(PSF psf, IQueryable<TEntity> preQuery) where PSF : IPSFBase
         {
             PagedList<TEntity, PSF> opRes = new();
             IQueryable<TEntity> filteredQuery = preQuery;
 
-            if (psfInfo != null)
+            if (psf != null)
             {
-                opRes.PagingInfo = psfInfo;
-                if (psfInfo.SetPageNumbers) 
-                    psfInfo.TotalItemCount = await filteredQuery.CountAsync();
+                opRes.PSF = psf;
+                if (psf.SetPageNumbers) 
+                    psf.TotalItemCount = await filteredQuery.CountAsync();
             }
 
-            opRes.Data = await filteredQuery.OrderBy(psfInfo.SortExpression)
-                             .Skip((psfInfo.CurrentPage - 1) * psfInfo.ItemPerPage)
-                             .Take(psfInfo.ItemPerPage).ToListAsync();
+            opRes.Data = await filteredQuery.OrderBy(psf.SortExpression)
+                             .Skip((psf.CurrentPage - 1) * psf.ItemPerPage)
+                             .Take(psf.ItemPerPage).ToListAsync();
 
             return opRes;
         }
 
-        public virtual PagedList<TEntity, PSF> GetResult<PSF>(PSF psfInfo) where PSF : IPSFBase
+        public virtual PagedList<TEntity, PSF> GetResult<PSF>(PSF psf) where PSF : IPSFBase
         {
             IQueryable<TEntity> filteredQuery = _db.Set<TEntity>();
-            var opRes = GetResult(psfInfo, filteredQuery);
+            var opRes = GetResult(psf, filteredQuery);
             return opRes;
         }
-        public virtual async Task<PagedList<TEntity, PSF>> GetResultAsync<PSF>(PSF psfInfo) where PSF : IPSFBase
+        public virtual async Task<PagedList<TEntity, PSF>> GetResultAsync<PSF>(PSF psf) where PSF : IPSFBase
         {
             IQueryable<TEntity> filteredQuery = _db.Set<TEntity>();
-            var opRes = await GetResultAsync(psfInfo, filteredQuery);
+            var opRes = await GetResultAsync(psf, filteredQuery);
             return opRes;
         }
 
@@ -102,25 +102,25 @@ namespace Adverthouse.Common.Data
         {
             return await _db.Set<TEntity>().Where(whereExp).Select(selectExp).Distinct().Where(x => x != null).Cast<int>().ToListAsync();
         }
-        public List<int> SelectIDs<PSF>(PSF psfInfo, Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, int?>> selectExp) where PSF : IPSFBase
+        public List<int> SelectIDs<PSF>(PSF psf, Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, int?>> selectExp) where PSF : IPSFBase
         {
             var result = _db.Set<TEntity>().AsQueryable();
 
             if (whereExp != null) result = result.Where(whereExp);
 
-            return result.OrderBy(psfInfo.SortExpression)
-                             .Skip((psfInfo.CurrentPage - 1) * psfInfo.ItemPerPage)
-                             .Take(psfInfo.ItemPerPage).Select(selectExp).Distinct().Where(x => x != null).Cast<int>().ToList();
+            return result.OrderBy(psf.SortExpression)
+                             .Skip((psf.CurrentPage - 1) * psf.ItemPerPage)
+                             .Take(psf.ItemPerPage).Select(selectExp).Distinct().Where(x => x != null).Cast<int>().ToList();
         }
-        public async Task<List<int>> SelectIDsAsync<PSF>(PSF psfInfo, Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, int?>> selectExp) where PSF : IPSFBase
+        public async Task<List<int>> SelectIDsAsync<PSF>(PSF psf, Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, int?>> selectExp) where PSF : IPSFBase
         {
             var result = _db.Set<TEntity>().AsQueryable();
 
             if (whereExp != null) result = result.Where(whereExp);
 
-            return await result.OrderBy(psfInfo.SortExpression)
-                             .Skip((psfInfo.CurrentPage - 1) * psfInfo.ItemPerPage)
-                             .Take(psfInfo.ItemPerPage).Select(selectExp).Distinct().Where(x => x != null).Cast<int>().ToListAsync();
+            return await result.OrderBy(psf.SortExpression)
+                             .Skip((psf.CurrentPage - 1) * psf.ItemPerPage)
+                             .Take(psf.ItemPerPage).Select(selectExp).Distinct().Where(x => x != null).Cast<int>().ToListAsync();
         }
         public virtual int Add(TEntity entity)
         {
