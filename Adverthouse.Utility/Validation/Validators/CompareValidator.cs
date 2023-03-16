@@ -22,7 +22,7 @@ namespace Adverthouse.Utility.Validation.Validators
         public bool IsValid(object value) => false;
         public bool IsValid(object value, object CompareValue)
         {
-            return ((Convert.ToString(value) ?? "") == (Convert.ToString(CompareValue) ?? "") ? true : false);
+            return (value == CompareValue ? true : false);
         }
         public CompareValidator(string propertName, string comparePropertyName)
         {
