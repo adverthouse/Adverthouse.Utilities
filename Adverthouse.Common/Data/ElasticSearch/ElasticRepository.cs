@@ -77,6 +77,11 @@ namespace Adverthouse.Common.Data.ElasticSearch
             return _elasticClient.IndexDocument(document);
         }
 
+        public DeleteResponse DeleteDocument(string index, int id)
+        {
+            return _elasticClient.Delete<T>(id, bc =>  bc.Index(index));
+        }
+
         public DeleteIndexResponse DeleteIndex(string indexName)
         {
 
