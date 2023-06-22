@@ -5,6 +5,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Test.WebUI.Models;
 using Test.WebUI.Models.Services;
@@ -81,43 +82,21 @@ namespace Test.WebUI.Controllers
 
         private static string abc = "deneme";
 
-        private static DateTime lad = DateTime.Now;
-        TTLExtendableCacheObject<DateTime> saat(int i)
-        {
-            return new TTLExtendableCacheObject<DateTime>(lad, lad);
-        }
+        
+        private static RefreshableStaticData<List<int>> rrs;
 
-        [ResponseCache(CacheProfileName = "default")]
         public IActionResult Index()
         {
+            List<int> _get() => new List<int> { 1, 3, 4 };
 
-            var cacheKey = _cacheManager.PrepareKeyForDefaultCache(AdminDefaults.RoleByIDCacheKey, 1);
-            cacheKey.CacheTime = TimeSpan.FromHours(1);
 
-            var cacheRefreshKey = _cacheManager.PrepareKeyForDefaultCache(AdminDefaults.RefreshRoleByIDCacheKey, 1);
-            cacheRefreshKey.CacheTime = TimeSpan.FromSeconds(10);
-
-            DateTime LastUpdateDate() => lad;
-             
-            TTLExtendableCacheObject<DateTime> dt = _cacheManager.GetOrCreate(cacheKey, () => saat(1), cacheRefreshKey,LastUpdateDate);
-
-            ConcurrentDictionary<int, string> tete = new ConcurrentDictionary<int, string>();
-
-            tete.AddOrUpdate(1, "one", (int key, string value) =>
-              {
-                  return key.ToString();
-              });
-
-            ViewBag.dt = abc;         
-         
-            return View();
+            if (rrs == null)
+            {
+               rrs = new RefreshableStaticData<List<int>>(TimeSpan.FromSeconds(20), _get, () => DateTime.Now , false);
+            }
+            return View(rrs.GetFreshData());
         }
-
-        private Func<TTLExtendableCacheObject<DateTime>> Func<T>(Func<object, TTLExtendableCacheObject<DateTime>> p)
-        {
-            throw new NotImplementedException();
-        }
-
+ 
         public IActionResult Privacy()
         {
             return View();

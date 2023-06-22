@@ -18,7 +18,7 @@
     "Test.WebUI": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "shutter",
+      "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
