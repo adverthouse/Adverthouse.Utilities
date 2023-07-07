@@ -2,12 +2,11 @@
 
 namespace Adverthouse.Common.Data.RocksDB
 {
-    public class RocksDBResponse
+    public class RocksDBResponse<T>
     {
         public int StatusCode { get; set; }
-        public string StatusMessage { get; set; }
-        public bool IsFromCache { get; set; } = false;
-        public string Data { get; set; }
+        public string StatusMessage { get; set; }        
+        public T Data { get; set; }
 
         public RocksDBResponse()
         {

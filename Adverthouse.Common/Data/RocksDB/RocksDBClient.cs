@@ -3,193 +3,131 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Adverthouse.Common.Data.RocksDB
 {
     public class RocksDBClient
-    {  private static HttpClient client = new HttpClient(new HttpClientHandler()
+    {  
+        private static HttpClient client = new HttpClient(new HttpClientHandler()
         {            
             Proxy = null,
             UseProxy = false,
             MaxConnectionsPerServer = int.MaxValue,
             AllowAutoRedirect = false,
             UseCookies = false
-        });         
-
-        private static JsonSerializer serializer = new JsonSerializer(); 
+        });          
+       
         private static string _tcpHostAddress = "";
-        private static int  _minPoolSize = 20;
-        private static int  _maxPoolSize = 500;
-        private static int  _socketRecycleAgeAsMinute = 15;
-        private static int  _port = 38670;
 
-        public RocksDBClient(string tcpHostAdress = "127.0.0.1", int port = 38670, int minPoolSize = 20, int maxPoolSize = 5000, int socketRecycleAgeAsMinute = 15)
+        public RocksDBClient(string tcpHostAdress = "127.0.0.1")
         {
             _tcpHostAddress = tcpHostAdress;
-            _minPoolSize = minPoolSize;
-            _maxPoolSize = maxPoolSize;
-            _socketRecycleAgeAsMinute = socketRecycleAgeAsMinute;
-            _port = port;
 
             if (client.BaseAddress == null)
             {
-                client.BaseAddress = new Uri("http://" + tcpHostAdress + ":3800/");
+                client.BaseAddress = new Uri("http://" + _tcpHostAddress + ":3800/");
                 client.DefaultRequestHeaders.Accept.Clear();
             } 
         }
-
-        public static T GetDataOverTCP<T>(string dbName, string key)
-        {  
-             if (!TcpConnectionPool.Initialized) 
-                 TcpConnectionPool.InitializeConnectionPool(_tcpHostAddress, _port, _minPoolSize, _maxPoolSize, _socketRecycleAgeAsMinute);
-
-            var CustomSocket = TcpConnectionPool.GetSocket();
-            
-            try
+        private static async Task<byte[]> SerializeAndCompressAsync<T>(T obj, CancellationToken cancel = default(CancellationToken))
+        {
+            using (var outputStream = new MemoryStream())
             {
-                byte[] sendData = Encoding.ASCII.GetBytes($"get {dbName} {key}");
-                string response;
-                using (NetworkStream stream = CustomSocket.GetStream())
+                using (var compressionStream = new GZipStream(outputStream, CompressionMode.Compress, true))
                 {
-                    stream.Write(sendData, 0, sendData.Length);
- 
-                    using(MemoryStream buffer = new MemoryStream())
+                    var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(obj));
+
+                    await compressionStream.WriteAsync(bytes, 0, bytes.Length, cancel);
+                }
+                return outputStream.ToArray();
+            }
+        }
+
+        private static async Task<T> DecompressAndDeserializeAsync<T>(byte[] bytes, CancellationToken cancel = default(CancellationToken))
+        {
+            using (var inputStream = new MemoryStream(bytes))
+            {
+                using (var outputStream = new MemoryStream())
+                {
+                    using (var compressionStream = new GZipStream(inputStream, CompressionMode.Decompress))
                     {
-                        int b; 
-                        while ((b = stream.ReadByte()) != -1)
-                        {
-                            buffer.WriteByte((byte)b);
-                        } 
-                        response = Encoding.UTF8.GetString(buffer.GetBuffer());
+                        await compressionStream.CopyToAsync(outputStream, cancel);
+                        var bytesOut = outputStream.ToArray();
+
+                        return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(bytesOut));
                     }
                 }
-                return JsonConvert.DeserializeObject<T>(response);
-            }
-            finally
-            {
-                TcpConnectionPool.PutSocket(CustomSocket);
             }
         }
-        public static async Task<T> GetDataOverTCPAsync<T>(string dbName, string key)
-        {  
-             if (!TcpConnectionPool.Initialized) 
-                 TcpConnectionPool.InitializeConnectionPool(_tcpHostAddress, _port, _minPoolSize, _maxPoolSize, _socketRecycleAgeAsMinute);
 
-            var CustomSocket = TcpConnectionPool.GetSocket();
-
-            try
-            {
-                byte[] sendData = Encoding.ASCII.GetBytes($"get {dbName} {key}");
-                string response;
-                using (NetworkStream stream = CustomSocket.GetStream())
-                {
-                    await stream.WriteAsync(sendData, 0, sendData.Length);
- 
-                    using(MemoryStream buffer = new MemoryStream())
-                    {
-                        int b; 
-                        while ((b = stream.ReadByte()) != -1)
-                        {
-                            buffer.WriteByte((byte)b);
-                        } 
-                        response = Encoding.UTF8.GetString(buffer.GetBuffer());
-                    }
-                }
-                return JsonConvert.DeserializeObject<T>(response);
-            }
-            finally
-            {
-                TcpConnectionPool.PutSocket(CustomSocket);
-            } 
-        }
-
-        public static async Task<RocksDBResponse> GetAsync(string key)
+        public static async Task<RocksDBResponse<string>> AddAsync(string dbName, string key, string value)
         {
-            RocksDBResponse value = new RocksDBResponse();
-            HttpResponseMessage response = await client.GetAsync($"api/get/{key}");
-            if (response.IsSuccessStatusCode)
-            {
-                value = await response.Content.ReadAsAsync<RocksDBResponse>() ?? new RocksDBResponse();
-            }
-            return value;
-        }
-        public static async Task<RocksDBResponse> GetAsync(string dbName, string key)
-        {
-            RocksDBResponse value = new RocksDBResponse();
-            HttpResponseMessage response = await client.GetAsync($"api/get/{dbName}/{key}");
-            if (response.IsSuccessStatusCode)
-            {
-                value = await response.Content.ReadAsAsync<RocksDBResponse>() ?? new RocksDBResponse();
-            }
-            return value;
-        }
-    
-        public static async Task<string> GetStringAsync(string dbName, string key)
-        {            
-            string value = "";
-            HttpResponseMessage response = await client.GetAsync($"api/GetAsString/{dbName}/{key}");
-            if (response.IsSuccessStatusCode)
-            {
-                value = await response.Content.ReadAsStringAsync();
-            }
-            return value;
-        }
-
-        public static async Task<T> GetStringAsObjectAsync<T>(string dbName, string key)
-        {            
-            using (Stream s = await client.GetStreamAsync($"api/GetAsString/{dbName}/{key}"))
-            using (StreamReader sr = new StreamReader(s))
-            using (JsonReader reader = new JsonTextReader(sr))
-            {
-                return serializer.Deserialize<T>(reader);
-            }
-        }
-        public static async Task<T> GetAsByteAsync<T>(string dbName, string key) where T : class
-        {
-            var response = await client.GetStringAsync($"api/GetAsByte/{dbName}/{key}");
-
-            return JsonConvert.DeserializeObject<T>(response);
-        }
-
-        public static async Task<RocksDBResponse> AddAsync(string dbName, string key, string value)
-        {
-
             HttpResponseMessage response = await client.PutAsJsonAsync(
                 $"api/Add/{dbName}", new KeyValuePair<string, string>(key, value));
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadAsAsync<RocksDBResponse>();
+            return await response.Content.ReadAsAsync<RocksDBResponse<string>>();
         }
 
-        public static async Task<RocksDBResponse> AddAsByteAsync<T>(string dbName, string key, T value)
+        public static async Task<RocksDBResponse<string>> GetAsync(string dbName, string key)
         {
-            HttpResponseMessage response = await client.PutAsJsonAsync(
-                $"api/AddAsByte/{dbName}", new KeyValuePair<string, byte[]>(key, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value))));
+            var value = new RocksDBResponse<string>();
+            HttpResponseMessage response = await client.GetAsync($"api/get/{dbName}/{key}");
+            if (response.IsSuccessStatusCode)
+            {
+                value = await response.Content.ReadAsAsync<RocksDBResponse<string>>() ?? new RocksDBResponse<string>();
+            }
+            return value;
+        }
+
+        public static async Task<RocksDBResponse<string>> AddAsByteAsync<T>(string dbName, string key, T value)
+        {
+            var data = await SerializeAndCompressAsync<T>(value);
+
+            HttpResponseMessage response = await client.PutAsJsonAsync("api/AddAsByte/" + dbName,
+                    new KeyValuePair<string, byte[]>(key, data));
+
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadAsAsync<RocksDBResponse>();
+            return await response.Content.ReadAsAsync<RocksDBResponse<string>>();
         }
 
-        public static async Task<RocksDBResponse> DeleteAsync(string key)
+        public static async Task<RocksDBResponse<T>> GetFromByteAsAsync<T>(string dbName, string key) where T : class
+        {
+           var value = new RocksDBResponse<T>();
+            HttpResponseMessage response = await client.GetAsync($"api/GetAsByte/{dbName}/{key}");
+            if (response.IsSuccessStatusCode)
+            {
+                RocksDBResponse<byte[]> tempValue = await response.Content.ReadAsAsync<RocksDBResponse<byte[]>>() ?? new RocksDBResponse<byte[]>();
+
+                value.Data = await DecompressAndDeserializeAsync<T>(tempValue.Data);
+                
+            }
+            return value;
+        }
+
+        public static async Task<RocksDBResponse<string>> DeleteAsync(string key)
         {
 
             HttpResponseMessage response = await client.DeleteAsync($"api/delete/{key}");
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadAsAsync<RocksDBResponse>();
+            return await response.Content.ReadAsAsync<RocksDBResponse<string>>();
         }
 
-        public static async Task<RocksDBResponse> DeleteAsync(string dbName, string key)
+        public static async Task<RocksDBResponse<string>> DeleteAsync(string dbName, string key)
         {
 
             HttpResponseMessage response = await client.DeleteAsync($"api/delete/{dbName}/{key}");
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadAsAsync<RocksDBResponse>();
+            return await response.Content.ReadAsAsync<RocksDBResponse<string>>();
         }
     }
 }
