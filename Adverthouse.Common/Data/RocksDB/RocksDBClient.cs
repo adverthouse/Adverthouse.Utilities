@@ -1,4 +1,5 @@
 ﻿using Adverthouse.Core.TcpPooling;
+using Elasticsearch.Net;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -86,9 +87,11 @@ namespace Adverthouse.Common.Data.RocksDB
             return value;
         }
 
-        public static async Task<RocksDBResponse<string>> AddAsByteAsync<T>(string dbName, string key, T value)
+        public static async Task<RocksDBResponse<string>> AddAsByteAsync<T>(string dbName, string key, T value, bool compress = true)
         {
-            var data = await SerializeAndCompressAsync<T>(value);
+            byte[] data =  compress ? 
+                  await SerializeAndCompressAsync<T>(value)
+                :  Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(value));
 
             HttpResponseMessage response = await client.PutAsJsonAsync("api/AddAsByte/" + dbName,
                     new KeyValuePair<string, byte[]>(key, data));
@@ -98,16 +101,17 @@ namespace Adverthouse.Common.Data.RocksDB
             return await response.Content.ReadAsAsync<RocksDBResponse<string>>();
         }
 
-        public static async Task<RocksDBResponse<T>> GetFromByteAsAsync<T>(string dbName, string key) where T : class
+        public static async Task<RocksDBResponse<T>> GetFromByteAsAsync<T>(string dbName, string key, bool isCompressed = true) where T : class
         {
-           var value = new RocksDBResponse<T>();
+            var value = new RocksDBResponse<T>();
             HttpResponseMessage response = await client.GetAsync($"api/GetFromByteAs/{dbName}/{key}");
             if (response.IsSuccessStatusCode)
             {
                 RocksDBResponse<byte[]> tempValue = await response.Content.ReadAsAsync<RocksDBResponse<byte[]>>() ?? new RocksDBResponse<byte[]>();
 
-                value.Data = await DecompressAndDeserializeAsync<T>(tempValue.Data);
-                
+                value.Data = isCompressed ?  
+                       await DecompressAndDeserializeAsync<T>(tempValue.Data) :
+                          JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(tempValue.Data));                
             }
             return value;
         }
