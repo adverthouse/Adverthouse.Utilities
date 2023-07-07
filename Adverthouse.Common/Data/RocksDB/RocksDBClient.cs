@@ -101,7 +101,7 @@ namespace Adverthouse.Common.Data.RocksDB
         public static async Task<RocksDBResponse<T>> GetFromByteAsAsync<T>(string dbName, string key) where T : class
         {
            var value = new RocksDBResponse<T>();
-            HttpResponseMessage response = await client.GetAsync($"api/GetAsByte/{dbName}/{key}");
+            HttpResponseMessage response = await client.GetAsync($"api/GetFromByteAs/{dbName}/{key}");
             if (response.IsSuccessStatusCode)
             {
                 RocksDBResponse<byte[]> tempValue = await response.Content.ReadAsAsync<RocksDBResponse<byte[]>>() ?? new RocksDBResponse<byte[]>();
