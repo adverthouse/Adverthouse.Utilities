@@ -3,10 +3,16 @@ using Adverthouse.Common.NoSQL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Test.WebUI.Models;
 using Test.WebUI.Models.Services;
 using Test.WebUI.Validators;
@@ -38,6 +44,7 @@ namespace Test.WebUI.Controllers
         }
 
         public IActionResult Fill() {
+ 
             /*
                  _categoryService.Create(new Category()
                  {
@@ -78,6 +85,37 @@ namespace Test.WebUI.Controllers
 
             return Ok("");
         }
+       private static async Task<byte[]> SerializeAndCompressAsync<T>(T obj, CancellationToken cancel = default(CancellationToken))
+        {
+            using (var outputStream = new MemoryStream())
+            {
+                using (var compressionStream = new GZipStream(outputStream, CompressionMode.Compress, true))
+                {
+                    var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(obj));
+
+                    await compressionStream.WriteAsync(bytes, 0, bytes.Length, cancel);
+                }
+                return outputStream.ToArray();
+            }
+        }
+
+        private static async Task<T> DecompressAndDeserializeAsync<T>(byte[] bytes, CancellationToken cancel = default(CancellationToken))
+        {
+            using (var inputStream = new MemoryStream(bytes))
+            {
+                using (var outputStream = new MemoryStream())
+                {
+                    using (var compressionStream = new GZipStream(inputStream, CompressionMode.Decompress))
+                    {
+                        await compressionStream.CopyToAsync(outputStream, cancel);
+                        var bytesOut = outputStream.ToArray();
+
+                        return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(bytesOut));
+                    }
+                }
+            }
+        }
+        
         private static long _lockFlag = DateTime.Now.Ticks; // 0 - free
 
         private static string abc = "deneme";

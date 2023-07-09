@@ -1,4 +1,5 @@
-﻿using Adverthouse.Core.TcpPooling;
+﻿using System.Data.SqlTypes;
+using Adverthouse.Core.TcpPooling;
 using Elasticsearch.Net;
 using Newtonsoft.Json;
 using System;
@@ -107,9 +108,12 @@ namespace Adverthouse.Common.Data.RocksDB
             HttpResponseMessage response = await client.GetAsync($"api/GetFromByteAs/{dbName}/{key}");
             if (response.IsSuccessStatusCode)
             {
-                RocksDBResponse<byte[]> tempValue = await response.Content.ReadAsAsync<RocksDBResponse<byte[]>>() ?? new RocksDBResponse<byte[]>();
+                RocksDBResponse<byte[]> tempValue = await response.Content.ReadAsAsync<RocksDBResponse<byte[]>>();
 
-                value.Data = isCompressed ?  
+                if (tempValue.Data == null)
+                    value.Data = default(T);    
+                else 
+                    value.Data = isCompressed ?  
                        await DecompressAndDeserializeAsync<T>(tempValue.Data) :
                           JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(tempValue.Data));                
             }
