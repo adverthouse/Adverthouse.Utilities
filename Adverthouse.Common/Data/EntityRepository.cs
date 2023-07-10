@@ -110,7 +110,7 @@ namespace Adverthouse.Common.Data
 
             return result.OrderBy(psf.SortExpression)
                              .Skip((psf.CurrentPage - 1) * psf.ItemPerPage)
-                             .Take(psf.ItemPerPage).Select(selectExp).Distinct().Where(x => x != null).Cast<int>().ToList();
+                             .Take(psf.ItemPerPage).AsNoTracking().Select(selectExp).Distinct().Where(x => x != null).Cast<int>().ToList();
         }
         public async Task<List<int>> SelectIDsAsync<PSF>(PSF psf, Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, int?>> selectExp) where PSF : IPSFBase
         {
@@ -120,7 +120,7 @@ namespace Adverthouse.Common.Data
 
             return await result.OrderBy(psf.SortExpression)
                              .Skip((psf.CurrentPage - 1) * psf.ItemPerPage)
-                             .Take(psf.ItemPerPage).Select(selectExp).Distinct().Where(x => x != null).Cast<int>().ToListAsync();
+                             .Take(psf.ItemPerPage).AsNoTracking().Select(selectExp).Distinct().Where(x => x != null).Cast<int>().ToListAsync();
         }
         public virtual int Add(TEntity entity)
         {
