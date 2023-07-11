@@ -38,5 +38,8 @@ namespace Adverthouse.Common.Interfaces
         Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate);
         Task<int> CountAsync();
         Task<int> DeleteAsync(Expression<Func<TEntity, bool>> criteria);
+        Task<List<int>> SelectIDsAsync(Expression<Func<TEntity, int?>> selectExp);
+        Task<List<int>> SelectIDsAsync(Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, int?>> selectExp);
+        Task<List<int>> SelectIDsAsync<PSF>(PSF psf, Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, int?>> selectExp) where PSF : IPSFBase;
     }
     }
