@@ -13,8 +13,7 @@ namespace Adverthouse.Core.Security
             byte[] array;
 
             using (Aes aes = Aes.Create())
-            {
-                aes.Padding = PaddingMode.Zeros;
+            { 
                 aes.Key = Encoding.UTF8.GetBytes(key);
                 aes.IV = iv;
 
@@ -41,22 +40,27 @@ namespace Adverthouse.Core.Security
             byte[] buffer = Convert.FromBase64String(cipherText);
 
             using (Aes aes = Aes.Create())
-            {
-                aes.Padding = PaddingMode.Zeros;
+            { 
                 aes.Key = Encoding.UTF8.GetBytes(key);
                 aes.IV = iv;
                 ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
 
+                string temp = "";
                 using (MemoryStream memoryStream = new MemoryStream(buffer))
                 {
                     using (CryptoStream cryptoStream = new CryptoStream((Stream)memoryStream, decryptor, CryptoStreamMode.Read))
                     {
                         using (StreamReader streamReader = new StreamReader((Stream)cryptoStream))
-                        {
-                            return streamReader.ReadToEnd();
+                        { 
+                            while (streamReader.Peek() >= 0)
+                            {
+                               temp += streamReader.ReadLine();
+                            }
                         }
                     }
                 }
+
+                return temp;
             }
         }
     }

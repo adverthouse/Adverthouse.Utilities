@@ -1,5 +1,6 @@
 ﻿using Adverthouse.Common.Data.Caching;
 using Adverthouse.Common.NoSQL;
+using Adverthouse.Core.Security;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -125,6 +126,12 @@ namespace Test.WebUI.Controllers
 
         public IActionResult Index()
         {
+            string key = "a18da5868a4e4123bbc22ea2355a1012";
+
+            var result = SecurityUtility.Encrypt(key,"Merhaba yunus");
+            var temop = SecurityUtility.Decrypt(key, result);
+
+
             List<int> _get() => new List<int> { 1, 3, 4 };
 
 
