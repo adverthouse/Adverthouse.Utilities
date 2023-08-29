@@ -14,6 +14,7 @@ namespace Adverthouse.Core.Security
 
             using (Aes aes = Aes.Create())
             {
+                aes.Padding = PaddingMode.Zeros;
                 aes.Key = Encoding.UTF8.GetBytes(key);
                 aes.IV = iv;
 
@@ -41,6 +42,7 @@ namespace Adverthouse.Core.Security
 
             using (Aes aes = Aes.Create())
             {
+                aes.Padding = PaddingMode.Zeros;
                 aes.Key = Encoding.UTF8.GetBytes(key);
                 aes.IV = iv;
                 ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
