@@ -40,7 +40,10 @@ namespace Adverthouse.Core.Authorize
 
         public static bool IsAllowed(this IPrincipal user, string section)
         {
-            var perm = from per in permissionsByRoleId.GetValueOrDefault(user.RoleId())
+            var permissions =  permissionsByRoleId.GetValueOrDefault(user.RoleId());
+            if (permissions == null) return false;
+
+            var perm = from per in permissions
                        where per.TypeOfPermission == PermissionType.BaseAccess && per.Section == section
                        select per;
             var isAllowed = false;
@@ -53,10 +56,14 @@ namespace Adverthouse.Core.Authorize
 
         public static bool IsAllowed(this IPrincipal user, string section, PermissionType permissionType)
         {
-            var perm = from per in permissionsByRoleId.GetValueOrDefault(user.RoleId())
+            var permissions =  permissionsByRoleId.GetValueOrDefault(user.RoleId());
+            if (permissions == null) return false;
+
+            var perm = from per in permissions
                        where per.TypeOfPermission == permissionType && per.Section == section
                        select per;
             var isAllowed = false;
+
             if (perm.Count<PermissionHelper>() > 0)
             {
                 isAllowed = true;
