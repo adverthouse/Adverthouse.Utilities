@@ -33,9 +33,9 @@ namespace Adverthouse.Utility
             return new string(buffer, i, buffer.Length - i);
         }
 
-        public static long Base36ToLong(string number)
-        {
-            char[] chrs = number.ToCharArray();
+        public static long Base36ToLong(string number, bool trimZeros = true)
+        { 
+            char[] chrs = number.TrimStart('0').ToCharArray();
             int m = chrs.Length - 1;
             int n = BaseChars.Length, x;
             long result = 0;
