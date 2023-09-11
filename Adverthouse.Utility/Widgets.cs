@@ -84,7 +84,7 @@ namespace Adverthouse.Utility
 
             return content;
         }
-        public static IHtmlContent WidgetCheckBox(this IHtmlHelper htmlHelper, int ID)
+        public static IHtmlContent WidgetCheckBox<TVal>(this IHtmlHelper htmlHelper, TVal ID)
         {
             return WidgetCheckBox(htmlHelper, ID.ToString());
         }
