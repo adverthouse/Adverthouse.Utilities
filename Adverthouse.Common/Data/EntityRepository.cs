@@ -85,24 +85,24 @@ namespace Adverthouse.Common.Data
             return await filteredQuery.ToListAsync();
         }
 
-        public List<int> SelectIDs(Expression<Func<TEntity, int?>> selectExp)
+        public List<TVar> SelectIDs<TVar>(Expression<Func<TEntity, TVar>> selectExp)
         {
-            return _db.Set<TEntity>().Select(selectExp).Distinct().Where(x => x != null).Cast<int>().ToList();
+            return _db.Set<TEntity>().Select(selectExp).Distinct().Where(x => x != null).Cast<TVar>().ToList();
         }
 
-        public async Task<List<int>> SelectIDsAsync(Expression<Func<TEntity, int?>> selectExp)
+        public async Task<List<TVar>> SelectIDsAsync<TVar>(Expression<Func<TEntity, TVar>> selectExp)
         {
-            return await _db.Set<TEntity>().Select(selectExp).Distinct().Where(x => x != null).Cast<int>().ToListAsync();
+            return await _db.Set<TEntity>().Select(selectExp).Distinct().Where(x => x != null).Cast<TVar>().ToListAsync();
         }
-        public List<int> SelectIDs(Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, int?>> selectExp)
+        public List<TVar> SelectIDs<TVar>(Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, TVar>> selectExp)
         {
-            return _db.Set<TEntity>().Where(whereExp).Select(selectExp).Distinct().Where(x => x != null).Cast<int>().ToList();
+            return _db.Set<TEntity>().Where(whereExp).Select(selectExp).Distinct().Where(x => x != null).Cast<TVar>().ToList();
         }
-        public async Task<List<int>> SelectIDsAsync(Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, int?>> selectExp)
+        public async Task<List<TVar>> SelectIDsAsync<TVar>(Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, TVar>> selectExp)
         {
-            return await _db.Set<TEntity>().Where(whereExp).Select(selectExp).Distinct().Where(x => x != null).Cast<int>().ToListAsync();
+            return await _db.Set<TEntity>().Where(whereExp).Select(selectExp).Distinct().Where(x => x != null).Cast<TVar>().ToListAsync();
         }
-        public List<int> SelectIDs<PSF>(PSF psf, Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, int?>> selectExp) where PSF : IPSFBase
+        public List<TVar> SelectIDs<PSF, TVar>(PSF psf, Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, TVar>> selectExp) where PSF : IPSFBase
         {
             var result = _db.Set<TEntity>().AsQueryable();
 
@@ -110,9 +110,10 @@ namespace Adverthouse.Common.Data
 
             return result.OrderBy(psf.SortExpression)
                              .Skip((psf.CurrentPage - 1) * psf.ItemPerPage)
-                             .Take(psf.ItemPerPage).AsNoTracking().Select(selectExp).Distinct().Where(x => x != null).Cast<int>().ToList();
+                             .Take(psf.ItemPerPage).AsNoTracking().Select(selectExp).Distinct().Where(x => x != null).Cast<TVar>().ToList();
         }
-        public async Task<List<int>> SelectIDsAsync<PSF>(PSF psf, Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, int?>> selectExp) where PSF : IPSFBase
+
+        public async Task<List<TVar>> SelectIDsAsync<PSF, TVar>(PSF psf, Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, TVar>> selectExp) where PSF : IPSFBase
         {
             var result = _db.Set<TEntity>().AsQueryable();
 
@@ -120,7 +121,7 @@ namespace Adverthouse.Common.Data
 
             return await result.OrderBy(psf.SortExpression)
                              .Skip((psf.CurrentPage - 1) * psf.ItemPerPage)
-                             .Take(psf.ItemPerPage).AsNoTracking().Select(selectExp).Distinct().Where(x => x != null).Cast<int>().ToListAsync();
+                             .Take(psf.ItemPerPage).AsNoTracking().Select(selectExp).Distinct().Where(x => x != null).Cast<TVar>().ToListAsync();
         }
         public virtual int Add(TEntity entity)
         {
