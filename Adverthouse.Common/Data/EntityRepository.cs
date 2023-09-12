@@ -16,7 +16,7 @@ namespace Adverthouse.Common.Data
 
         public EntityRepository(DbContext db)  => _db = db; 
 
-        public IQueryable<TEntity> GetResult() => _db.Set<TEntity>();
+        public IQueryable<TEntity> Queryable => _db.Set<TEntity>();
         
         public virtual PagedList<TEntity, PSF> GetResult<PSF>(PSF psf, IQueryable<TEntity> preQuery) where PSF : IPSFBase 
         {

@@ -1,8 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>7.0.11</Version>
+		<Version>7.0.12</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>MongoDB,ElasticSearch,Redis,SQL Server</PackageTags>
 		<RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
