@@ -197,7 +197,8 @@ namespace Adverthouse.Common.Data
         {
             _db.ChangeTracker.LazyLoadingEnabled = enableLazyLoad;
             return await _db.Set<TEntity>().Include(include).Where(predicate).FirstOrDefaultAsync();
-        }
+        } 
+
         public int Count(Expression<Func<TEntity, bool>> predicate)
         {
             return _db.Set<TEntity>().Where(predicate).Count();
@@ -216,15 +217,11 @@ namespace Adverthouse.Common.Data
         }
         public int Delete(Expression<Func<TEntity, bool>> criteria)
         {
-            TEntity entity = FindBy(criteria);
-            _db.Entry(entity).State = EntityState.Deleted;
-            return _db.SaveChanges();
+            return _db.Set<TEntity>().Where(criteria).ExecuteDelete(); 
         }
         public async Task<int> DeleteAsync(Expression<Func<TEntity, bool>> criteria)
         {
-            TEntity entity = FindBy(criteria);
-            _db.Entry(entity).State = EntityState.Deleted;
-            return await _db.SaveChangesAsync();
+            return await _db.Set<TEntity>().Where(criteria).ExecuteDeleteAsync();  
         }
 
         public void Dispose()
