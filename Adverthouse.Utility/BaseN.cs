@@ -15,6 +15,10 @@ namespace Adverthouse.Utility
                    .Select((c, i) => new { Char = c, Index = i })
                    .ToDictionary(c => c.Char, c => c.Index);
 
+        public static string LongToBase36(long value,int leftZeroCount)
+                          => LongToBase36(value).PadLeft(leftZeroCount,'0');
+        
+
         public static string LongToBase36(long value)
         {
             long targetBase = BaseChars.Length;

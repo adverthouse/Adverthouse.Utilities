@@ -7,7 +7,7 @@ namespace Adverthouse.Common.Data
     {
         public int StatusCode { get; set; }
         public string StatusMessage { get; set; }
-        public int ID { get; set; }
+        public long ID { get; set; }
         public T Data { get; set; }
 
         public StatusInfo()
