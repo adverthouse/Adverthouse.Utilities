@@ -10,7 +10,7 @@ namespace Adverthouse.Utility
 {
     public static class Widgets
     {
-        public static IHtmlContent WidgetEnum(this IHtmlHelper htmlHelper,Enum genericEnum,string tag="span")
+        public static IHtmlContent WidgetEnum(this IHtmlHelper htmlHelper,Enum genericEnum, string id="",string tag="span")
         {
             var content = new HtmlContentBuilder();
             Type genericEnumType = genericEnum.GetType();
@@ -23,8 +23,13 @@ namespace Adverthouse.Utility
                     var attr = ((EnumAttribute)_Attribs.ElementAt(0));
                     if (string.IsNullOrWhiteSpace(tag))
                         content.AppendHtml(attr.Description);
-                    else 
-                        content.AppendHtml(String.Format($"<{tag} class=\"label label-{attr.ClassName}\">{attr.Description}</{tag}>"));
+                    else
+                        if (String.IsNullOrWhiteSpace(id))
+                        {
+                            content.AppendHtml(String.Format($"<{tag} class=\"label label-{attr.ClassName}\">{attr.Description}</{tag}>"));
+                        } else {
+                            content.AppendHtml(String.Format($"<{tag} id=\"{id}\" class=\"label label-{attr.ClassName}\">{attr.Description}</{tag}>"));
+                    }
                     return content;
                 }
             }
