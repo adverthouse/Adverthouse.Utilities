@@ -35,6 +35,21 @@ namespace Adverthouse.Utility
             }
             return content.AppendHtml(genericEnum.ToString());
         }
+        public static IHtmlContent WidgetBool(this IHtmlHelper htmlHelper, bool status,string activeText,string passiveText, string id = "", string tag = "span")
+        {
+            var content = new HtmlContentBuilder();
+                  
+            if (String.IsNullOrWhiteSpace(id))
+            {
+                content.AppendHtml(String.Format($"<{tag} class=\"label label-{(status ? "success" : "danger")}\">{(status ? activeText : passiveText)}</{tag}>"));
+            }
+            else
+            {
+                content.AppendHtml(String.Format($"<{tag} id=\"{id}\" class=\"label label-{(status ? "success" : "danger")}\">{(status ? activeText : passiveText)}</{tag}>"));
+            }
+   
+            return content;
+        }
         public static IHtmlContent WidgetTitle(this IHtmlHelper htmlHelper, string title)
         {
             var content = new HtmlContentBuilder()
