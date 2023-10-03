@@ -27,12 +27,12 @@ namespace Adverthouse.Common.Data
             {
                 opRes.PSF = psf;
                 if (psf.SetPageNumbers)
-                    psf.TotalItemCount = filteredQuery.Count();
+                    psf.TotalItemCount = filteredQuery.AsNoTracking().Count();
             }
 
             opRes.Data = filteredQuery.OrderBy(psf.SortExpression)
                              .Skip((psf.CurrentPage - 1) * psf.ItemPerPage)
-                             .Take(psf.ItemPerPage).ToList();
+                             .Take(psf.ItemPerPage).AsNoTracking().ToList();
 
             return opRes;
         }
@@ -46,12 +46,12 @@ namespace Adverthouse.Common.Data
             {
                 opRes.PSF = psf;
                 if (psf.SetPageNumbers) 
-                    psf.TotalItemCount = await filteredQuery.CountAsync();
+                    psf.TotalItemCount = await filteredQuery.AsNoTracking().CountAsync();
             }
 
             opRes.Data = await filteredQuery.OrderBy(psf.SortExpression)
                              .Skip((psf.CurrentPage - 1) * psf.ItemPerPage)
-                             .Take(psf.ItemPerPage).ToListAsync();
+                             .Take(psf.ItemPerPage).AsNoTracking().ToListAsync();
 
             return opRes;
         }
@@ -74,7 +74,7 @@ namespace Adverthouse.Common.Data
             IQueryable<TEntity> filteredQuery = _db.Set<TEntity>();
             if (predicate != null)
                 filteredQuery = filteredQuery.Where(predicate);
-            return filteredQuery.ToList();
+            return filteredQuery.AsNoTracking().ToList();
         }
 
         public async Task<List<TEntity>> GetResultAsync(Expression<Func<TEntity, bool>> predicate = null)
@@ -82,25 +82,25 @@ namespace Adverthouse.Common.Data
             IQueryable<TEntity> filteredQuery = _db.Set<TEntity>();
             if (predicate != null)
                 filteredQuery = filteredQuery.Where(predicate);
-            return await filteredQuery.ToListAsync();
+            return await filteredQuery.AsNoTracking().ToListAsync();
         }
 
         public List<TVar> SelectIDs<TVar>(Expression<Func<TEntity, TVar>> selectExp)
         {
-            return _db.Set<TEntity>().Select(selectExp).Distinct().Where(x => x != null).Cast<TVar>().ToList();
+            return _db.Set<TEntity>().AsNoTracking().Select(selectExp).Distinct().Where(x => x != null).Cast<TVar>().ToList();
         }
 
         public async Task<List<TVar>> SelectIDsAsync<TVar>(Expression<Func<TEntity, TVar>> selectExp)
         {
-            return await _db.Set<TEntity>().Select(selectExp).Distinct().Where(x => x != null).Cast<TVar>().ToListAsync();
+            return await _db.Set<TEntity>().AsNoTracking().Select(selectExp).Distinct().Where(x => x != null).Cast<TVar>().ToListAsync();
         }
         public List<TVar> SelectIDs<TVar>(Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, TVar>> selectExp)
         {
-            return _db.Set<TEntity>().Where(whereExp).Select(selectExp).Distinct().Where(x => x != null).Cast<TVar>().ToList();
+            return _db.Set<TEntity>().AsNoTracking().Where(whereExp).Select(selectExp).Distinct().Where(x => x != null).Cast<TVar>().ToList();
         }
         public async Task<List<TVar>> SelectIDsAsync<TVar>(Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, TVar>> selectExp)
         {
-            return await _db.Set<TEntity>().Where(whereExp).Select(selectExp).Distinct().Where(x => x != null).Cast<TVar>().ToListAsync();
+            return await _db.Set<TEntity>().AsNoTracking().Where(whereExp).Select(selectExp).Distinct().Where(x => x != null).Cast<TVar>().ToListAsync();
         }
         public List<TVar> SelectIDs<PSF, TVar>(PSF psf, Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, TVar>> selectExp) where PSF : IPSFBase
         {
