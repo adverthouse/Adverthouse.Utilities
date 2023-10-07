@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Http;
 
 namespace Adverthouse.Common.Data
 {
-    public class StatusInfo<T>
+    public class StatusInfo<TData,TId>
     {
         public int StatusCode { get; set; }
-        public string StatusMessage { get; set; }
-        public long ID { get; set; }
-        public T Data { get; set; }
+        public string StatusMessage { get; set; } = String.Empty;
+        public TId ID { get; set; }
+        public TData Data { get; set; }
 
         public StatusInfo()
         {
