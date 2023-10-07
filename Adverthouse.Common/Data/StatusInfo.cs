@@ -9,6 +9,8 @@ namespace Adverthouse.Common.Data
         public string StatusMessage { get; set; } = String.Empty;
         public TId ID { get; set; }
         public TData Data { get; set; }
+        public StatusInfo(){ }
+        
         public StatusInfo(int statusCode)
         {
             StatusCode = statusCode;
