@@ -11,9 +11,11 @@ namespace Adverthouse.Core.Configuration
     {
         public MongoDBConfig MongoDBConfig { get; set; } = new MongoDBConfig();
         public SMTPConfig SMTPConfig { get; set; } = new SMTPConfig();
+        public PayPalConfig PayPalConfig { get; set; } = new PayPalConfig();
         public reCAPTCHAConfig reCAPTCHAConfig { get; set; } = new reCAPTCHAConfig();
         public RedisConfig RedisConfig { get; set; } = new RedisConfig();
         public ElasticSearchConfig ElasticSearchConfig { get; set; } = new ElasticSearchConfig();
+
         
         [JsonExtensionData]
         public IDictionary<string, JToken> AdditionalSettings { get; set; }
