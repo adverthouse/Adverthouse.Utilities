@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -11,12 +11,12 @@
 		<None Remove="Data\EntityRepository.cs~RFfc05a1a.TMP" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Dapper" Version="2.1.4" />
-		<PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.11" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.11" />
+		<PackageReference Include="Dapper" Version="2.1.15" />
+		<PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.13" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.13" />
 		<PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
-		<PackageReference Include="MongoDB.Driver" Version="2.21.0" />
+		<PackageReference Include="MongoDB.Driver" Version="2.22.0" />
 		<PackageReference Include="NEST" Version="7.17.5" />
 		<PackageReference Include="StackExchange.Redis" Version="2.6.122" />
 		<PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
