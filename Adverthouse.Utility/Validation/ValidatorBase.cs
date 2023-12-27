@@ -107,13 +107,22 @@ namespace Adverthouse.Utility.Validation
                 temp += String.Format("<li><h3 class=\"text-danger\"><i class=\"fa fa-exclamation-triangle\"></i>{0}</h3></li>", title);
                 foreach (ValidationError el in ValidationErrors)
                 {
-                    temp += $"<li><strong>{el.ErrorField} : </strong> {el.ErrorMessage}</li>";
+                    temp += $"<li><strong>{(String.IsNullOrWhiteSpace(el.ErrorField) ? "*" : ":")}</strong> {el.ErrorMessage}</li>";
                 }
                 temp += "</ul>";
                 return new HtmlString(temp);
             }
             else
                 return new HtmlString(string.Empty);
+        }
+
+        public List<string> GetValidationErrorLines(){
+            List<string> items = new();
+            
+            foreach (ValidationError el in ValidationErrors)
+                items.Add(el.ErrorMessage);  
+
+            return items;
         }
     }
 }
