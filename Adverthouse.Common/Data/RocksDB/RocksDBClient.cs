@@ -1,5 +1,4 @@
-﻿using System.Data.SqlTypes;
-using Adverthouse.Core.TcpPooling;
+﻿using System.Data.SqlTypes; 
 using Elasticsearch.Net;
 using Newtonsoft.Json;
 using System;

@@ -1,7 +1,6 @@
 ﻿using Adverthouse.Core.Security;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -13,14 +12,20 @@ namespace Adverthouse.Core.Authorize
     {
         public const string emailSchema = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress";
         public static int CurrentVersion = 1;
-        private static ConcurrentDictionary<int, List<PermissionHelper>> permissionsByRoleId = new();
+        private static Dictionary<int, List<PermissionHelper>> permissionsByRoleId = new Dictionary<int, List<PermissionHelper>>();
 
-        public static void UpsertPermissionsByRoleId(int roleId,List<PermissionHelper> permissions){
-            permissionsByRoleId.AddOrUpdate(roleId,permissions,(key, oldValue) => permissions);
+        public static void UpsertPermissionsByRoleId(int roleID,List<PermissionHelper> permissions){
+            
         }
- 
-        public static int RoleId(this IPrincipal user) 
-                    => user.GetClaimByType<int>("RoleId"); 
+        private static List<PermissionHelper> Permissions(this IPrincipal user)
+        {
+            List<PermissionHelper> permissions =
+                JsonConvert.DeserializeObject<List<PermissionHelper>>(GetClaimByType(user,
+                "Permissions"));
+
+            return permissions;
+        }
+
         public static bool IsAuthLatestVersion(this IPrincipal user)
         {
             return CurrentVersion == user.GetClaimByType<int>("Version");
@@ -40,10 +45,7 @@ namespace Adverthouse.Core.Authorize
 
         public static bool IsAllowed(this IPrincipal user, string section)
         {
-            var permissions =  permissionsByRoleId.GetValueOrDefault(user.RoleId());
-            if (permissions == null) return false;
-
-            var perm = from per in permissions
+            var perm = from per in user.Permissions()
                        where per.TypeOfPermission == PermissionType.BaseAccess && per.Section == section
                        select per;
             var isAllowed = false;
@@ -56,14 +58,10 @@ namespace Adverthouse.Core.Authorize
 
         public static bool IsAllowed(this IPrincipal user, string section, PermissionType permissionType)
         {
-            var permissions =  permissionsByRoleId.GetValueOrDefault(user.RoleId());
-            if (permissions == null) return false;
-
-            var perm = from per in permissions
+            var perm = from per in user.Permissions()
                        where per.TypeOfPermission == permissionType && per.Section == section
                        select per;
             var isAllowed = false;
-
             if (perm.Count<PermissionHelper>() > 0)
             {
                 isAllowed = true;
