@@ -1,6 +1,7 @@
 ﻿using Adverthouse.Core.Security;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -12,12 +13,22 @@ namespace Adverthouse.Core.Authorize
     {
         public const string emailSchema = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress";
         public static int CurrentVersion = 1;
+        private static ConcurrentDictionary<int, List<PermissionHelper>> permissionsByRoleId = new();
+        public static int RoleId(this IPrincipal user)
+        {
+            return user.GetClaimByType<int>("RoleId");
+        }
+
         private static List<PermissionHelper> Permissions(this IPrincipal user)
         {
-            List<PermissionHelper> permissions =
-                JsonConvert.DeserializeObject<List<PermissionHelper>>(GetClaimByType(user,
-                "Permissions"));
-
+            int roleId = RoleId(user);
+            List<PermissionHelper> permissions = new();
+            bool isGet = permissionsByRoleId.TryGetValue(roleId,out permissions);
+            if (!isGet)
+            {
+               permissions = JsonConvert.DeserializeObject<List<PermissionHelper>>(GetClaimByType(user,"Permissions"));
+               permissionsByRoleId.TryAdd(roleId,permissions);
+            }            
             return permissions;
         }
 
