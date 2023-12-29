@@ -12,11 +12,6 @@ namespace Adverthouse.Core.Authorize
     {
         public const string emailSchema = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress";
         public static int CurrentVersion = 1;
-        private static Dictionary<int, List<PermissionHelper>> permissionsByRoleId = new Dictionary<int, List<PermissionHelper>>();
-
-        public static void UpsertPermissionsByRoleId(int roleID,List<PermissionHelper> permissions){
-            
-        }
         private static List<PermissionHelper> Permissions(this IPrincipal user)
         {
             List<PermissionHelper> permissions =
