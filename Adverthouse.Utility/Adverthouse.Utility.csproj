@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>Adverthouse.Utility</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Adverthouse</Authors>
@@ -11,7 +11,7 @@
     <NeutralLanguage>en</NeutralLanguage>
     <PackageIcon> </PackageIcon>
     <RepositoryUrl>https://github.com/adverthouse/Adverthouse.Utilities/tree/master/Adverthouse.Utility</RepositoryUrl>
-    <Version>7.0.10</Version>
+    <Version>7.0.11</Version>
   </PropertyGroup>
 
   <ItemGroup>

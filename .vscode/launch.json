@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/Test.WebUI/bin/Debug/net7.0/Test.WebUI.dll",
+            "program": "${workspaceFolder}/Test.WebUI/bin/Debug/net8.0/Test.WebUI.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Test.WebUI",
             "stopAtEntry": false,
