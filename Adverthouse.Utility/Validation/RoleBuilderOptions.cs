@@ -58,9 +58,9 @@ namespace Adverthouse.Utility.Validation
             return ruleBuilder;
         }
 
-        public static IRuleBuilder CompareValue(this IRuleBuilder ruleBuilder, IRuleBuilder ruleBuilder2, string errorMessage)
-        {       
-            ruleBuilder.AddRule(new CompareValidator(ruleBuilder.ValidationRule.PropertyName, ruleBuilder2.ValidationRule.PropertyName, errorMessage));
+        public static IRuleBuilder CompareValue(this IRuleBuilder ruleBuilder,string comparePropertyName,object compareValue, string errorMessage)
+        {        
+            ruleBuilder.AddRule(new CompareValidator(ruleBuilder.ValidationRule.PropertyName,comparePropertyName, compareValue, errorMessage));
             return ruleBuilder;
         }
         public static IRuleBuilder IsChecked(this IRuleBuilder ruleBuilder, string errorMessage)

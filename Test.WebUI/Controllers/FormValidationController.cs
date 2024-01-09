@@ -11,21 +11,20 @@ namespace Test.WebUI.Controllers
 
         public FormValidationController()
         {
-            _memberValidator = new MemberValidator("#EditForm");
+            
         }
 
         public IActionResult Index()
         {
-            _memberValidator.AdditionalMethods();
-            ViewBag.ValidationScript = _memberValidator.GetValidationScript();
+            //_memberValidator.AdditionalMethods("");
+  //          ViewBag.ValidationScript = _memberValidator.GetValidationScript();
             return View();
         }
 
         [HttpPost]
         public IActionResult Index(VMMember member)
         {
-
-            ViewBag.ValidationScript = _memberValidator.GetValidationScript();
+            _memberValidator = new MemberValidator("#EditForm",member.Password); 
             if (_memberValidator.IsValid(member))
             {
                 return RedirectToAction("Index");

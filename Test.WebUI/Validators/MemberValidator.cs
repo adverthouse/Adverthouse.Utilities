@@ -5,7 +5,7 @@ namespace Test.WebUI.Validators
 {
     public class MemberValidator : ValidatorBase<VMMember>
     {
-        public MemberValidator(string formID) : base(formID)
+        public MemberValidator(string formID,string password) : base(formID)
         {
             AddRule(a => a.FirstName).Required("First name required");
             AddRule(a => a.LastName).Required();
@@ -16,12 +16,9 @@ namespace Test.WebUI.Validators
                                     .MinMaxLength(4, null, "Min length is 4 letter.");
 
             AddRule(a => a.Age).Required().Integer("Age must be numeric");
-        }
 
-        public void AdditionalMethods()
-        {
             AddRule(a=>a.Password2)
-                .CompareValue(AddRule(a=>a.Password),"Password must be same with each other")
+                .CompareValue("Password",password,"Password must be same with each other")
                 .Required()
                 .MinMaxLength(4, null, "Min length is 4 letter.");
         }

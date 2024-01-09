@@ -12,6 +12,7 @@ namespace Adverthouse.Utility.Validation.Validators
                 return _errorMessage == null ? $"{ProperyName} required" : _errorMessage;
             }
         }
+        private object CompareValue { get;set;}
         public string ProperyName { get; }
         public string ComparePropertyName { get; }
 
@@ -19,20 +20,23 @@ namespace Adverthouse.Utility.Validation.Validators
 
         public string ScriptMessage => $" equalTo :\"{ErrorMessage.Replace("\"", "'")}\"";
 
-        public bool IsValid(object value) => false;
-        public bool IsValid(object value, object CompareValue)
+        public bool IsValid(object value) 
         {
-            return (value == CompareValue ? true : false);
-        }
+            if (value.ToString() == CompareValue.ToString())
+               return true;
+            else return false;
+        } 
+
         public CompareValidator(string propertName, string comparePropertyName)
         {
             ProperyName = propertName;
             ComparePropertyName = comparePropertyName;
         }
-        public CompareValidator(string propertName, string comparePropertyName, string errorMessage)
+        public CompareValidator(string propertName, string comparePropertyName,object compareValue, string errorMessage)
         {
             ProperyName = propertName;
-            ComparePropertyName = comparePropertyName;
+            ComparePropertyName = comparePropertyName; 
+            CompareValue = compareValue;
             _errorMessage = errorMessage;
         }
     }

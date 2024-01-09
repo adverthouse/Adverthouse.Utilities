@@ -19,6 +19,7 @@ namespace Adverthouse.Common.Data.Caching
             _redisConfig = appSettings.RedisConfig;
             var configurationOptions = new ConfigurationOptions
             {
+                SyncTimeout = 500000,
                 EndPoints = { $"{_redisConfig.RedisHost}:{_redisConfig.RedisPort}" },
                 Ssl = _redisConfig.Ssl,
                 AbortOnConnectFail = _redisConfig.AbortOnConnectFail,

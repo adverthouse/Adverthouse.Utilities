@@ -34,8 +34,6 @@ namespace Adverthouse.Utility.Validation
 
             return ruleBuilder;
         }
-
-
         public bool IsValid(T entity)
         {
             _isValid = true;
@@ -43,11 +41,12 @@ namespace Adverthouse.Utility.Validation
             foreach (RuleBuilder rule in ValidationRules)
             {
                 var prop = props.Where(a => a.Name == rule.ValidationRule.PropertyName).FirstOrDefault();
-                var value = prop.GetValue(entity);
+                var value = prop.GetValue(entity);                 
+
                 foreach (IPropertyValidator validator in rule
                     .ValidationRule.PropertyValidator)
                 {
-                    var isValid = validator.IsValid(value);
+                    var isValid =  validator.IsValid(value);
                     if (!isValid)
                     {
                         ValidationErrors.Add(new ValidationError(validator.ErrorMessage, rule.ValidationRule.PropertyName));
