@@ -11,8 +11,8 @@ namespace Adverthouse.Common.Interfaces
     {
         IQueryable<TEntity> Queryable { get; }
         List<TEntity> GetResult(Expression<Func<TEntity, bool>> predicate = null);
-        IPagedList<TEntity> GetResult<PSF>(PSF psfInfo, IQueryable<TEntity> preQuery) where PSF : IPSFBase;
-        IPagedList<TEntity> GetResult<PSF>(PSF psfInfo) where PSF : IPSFBase;            
+        PagedList<TEntity, PSF> GetResult<PSF>(PSF psfInfo, IQueryable<TEntity> preQuery) where PSF : IPSFBase;
+        PagedList<TEntity, PSF> GetResult<PSF>(PSF psfInfo) where PSF : IPSFBase;            
         List<TVar> SelectIDs<TVar>(Expression<Func<TEntity, TVar>> selectExp);
         List<TVar> SelectIDs<TVar>(Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, TVar>> selectExp);
         List<TVar> SelectIDs<PSF,TVar>(PSF psfInfo, Expression<Func<TEntity, bool>> whereExp, Expression<Func<TEntity, TVar>> selectExp) where PSF : IPSFBase;
@@ -26,8 +26,8 @@ namespace Adverthouse.Common.Interfaces
         int Count(Expression<Func<TEntity, bool>> predicate);
         int Count();
         int Delete(Expression<Func<TEntity, bool>> criteria);
-        Task<IPagedList<TEntity>> GetResultAsync<PSF>(PSF psfInfo, IQueryable<TEntity> preQuery) where PSF : IPSFBase;
-        Task<IPagedList<TEntity>> GetResultAsync<PSF>(PSF psfInfo) where PSF : IPSFBase;
+        Task<PagedList<TEntity, PSF>> GetResultAsync<PSF>(PSF psfInfo, IQueryable<TEntity> preQuery) where PSF : IPSFBase;
+        Task<PagedList<TEntity, PSF>> GetResultAsync<PSF>(PSF psfInfo) where PSF : IPSFBase;
         Task<List<TEntity>> GetResultAsync(Expression<Func<TEntity, bool>> predicate = null);
         Task<int> AddIfNotExistsAsync(Expression<Func<TEntity, bool>> predicate, TEntity entity); 
         Task<int> AddRangeAsync(IEnumerable<TEntity> entities);

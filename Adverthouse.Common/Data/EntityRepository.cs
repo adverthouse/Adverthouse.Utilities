@@ -18,13 +18,14 @@ namespace Adverthouse.Common.Data
 
         public IQueryable<TEntity> Queryable => _db.Set<TEntity>();
         
-        public virtual IPagedList<TEntity> GetResult<PSF>(PSF psf, IQueryable<TEntity> preQuery) where PSF : IPSFBase 
+        public virtual PagedList<TEntity, PSF> GetResult<PSF>(PSF psf, IQueryable<TEntity> preQuery) where PSF : IPSFBase 
         {
-            PagedList<TEntity> opRes = new();
+            PagedList<TEntity, PSF> opRes = new();
             IQueryable<TEntity> filteredQuery = preQuery;
 
             if (psf != null)
             {
+                opRes.PSF = psf;
                 if (psf.SetPageNumbers)
                     psf.TotalItemCount = filteredQuery.AsNoTracking().Count();
             }
@@ -36,13 +37,14 @@ namespace Adverthouse.Common.Data
             return opRes;
         }
 
-        public virtual async Task<IPagedList<TEntity>> GetResultAsync<PSF>(PSF psf, IQueryable<TEntity> preQuery) where PSF : IPSFBase
+        public virtual async Task<PagedList<TEntity, PSF>> GetResultAsync<PSF>(PSF psf, IQueryable<TEntity> preQuery) where PSF : IPSFBase
         {
-            PagedList<TEntity> opRes = new();
+            PagedList<TEntity, PSF> opRes = new();
             IQueryable<TEntity> filteredQuery = preQuery;
 
             if (psf != null)
             {
+                opRes.PSF = psf;
                 if (psf.SetPageNumbers) 
                     psf.TotalItemCount = await filteredQuery.AsNoTracking().CountAsync();
             }
@@ -54,13 +56,13 @@ namespace Adverthouse.Common.Data
             return opRes;
         }
 
-        public virtual IPagedList<TEntity> GetResult<PSF>(PSF psf) where PSF : IPSFBase
+        public virtual PagedList<TEntity, PSF> GetResult<PSF>(PSF psf) where PSF : IPSFBase
         {
             IQueryable<TEntity> filteredQuery = _db.Set<TEntity>();
             var opRes = GetResult(psf, filteredQuery);
             return opRes;
         }
-        public virtual async Task<IPagedList<TEntity>> GetResultAsync<PSF>(PSF psf) where PSF : IPSFBase
+        public virtual async Task<PagedList<TEntity, PSF>> GetResultAsync<PSF>(PSF psf) where PSF : IPSFBase
         {
             IQueryable<TEntity> filteredQuery = _db.Set<TEntity>();
             var opRes = await GetResultAsync(psf, filteredQuery);
@@ -226,6 +228,6 @@ namespace Adverthouse.Common.Data
         {
             if (_db != null)  _db.Dispose();  
             GC.SuppressFinalize(this);
-        } 
+        }
     }
 }
