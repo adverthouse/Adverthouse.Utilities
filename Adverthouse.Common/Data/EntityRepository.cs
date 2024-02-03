@@ -217,11 +217,15 @@ namespace Adverthouse.Common.Data
         }
         public int Delete(Expression<Func<TEntity, bool>> criteria)
         {
-            return _db.Set<TEntity>().Where(criteria).ExecuteDelete(); 
+            TEntity entity = FindBy(criteria);
+            _db.Entry(entity).State = EntityState.Deleted;
+            return _db.SaveChanges();
         }
         public async Task<int> DeleteAsync(Expression<Func<TEntity, bool>> criteria)
         {
-            return await _db.Set<TEntity>().Where(criteria).ExecuteDeleteAsync();  
+            TEntity entity = FindBy(criteria);
+            _db.Entry(entity).State = EntityState.Deleted;
+            return await _db.SaveChangesAsync();
         }
 
         public void Dispose()
