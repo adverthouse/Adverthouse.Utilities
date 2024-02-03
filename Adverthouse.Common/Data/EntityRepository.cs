@@ -218,12 +218,16 @@ namespace Adverthouse.Common.Data
         public int Delete(Expression<Func<TEntity, bool>> criteria)
         {
             TEntity entity = FindBy(criteria);
+            if (entity is null) return -1;
+            
             _db.Entry(entity).State = EntityState.Deleted;
             return _db.SaveChanges();
         }
         public async Task<int> DeleteAsync(Expression<Func<TEntity, bool>> criteria)
         {
             TEntity entity = FindBy(criteria);
+            if (entity is null) return -1;
+
             _db.Entry(entity).State = EntityState.Deleted;
             return await _db.SaveChangesAsync();
         }
