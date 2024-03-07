@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Adverthouse.Common.Data
 {
 
-    public class EntityRepository<TEntity> : IRepository<TEntity> where TEntity : class, IEntity
+    public class EntityRepository<TEntity> : IRepository<TEntity> where TEntity : class, IEntity 
     {
         protected readonly DbContext _db;
 
