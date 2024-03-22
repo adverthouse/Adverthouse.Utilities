@@ -11,6 +11,8 @@ namespace Adverthouse.Core.Notification
     {
         private readonly SMTPConfig _smtpConfig;
         public bool SendError { get; set; }
+        public string ErrorMessage { get; set; } = String.Empty;
+        public string ErrorStackTrace { get; set; } = String.Empty;
         public EmailSender(AppSettings appSettings)
         {
             _smtpConfig = appSettings.SMTPConfig;
@@ -99,6 +101,8 @@ namespace Adverthouse.Core.Notification
             catch (Exception ex)
             {
                 SendError = true;
+                ErrorMessage = ex.Message;
+                ErrorStackTrace = ex.InnerException.StackTrace;
             }
         }
 
