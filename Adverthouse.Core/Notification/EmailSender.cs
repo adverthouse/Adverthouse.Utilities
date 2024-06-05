@@ -105,7 +105,5 @@ namespace Adverthouse.Core.Notification
                 ErrorStackTrace = ex.InnerException.StackTrace;
             }
         }
-
-
     }
 } 

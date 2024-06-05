@@ -1,6 +1,7 @@
 ﻿
 using Adverthouse.Common.Interfaces;
 using Dapper;
+using Microsoft.Data.Sqlite;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -12,10 +13,15 @@ namespace Adverthouse.Common.Data
     {
         private string _connectionString = "";
         private int _defaultConnectionTimeOut;
-        public SqlConnection SqlConnection() => new SqlConnection(GetConnectionString());
+        private string _connectionType = "sql_server";
+        public IDbConnection SqlConnection() =>
+             _connectionType == "sql_server" ?  
+             new SqlConnection(GetConnectionString()) :
+             new SqliteConnection(GetConnectionString());
 
-        public DapperSql(string connectionString, int connectionTimeOut = 300)
+        public DapperSql(string connectionString, int connectionTimeOut = 300,bool isSqlServer = true)
         {
+            if (!isSqlServer) _connectionType = "sqlite";
             _connectionString = connectionString;
             _defaultConnectionTimeOut = connectionTimeOut;
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
@@ -14,7 +15,7 @@ namespace Adverthouse.Common.Interfaces
         int Execute(string sqlCommand, object param = null, int? commandTimeout = null);
         T ExecuteScalar<T>(string sqlCommand, int? commandTimeout);
         T ExecuteScalar<T>(string sqlCommand, object param = null, int? commandTimeout = null);
-        SqlConnection SqlConnection();
+        IDbConnection SqlConnection();
         Task<IEnumerable<T>> QueryAsync<T>(string sqlCommand, int? commandTimeout);
         Task<IEnumerable<T>> QueryAsync<T>(string sqlCommand, object param = null, int? commandTimeout = null);
         Task<int> ExecuteAsync(string sqlCommand, int? commandTimeout);
