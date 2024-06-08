@@ -51,9 +51,10 @@ namespace Adverthouse.Common.Data.Caching
             }
         }
 
-        public T GetFreshData()
+        public T GetFreshData(bool enforce = false)
         {
-            if (NextDateOfRefreshControl > DateTime.Now) return Data;
+            if (!enforce)
+                if (NextDateOfRefreshControl > DateTime.Now) return Data;
 
             if (Interlocked.CompareExchange(ref LockCount, 1, 0) == 0)
             {
