@@ -20,9 +20,9 @@ namespace Adverthouse.Common.Interfaces
         int AddIfNotExists(Expression<Func<TEntity, bool>> predicate, TEntity entity);
         int AddRange(IEnumerable<TEntity> entities);
         int Update(TEntity entity);
-        TEntity FindBy(Expression<Func<TEntity, bool>> predicate, bool enableLazyLoad = false);
-        TEntity FindBy(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEnumerable<IEntity>>> include, bool enableLazyLoad = false);
-        TEntity FindBy(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEntity>> include, bool enableLazyLoad = false);
+        TEntity FindBy(Expression<Func<TEntity, bool>> predicate, bool enableLazyLoad = false,bool noTracking = false);
+        TEntity FindBy(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEnumerable<IEntity>>> include, bool enableLazyLoad = false,bool noTracking = false);
+        TEntity FindBy(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEntity>> include, bool enableLazyLoad = false,bool noTracking = false);
         int Count(Expression<Func<TEntity, bool>> predicate);
         int Count();
         int Delete(Expression<Func<TEntity, bool>> criteria);
@@ -32,9 +32,9 @@ namespace Adverthouse.Common.Interfaces
         Task<int> AddIfNotExistsAsync(Expression<Func<TEntity, bool>> predicate, TEntity entity); 
         Task<int> AddRangeAsync(IEnumerable<TEntity> entities);
         Task<int> UpdateAsync(TEntity entity);
-        Task<TEntity> FindByAsync(Expression<Func<TEntity, bool>> predicate, bool enableLazyLoad = false);
-        Task<TEntity> FindByAsync(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEntity>> include, bool enableLazyLoad = false);
-        Task<TEntity> FindByAsync(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEnumerable<IEntity>>> include, bool enableLazyLoad = false);
+        Task<TEntity> FindByAsync(Expression<Func<TEntity, bool>> predicate, bool enableLazyLoad = false,bool noTracking = false);
+        Task<TEntity> FindByAsync(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEntity>> include, bool enableLazyLoad = false,bool noTracking = false);
+        Task<TEntity> FindByAsync(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEnumerable<IEntity>>> include, bool enableLazyLoad = false,bool noTracking = false);
         Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate);
         Task<int> CountAsync();
         Task<int> DeleteAsync(Expression<Func<TEntity, bool>> criteria);
