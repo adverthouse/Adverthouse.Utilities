@@ -31,7 +31,7 @@ namespace Adverthouse.Core.Authorize
 
             if (!user.IsAuthLatestVersion())
             {
-                context.Result = new RedirectResult("/Member/LogoutEnforce");
+                context.Result = new RedirectResult(AuthUtility.LogoutEnforceUrl);
                 return;
             }
         }

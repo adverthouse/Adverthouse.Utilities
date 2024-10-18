@@ -13,6 +13,7 @@ namespace Adverthouse.Core.Authorize
     {
         public const string emailSchema = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress";
         public static int CurrentVersion = 1;
+        public static string LogoutEnforceUrl = "/Member/LogoutEnforce";
         private static ConcurrentDictionary<int, List<PermissionHelper>> permissionsByRoleId = new();
         public static int RoleId(this IPrincipal user)
         {
