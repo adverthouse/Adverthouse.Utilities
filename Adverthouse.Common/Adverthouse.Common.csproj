@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>7.0.26</Version>
+		<Version>7.0.27</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>MongoDB,ElasticSearch,Redis,SQL Server</PackageTags>
 		<RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
