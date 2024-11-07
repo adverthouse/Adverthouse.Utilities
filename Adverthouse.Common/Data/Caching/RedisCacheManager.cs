@@ -23,6 +23,8 @@ namespace Adverthouse.Common.Data.Caching
                 EndPoints = { $"{_redisConfig.RedisHost}:{_redisConfig.RedisPort}" },
                 Ssl = _redisConfig.Ssl,
                 AbortOnConnectFail = _redisConfig.AbortOnConnectFail,
+                User = _redisConfig.User,
+                Password = _redisConfig.Password
             };
             _connectionMultiplexer = ConnectionMultiplexer.Connect(configurationOptions);
             _database = _connectionMultiplexer.GetDatabase(_currentDatabaseID);
