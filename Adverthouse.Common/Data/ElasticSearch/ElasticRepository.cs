@@ -95,15 +95,22 @@ namespace Adverthouse.Common.Data.ElasticSearch
 
         public ISearchResponse<T> Search(ElasticSearchBuilder elasticSearchBuilder)
         {
-            ISearchRequest<T> searchRequest = new SearchRequest<T>(elasticSearchBuilder.IndexName); 
+            ISearchRequest<T> searchRequest = new SearchRequest<T>(elasticSearchBuilder.IndexName)
+            {
+                From = (elasticSearchBuilder.PSF.CurrentPage - 1) * elasticSearchBuilder.PSF.ItemPerPage,
+                Size = elasticSearchBuilder.PSF.ItemPerPage,
 
-            searchRequest.From = (elasticSearchBuilder.PSF.CurrentPage - 1) * elasticSearchBuilder.PSF.ItemPerPage;
-            searchRequest.Size = elasticSearchBuilder.PSF.ItemPerPage;
+                Query = elasticSearchBuilder.queryPreFilter,
+                PostFilter = elasticSearchBuilder.queryPostFilter,
 
-            searchRequest.Query = elasticSearchBuilder.queryPreFilter;
-            searchRequest.PostFilter = elasticSearchBuilder.queryPostFilter;
+                Aggregations = elasticSearchBuilder.aggregationDictionary                
+            }; 
 
-            searchRequest.Aggregations = elasticSearchBuilder.aggregationDictionary;
+            if (elasticSearchBuilder.Fields != null)
+                    searchRequest.Fields = elasticSearchBuilder.Fields.ToArray(); 
+ 
+ 
+
 
             if (elasticSearchBuilder.Sort != null)
                 searchRequest.Sort = elasticSearchBuilder.Sort; 
