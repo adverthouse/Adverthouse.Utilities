@@ -18,9 +18,10 @@ namespace Adverthouse.Common.Data
 
         public IQueryable<TEntity> Queryable => _db.Set<TEntity>();
         
-        public virtual IQueryable<TEntity> GetPagedListQueryable<PSF>(PSF psf, IQueryable<TEntity> preQuery) where PSF : IPSFBase 
-        {
-            return preQuery.OrderBy(psf.SortExpression)
+        public virtual IQueryable<TEntity> GetPagedListQueryable<PSF>(PSF psf) where PSF : IPSFBase 
+        {  
+            IQueryable<TEntity> filteredQuery = _db.Set<TEntity>();
+            return filteredQuery.OrderBy(psf.SortExpression)
                              .Skip((psf.CurrentPage - 1) * psf.ItemPerPage)
                              .Take(psf.ItemPerPage).AsQueryable();
         }

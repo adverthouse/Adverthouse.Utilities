@@ -10,7 +10,7 @@ namespace Adverthouse.Common.Interfaces
     public interface IRepository<TEntity>:IDisposable where TEntity : class, IEntity 
     {
         IQueryable<TEntity> Queryable { get; }
-        IQueryable<TEntity> GetPagedListQueryable<PSF>(PSF psf, IQueryable<TEntity> preQuery) where PSF : IPSFBase; 
+        IQueryable<TEntity> GetPagedListQueryable<PSF>(PSF psf) where PSF : IPSFBase; 
         List<TEntity> GetResult(Expression<Func<TEntity, bool>> predicate = null);
         PagedList<TEntity, PSF> GetResult<PSF>(PSF psfInfo, IQueryable<TEntity> preQuery) where PSF : IPSFBase;
         PagedList<TEntity, PSF> GetResult<PSF>(PSF psfInfo) where PSF : IPSFBase;            
