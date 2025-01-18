@@ -14,8 +14,8 @@ namespace Adverthouse.Common.Data
 
         public AuditableEntity()
         {
-            CreateDate = DateTime.Now;
-            LastModifiedDate = DateTime.Now;
+            CreateDate = DateTime.UtcNow;
+            LastModifiedDate = DateTime.UtcNow;
         }
     }
 }
