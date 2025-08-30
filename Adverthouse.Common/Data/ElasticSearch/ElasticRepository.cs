@@ -58,9 +58,9 @@ namespace Adverthouse.Common.Data.ElasticSearch
             else return null;
         }
 
-        public BulkResponse UpsertDocument(string indexName, List<T> documents, bool autoCreateIndex = true)
+        public BulkResponse UpsertDocument(string indexName, List<T> documents, bool autoCreateIndex = true, int numberOfReplica = 1, int numberOfShards = 5)
         {
-            if (autoCreateIndex) CreateIndex(indexName);
+            if (autoCreateIndex) CreateIndex(indexName,numberOfReplica,numberOfShards);
              
             return _elasticClient.Bulk(b => b
                    .UpdateMany(documents, (bc, d) => bc
