@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<TargetFramework>net9.0</TargetFramework>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>9.0.6</Version>
+		<Version>9.0.7</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>MongoDB,ElasticSearch,Redis,SQL Server</PackageTags>
 		<RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
@@ -11,17 +11,17 @@
 		<None Remove="Data\EntityRepository.cs~RFfc05a1a.TMP" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Dapper" Version="2.1.44" />
+		<PackageReference Include="Dapper" Version="2.1.66" />
 		<PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0" />
-		<PackageReference Include="MongoDB.Driver" Version="3.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.8" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="9.0.8" />
+		<PackageReference Include="MongoDB.Driver" Version="3.4.3" />
 		<PackageReference Include="NEST" Version="7.17.5" />
-		<PackageReference Include="StackExchange.Redis" Version="2.8.16" />
+		<PackageReference Include="StackExchange.Redis" Version="2.9.11" />
 		<PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
-		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.9" />
-		<PackageReference Include="Microsoft.Data.Sqlite.Core" Version="9.0.0" />
+		<PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.7" />
+		<PackageReference Include="Microsoft.Data.Sqlite.Core" Version="9.0.8" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Adverthouse.Core\Adverthouse.Core.csproj" />

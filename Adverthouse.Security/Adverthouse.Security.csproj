@@ -5,7 +5,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/adverthouse/Adverthouse.Utilities/tree/master/Adverthouse.Security</RepositoryUrl>
     <PackageTags>C#,Security,Utility</PackageTags>
-    <Version>9.0.1</Version>
+    <Version>9.0.7</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
