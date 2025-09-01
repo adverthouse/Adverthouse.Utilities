@@ -120,7 +120,8 @@ namespace Adverthouse.Common.Data.ElasticSearch
             if (elasticSearchBuilder.Sort != null)
                 searchRequest.Sort = elasticSearchBuilder.Sort;
 
-
+            if (elasticSearchBuilder.TrackTotalHits == false)
+                searchRequest.TrackTotalHits = false;
 
             return _elasticClient.Search<T>(searchRequest);
         }

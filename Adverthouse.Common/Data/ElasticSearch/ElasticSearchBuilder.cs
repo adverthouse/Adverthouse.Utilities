@@ -12,6 +12,8 @@ namespace Adverthouse.Common.Data.ElasticSearch
         public List<ISort> Sort { get; set; }
         public List<string> Source { get; set; }
 
+        public bool TrackTotalHits { get; set; } = true;
+
         public QueryContainer queryPreFilter;
         public QueryContainer queryPostFilter;
         public AggregationDictionary aggregationDictionary;
