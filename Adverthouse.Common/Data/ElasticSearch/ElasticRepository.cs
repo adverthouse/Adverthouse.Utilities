@@ -23,14 +23,15 @@ namespace Adverthouse.Common.Data.ElasticSearch
             if (hosts.Count == 1)
             {
                 connectionPool = new StaticConnectionPool(hosts);
-            } else
+            }
+            else
             {
                 connectionPool = new SingleNodeConnectionPool(hosts.First());
             }
 
             var settings = new ConnectionSettings(connectionPool)
-                                    .RequestTimeout(TimeSpan.FromMinutes(5)).DisablePing();  
-                                             
+                                    .RequestTimeout(TimeSpan.FromMinutes(2)).DisablePing();
+
             if (_elasticConfig.EnableAuthentication)
             {
                 settings = settings.BasicAuthentication(_elasticConfig.Username, _elasticConfig.Password);
@@ -49,7 +50,7 @@ namespace Adverthouse.Common.Data.ElasticSearch
         public CreateIndexResponse CreateIndex(string indexName, int numberOfReplica = 1, int numberOfShards = 5)
         {
             if (!IsIndexExist(indexName).Exists)
-            { 
+            {
                 return _elasticClient.Indices.Create(indexName,
                         c => c.Map<T>(m => m.AutoMap())
                               .Index(indexName)
@@ -62,8 +63,8 @@ namespace Adverthouse.Common.Data.ElasticSearch
 
         public BulkResponse UpsertDocument(string indexName, List<T> documents, bool autoCreateIndex = true, int numberOfReplica = 1, int numberOfShards = 5)
         {
-            if (autoCreateIndex) CreateIndex(indexName,numberOfReplica,numberOfShards);
-             
+            if (autoCreateIndex) CreateIndex(indexName, numberOfReplica, numberOfShards);
+
             return _elasticClient.Bulk(b => b
                    .UpdateMany(documents, (bc, d) => bc
                        .Index(indexName)
@@ -81,7 +82,7 @@ namespace Adverthouse.Common.Data.ElasticSearch
 
         public DeleteResponse DeleteDocument(string index, int id)
         {
-            return _elasticClient.Delete<T>(id, bc =>  bc.Index(index));
+            return _elasticClient.Delete<T>(id, bc => bc.Index(index));
         }
 
         public DeleteIndexResponse DeleteIndex(string indexName)
@@ -105,19 +106,21 @@ namespace Adverthouse.Common.Data.ElasticSearch
                 Query = elasticSearchBuilder.queryPreFilter,
                 PostFilter = elasticSearchBuilder.queryPostFilter,
 
-                Aggregations = elasticSearchBuilder.aggregationDictionary                
-            }; 
+                Aggregations = elasticSearchBuilder.aggregationDictionary
+            };
 
-            if (elasticSearchBuilder.Fields != null)
-                    searchRequest.Fields = elasticSearchBuilder.Fields.ToArray(); 
- 
- 
+            if (elasticSearchBuilder.Source != null)
+                searchRequest.Source = new SourceFilter
+                {
+                    Includes = elasticSearchBuilder.Source.ToArray()
+                };
+
 
 
             if (elasticSearchBuilder.Sort != null)
-                searchRequest.Sort = elasticSearchBuilder.Sort; 
-            
-             
+                searchRequest.Sort = elasticSearchBuilder.Sort;
+
+
 
             return _elasticClient.Search<T>(searchRequest);
         }

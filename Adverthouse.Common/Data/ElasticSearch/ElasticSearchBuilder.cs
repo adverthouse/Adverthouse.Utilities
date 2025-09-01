@@ -10,7 +10,7 @@ namespace Adverthouse.Common.Data.ElasticSearch
         public string IndexName { get; private set; }
         public IPSFBase PSF { get; private set; }
         public List<ISort> Sort { get; set; }
-        public List<string> Fields { get; set; }
+        public List<string> Source { get; set; }
 
         public QueryContainer queryPreFilter;
         public QueryContainer queryPostFilter;
