@@ -33,53 +33,44 @@ namespace Adverthouse.Common.Data.Caching
         }
         private void SeedData()
         {
-            try
+            var lad = _lastModifiedDateOfData();
+            if (lad != LastModifiedDateOfData)
             {
-                var lad = _lastModifiedDateOfData();
-                if (lad != LastModifiedDateOfData)
-                {
-                    var result = _acquire();
-
-                    lock (_assignmentLock)
-                    {
-                        Data = result;
-                        LastModifiedDateOfData = lad;
-                    }
-                }
+                var result = _acquire();
 
                 lock (_assignmentLock)
                 {
-                    LastDateOfRefreshControl = DateTime.Now;
+                    Data = result;
+                    LastModifiedDateOfData = lad;
                 }
             }
-            catch
+
+            lock (_assignmentLock)
             {
-                return;
-            }
-            finally
-            {
-                lock (_assignmentLock)
-                {
-                    LastDateOfRefreshControl = DateTime.Now;
-                }
+                LastDateOfRefreshControl = DateTime.Now;
             }
         }
 
         public T GetFreshData(bool enforce = false)
         {
-            if (!enforce && NextDateOfRefreshControl > DateTime.Now)
-                return Data;
+            if (!enforce)
+                if (NextDateOfRefreshControl > DateTime.Now) return Data;
+
 
             if (Interlocked.CompareExchange(ref LockCount, 1, 0) == 0)
             {
-                try
+                // Do refresh in background so caller isn’t blocked
+                Task.Run(() =>
                 {
-                    Task.Run(() => SeedData());
-                }
-                finally
-                {
-                    Interlocked.Exchange(ref LockCount, 0);
-                }
+                    try
+                    {
+                        SeedData();
+                    }
+                    finally
+                    {
+                        Interlocked.Exchange(ref LockCount, 0);
+                    }
+                });
             }
 
             return Data;
