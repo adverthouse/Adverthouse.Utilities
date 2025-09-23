@@ -33,41 +33,55 @@ namespace Adverthouse.Common.Data.Caching
         }
         private void SeedData()
         {
-            var lad = _lastModifiedDateOfData();
-            if (lad != LastModifiedDateOfData)
+            try
             {
-                var result = _acquire();
+                var lad = _lastModifiedDateOfData();
+                if (lad != LastModifiedDateOfData)
+                {
+                    var result = _acquire();
+
+                    lock (_assignmentLock)
+                    {
+                        Data = result;
+                        LastModifiedDateOfData = lad;
+                    }
+                }
 
                 lock (_assignmentLock)
                 {
-                    Data = result;
-                    LastModifiedDateOfData = lad;
+                    LastDateOfRefreshControl = DateTime.Now;
                 }
             }
-
-            lock (_assignmentLock)
+            catch
             {
-                LastDateOfRefreshControl = DateTime.Now;
+                return;
+            }
+            finally
+            {
+                lock (_assignmentLock)
+                {
+                    LastDateOfRefreshControl = DateTime.Now;
+                }
             }
         }
 
         public T GetFreshData(bool enforce = false)
         {
-            if (!enforce)
-                if (NextDateOfRefreshControl > DateTime.Now) return Data;
+            if (!enforce && NextDateOfRefreshControl > DateTime.Now)
+                return Data;
 
             if (Interlocked.CompareExchange(ref LockCount, 1, 0) == 0)
             {
                 try
                 {
-                    SeedData();
+                    Task.Run(() => SeedData());
                 }
                 finally
                 {
-                    Interlocked.Decrement(ref LockCount);
+                    Interlocked.Exchange(ref LockCount, 0);
                 }
             }
-            
+
             return Data;
         }
 
