@@ -16,7 +16,7 @@ namespace Adverthouse.Common.Data.Caching
         private Func<DateTime> _lastModifiedDateOfData;
 
         private int LockCount = 0;
-        private readonly object _assignmentLock = new object();
+        private readonly object _assignmentLock = new();
 
         public T Data { get; private set; }
 
@@ -31,16 +31,15 @@ namespace Adverthouse.Common.Data.Caching
                 return this.LastDateOfRefreshControl.Add(_refreshInterval);
             }
         }
+
         private void SeedData()
         {
             var lad = _lastModifiedDateOfData();
             if (lad != LastModifiedDateOfData)
             {
-                var result = _acquire();
-
                 lock (_assignmentLock)
                 {
-                    Data = result;
+                    Data = _acquire();
                     LastModifiedDateOfData = lad;
                 }
             }
@@ -56,23 +55,18 @@ namespace Adverthouse.Common.Data.Caching
             if (!enforce)
                 if (NextDateOfRefreshControl > DateTime.Now) return Data;
 
-
             if (Interlocked.CompareExchange(ref LockCount, 1, 0) == 0)
             {
-                // Do refresh in background so caller isn’t blocked
-                Task.Run(() =>
+                try
                 {
-                    try
-                    {
-                        SeedData();
-                    }
-                    finally
-                    {
-                        Interlocked.Exchange(ref LockCount, 0);
-                    }
-                });
+                    SeedData();
+                }
+                finally
+                {
+                    Interlocked.Decrement(ref LockCount);
+                }
             }
-
+            
             return Data;
         }
 

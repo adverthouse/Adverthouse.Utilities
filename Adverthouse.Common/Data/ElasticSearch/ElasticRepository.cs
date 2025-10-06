@@ -12,32 +12,29 @@ namespace Adverthouse.Common.Data.ElasticSearch
         private IElasticClient _elasticClient;
         public ElasticRepository(AppSettings appSettings)
         {
-            var _elasticConfig = appSettings.ElasticSearchConfig;
+            var elasticConfig = appSettings.ElasticSearchConfig;
 
-            List<Uri> hosts = new List<Uri>();
-            foreach (var host in _elasticConfig.HostAddresses.Split(","))
-            {
-                hosts.Add(new Uri(host));
-            }
-            IConnectionPool connectionPool;
-            if (hosts.Count == 1)
-            {
-                connectionPool = new StaticConnectionPool(hosts);
-            }
-            else
-            {
-                connectionPool = new SingleNodeConnectionPool(hosts.First());
-            }
+            var hosts = elasticConfig.HostAddresses
+                .Split(",", StringSplitOptions.RemoveEmptyEntries)
+                .Select(h => new Uri(h))
+                .ToList();
+
+            IConnectionPool connectionPool = hosts.Count == 1
+                ? new SingleNodeConnectionPool(hosts.First())
+                : new StaticConnectionPool(hosts);
 
             var settings = new ConnectionSettings(connectionPool)
-                                    .RequestTimeout(TimeSpan.FromMinutes(2)).DisablePing();
+                .RequestTimeout(TimeSpan.FromMinutes(5)); // increase if queries are heavy
 
-            if (_elasticConfig.EnableAuthentication)
+            if (elasticConfig.EnableAuthentication)
             {
-                settings = settings.BasicAuthentication(_elasticConfig.Username, _elasticConfig.Password);
+                settings = settings.BasicAuthentication(elasticConfig.Username, elasticConfig.Password);
             }
 
-            if (_elasticConfig.EnableDebugMode) settings = settings.EnableDebugMode();
+            if (elasticConfig.EnableDebugMode)
+            {
+                settings = settings.EnableDebugMode();
+            }
 
             _elasticClient = new ElasticClient(settings);
         }
