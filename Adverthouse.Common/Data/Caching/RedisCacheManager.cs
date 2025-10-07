@@ -47,13 +47,24 @@ namespace Adverthouse.Common.Data.Caching
             await _database.StringSetAsync(key.Key, jsonData, key.CacheTime);
         }
 
-        public T2 GetOrCreate<T2>(NoSQLKey key,Func<T2> acquire)
+        public T2 Get<T2>(NoSQLKey key)
         {
             RedisValue resultExist = _database.StringGet(key.Key);
 
             if (resultExist.HasValue)
                 return JsonConvert.DeserializeObject<T2>(resultExist);
- 
+
+            return default;
+        }
+
+
+        public T2 GetOrCreate<T2>(NoSQLKey key, Func<T2> acquire)
+        {
+            RedisValue resultExist = _database.StringGet(key.Key);
+
+            if (resultExist.HasValue)
+                return JsonConvert.DeserializeObject<T2>(resultExist);
+
             var result = acquire();
 
             if (key.CacheTime.TotalMinutes > 0)

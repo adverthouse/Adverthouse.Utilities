@@ -13,6 +13,7 @@ namespace Adverthouse.Common.Data.Caching
         Task<bool> RemoveKeyAsync(NoSQLKey key);
         bool IsKeyExist(NoSQLKey key);
         Task<bool> IsKeyExistAsync(NoSQLKey key);
+        T2 Get<T2>(NoSQLKey key);
         T2 GetOrCreate<T2>(NoSQLKey key, Func<T2> acquire);
         Task<T2> GetOrCreateAsync<T2>(NoSQLKey key, Func<Task<T2>> acquire);
         void SetValue<T2>(NoSQLKey key, T2 value);

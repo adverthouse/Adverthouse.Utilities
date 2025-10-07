@@ -78,14 +78,20 @@ namespace Adverthouse.Common.Data.Caching
             });           
         }
 
+        public T2 Get<T2>(NoSQLKey key)
+        { 
+            return _memoryCache.Get<T2>(key.Key); 
+        }
+        
         public T2 GetOrCreate<T2>(NoSQLKey key, Func<T2> acquire)
         {
             if ((key?.CacheTime.TotalSeconds ?? 0) <= 0)
                 return acquire();
 
-            var result = _memoryCache.GetOrCreate(key.Key, entry => {
-                entry.SetOptions(PrepareEntryOptions(key)); 
-       
+            var result = _memoryCache.GetOrCreate(key.Key, entry =>
+            {
+                entry.SetOptions(PrepareEntryOptions(key));
+
                 return acquire();
             });
 
