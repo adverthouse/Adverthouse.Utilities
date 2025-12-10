@@ -95,12 +95,23 @@ namespace Adverthouse.Common.Data.ElasticSearch
 
         public ISearchResponse<T> Search(ElasticSearchBuilder elasticSearchBuilder)
         {
+           // Wrap your existing pre-filter queries in a BoolQuery with Filter
+            QueryContainer optimizedQuery = new BoolQuery
+            {
+                Filter = new List<QueryContainer>
+                {
+                    elasticSearchBuilder.queryPreFilter
+                }
+            };
+
+
             ISearchRequest<T> searchRequest = new SearchRequest<T>(elasticSearchBuilder.IndexName)
             {
                 From = (elasticSearchBuilder.PSF.CurrentPage - 1) * elasticSearchBuilder.PSF.ItemPerPage,
-                Size = elasticSearchBuilder.PSF.ItemPerPage,
+                Size = elasticSearchBuilder.PSF.ItemPerPage,               
+                
+                Query = optimizedQuery,
 
-                Query = elasticSearchBuilder.queryPreFilter,
                 PostFilter = elasticSearchBuilder.queryPostFilter,
 
                 Aggregations = elasticSearchBuilder.aggregationDictionary
