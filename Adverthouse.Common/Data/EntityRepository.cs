@@ -39,12 +39,11 @@ namespace Adverthouse.Common.Data
             PagedList<TEntity, PSF> opRes = new();
             IQueryable<TEntity> filteredQuery = preQuery;
 
-            if (psf != null)
-            {
-                opRes.PSF = psf;
-                if (psf.SetPageNumbers)
-                    psf.TotalItemCount = filteredQuery.AsNoTracking().Count();
-            }
+
+            opRes.PSF = psf;
+            if (psf.SetPageNumbers)
+                psf.TotalItemCount = filteredQuery.AsNoTracking().Count();
+            
 
             opRes.Data = filteredQuery.OrderBy(psf.SortExpression)
                              .Skip((psf.CurrentPage - 1) * psf.ItemPerPage)
@@ -57,14 +56,11 @@ namespace Adverthouse.Common.Data
         {
             PagedList<TEntity, PSF> opRes = new();
             IQueryable<TEntity> filteredQuery = preQuery;
-
-            if (psf != null)
-            {
-                opRes.PSF = psf;
-                if (psf.SetPageNumbers) 
-                    psf.TotalItemCount = await filteredQuery.AsNoTracking().CountAsync();
-            }
-
+ 
+            opRes.PSF = psf;
+            if (psf.SetPageNumbers) 
+                psf.TotalItemCount = await filteredQuery.AsNoTracking().CountAsync();
+       
             opRes.Data = await filteredQuery.OrderBy(psf.SortExpression)
                              .Skip((psf.CurrentPage - 1) * psf.ItemPerPage)
                              .Take(psf.ItemPerPage).AsNoTracking().ToListAsync();
@@ -85,7 +81,7 @@ namespace Adverthouse.Common.Data
             return opRes;
         }
 
-        public List<TEntity> GetResult(Expression<Func<TEntity, bool>> predicate = null)
+        public List<TEntity> GetResult(Expression<Func<TEntity, bool>>? predicate)
         { 
             IQueryable<TEntity> filteredQuery = _db.Set<TEntity>();
             if (predicate != null)
@@ -93,7 +89,7 @@ namespace Adverthouse.Common.Data
             return filteredQuery.AsNoTracking().ToList();
         }
 
-        public async Task<List<TEntity>> GetResultAsync(Expression<Func<TEntity, bool>> predicate = null)
+        public async Task<List<TEntity>> GetResultAsync(Expression<Func<TEntity, bool>>? predicate)
         {
             IQueryable<TEntity> filteredQuery = _db.Set<TEntity>();
             if (predicate != null)
@@ -152,12 +148,12 @@ namespace Adverthouse.Common.Data
         }
         public virtual int AddIfNotExists(Expression<Func<TEntity, bool>> predicate, TEntity entity)
         {
-            if (Count(predicate) == 0) return Add(entity);
+            if (!Any(predicate)) return Add(entity);
             return 0;
         }
         public virtual async Task<int> AddIfNotExistsAsync(Expression<Func<TEntity, bool>> predicate, TEntity entity)
         {
-            if (Count(predicate) == 0) return await AddAsync(entity);
+            if (!Any(predicate)) return await AddAsync(entity);
             return 0;
         }
         public virtual int AddRange(IEnumerable<TEntity> entities)
@@ -182,52 +178,57 @@ namespace Adverthouse.Common.Data
             return await _db.SaveChangesAsync();
         }
 
-        public TEntity FindBy(Expression<Func<TEntity, bool>> predicate, bool enableLazyLoad = false,bool noTracking = false)
+        public TEntity? FindBy(Expression<Func<TEntity, bool>> predicate, bool enableLazyLoad = false,bool noTracking = false)
         {
             _db.ChangeTracker.LazyLoadingEnabled = enableLazyLoad;
-            return noTracking ? _db.Set<TEntity>().Where(predicate).AsNoTracking().FirstOrDefault() : 
-              _db.Set<TEntity>().Where(predicate).FirstOrDefault(); 
+            return noTracking ? _db.Set<TEntity>().AsNoTracking().FirstOrDefault(predicate) : 
+              _db.Set<TEntity>().FirstOrDefault(predicate); 
         }
 
-        public async Task<TEntity> FindByAsync(Expression<Func<TEntity, bool>> predicate, bool enableLazyLoad = false,bool noTracking = false)
+        public async Task<TEntity?> FindByAsync(Expression<Func<TEntity, bool>> predicate, bool enableLazyLoad = false,bool noTracking = false)
         {
             _db.ChangeTracker.LazyLoadingEnabled = enableLazyLoad;
-            return noTracking ? await _db.Set<TEntity>().Where(predicate).AsNoTracking().FirstOrDefaultAsync() :
-                                await _db.Set<TEntity>().Where(predicate).FirstOrDefaultAsync();
+            return noTracking ? await _db.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(predicate) :
+                                await _db.Set<TEntity>().FirstOrDefaultAsync(predicate);
         }
-        public TEntity FindBy(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEntity>> include, bool enableLazyLoad = false,bool noTracking = false)
+        public TEntity? FindBy(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEntity>> include, bool enableLazyLoad = false,bool noTracking = false)
+        {
+            _db.ChangeTracker.LazyLoadingEnabled = enableLazyLoad;
+            return noTracking ? _db.Set<TEntity>().Include(include).AsNoTracking().FirstOrDefault(predicate) :
+                                _db.Set<TEntity>().Include(include).FirstOrDefault(predicate);
+        }
+        public async Task<TEntity?> FindByAsync(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEntity>> include, bool enableLazyLoad = false,bool noTracking = false)
+        {
+            _db.ChangeTracker.LazyLoadingEnabled = enableLazyLoad;
+            return  noTracking ? await _db.Set<TEntity>().Include(include).AsNoTracking().FirstOrDefaultAsync(predicate):
+                                 await _db.Set<TEntity>().Include(include).FirstOrDefaultAsync(predicate);
+        }
+        public TEntity? FindBy(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEnumerable<IEntity>>> include, bool enableLazyLoad = false,bool noTracking = false)
         {
             _db.ChangeTracker.LazyLoadingEnabled = enableLazyLoad;
             return noTracking ? _db.Set<TEntity>().Include(include).Where(predicate).AsNoTracking().FirstOrDefault() :
                                 _db.Set<TEntity>().Include(include).Where(predicate).FirstOrDefault();
         }
-        public async Task<TEntity> FindByAsync(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEntity>> include, bool enableLazyLoad = false,bool noTracking = false)
-        {
-            _db.ChangeTracker.LazyLoadingEnabled = enableLazyLoad;
-            return  noTracking ? await _db.Set<TEntity>().Include(include).Where(predicate).AsNoTracking().FirstOrDefaultAsync():
-                                 await _db.Set<TEntity>().Include(include).Where(predicate).FirstOrDefaultAsync();
-        }
-        public TEntity FindBy(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEnumerable<IEntity>>> include, bool enableLazyLoad = false,bool noTracking = false)
-        {
-            _db.ChangeTracker.LazyLoadingEnabled = enableLazyLoad;
-            return noTracking ? _db.Set<TEntity>().Include(include).Where(predicate).AsNoTracking().FirstOrDefault() :
-                                _db.Set<TEntity>().Include(include).Where(predicate).FirstOrDefault();
-        }
 
-        public async Task<TEntity> FindByAsync(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEnumerable<IEntity>>> include, bool enableLazyLoad = false,bool noTracking = false)
+        public async Task<TEntity?> FindByAsync(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEnumerable<IEntity>>> include, bool enableLazyLoad = false,bool noTracking = false)
         {
             _db.ChangeTracker.LazyLoadingEnabled = enableLazyLoad;
             return noTracking ?  await _db.Set<TEntity>().Include(include).Where(predicate).AsNoTracking().FirstOrDefaultAsync():
                                  await _db.Set<TEntity>().Include(include).Where(predicate).FirstOrDefaultAsync();
         } 
 
+        public bool Any(Expression<Func<TEntity, bool>> predicate)
+        {
+            return _db.Set<TEntity>().Where(predicate).AsNoTracking().Any();
+        }
+
         public int Count(Expression<Func<TEntity, bool>> predicate)
         {
-            return _db.Set<TEntity>().Where(predicate).AsNoTracking().Count();
+            return _db.Set<TEntity>().AsNoTracking().Count(predicate);
         }
         public async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await _db.Set<TEntity>().Where(predicate).AsNoTracking().CountAsync();
+            return await _db.Set<TEntity>().AsNoTracking().CountAsync(predicate);
         }
         public int Count()
         {
@@ -239,7 +240,7 @@ namespace Adverthouse.Common.Data
         }
         public int Delete(Expression<Func<TEntity, bool>> criteria)
         {
-            TEntity entity = FindBy(criteria);
+            TEntity? entity = FindBy(criteria);
             if (entity is null) return -1;
             
             _db.Entry(entity).State = EntityState.Deleted;
@@ -247,7 +248,7 @@ namespace Adverthouse.Common.Data
         }
         public async Task<int> DeleteAsync(Expression<Func<TEntity, bool>> criteria)
         {
-            TEntity entity = FindBy(criteria);
+            TEntity? entity = FindBy(criteria);
             if (entity is null) return -1;
 
             _db.Entry(entity).State = EntityState.Deleted;

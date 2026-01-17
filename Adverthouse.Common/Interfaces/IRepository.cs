@@ -12,7 +12,7 @@ namespace Adverthouse.Common.Interfaces
         IQueryable<TEntity> Queryable { get; }
         IQueryable<TEntity> GetPagedListQueryable<PSF>(PSF psf) where PSF : IPSFBase; 
         IQueryable<TEntity> GetPagedListQueryable<PSF>(PSF psf, IQueryable<TEntity> preQuery) where PSF : IPSFBase; 
-        List<TEntity> GetResult(Expression<Func<TEntity, bool>> predicate = null);
+        List<TEntity> GetResult(Expression<Func<TEntity, bool>>? predicate);
         PagedList<TEntity, PSF> GetResult<PSF>(PSF psfInfo, IQueryable<TEntity> preQuery) where PSF : IPSFBase;
         PagedList<TEntity, PSF> GetResult<PSF>(PSF psfInfo) where PSF : IPSFBase;            
         List<TVar> SelectIDs<TVar>(Expression<Func<TEntity, TVar>> selectExp);
@@ -22,21 +22,22 @@ namespace Adverthouse.Common.Interfaces
         int AddIfNotExists(Expression<Func<TEntity, bool>> predicate, TEntity entity);
         int AddRange(IEnumerable<TEntity> entities);
         int Update(TEntity entity);
-        TEntity FindBy(Expression<Func<TEntity, bool>> predicate, bool enableLazyLoad = false,bool noTracking = false);
-        TEntity FindBy(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEnumerable<IEntity>>> include, bool enableLazyLoad = false,bool noTracking = false);
-        TEntity FindBy(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEntity>> include, bool enableLazyLoad = false,bool noTracking = false);
+        TEntity? FindBy(Expression<Func<TEntity, bool>> predicate, bool enableLazyLoad = false,bool noTracking = false);
+        TEntity? FindBy(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEnumerable<IEntity>>> include, bool enableLazyLoad = false,bool noTracking = false);
+        TEntity? FindBy(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEntity>> include, bool enableLazyLoad = false,bool noTracking = false);
+        bool Any(Expression<Func<TEntity, bool>> predicate);
         int Count(Expression<Func<TEntity, bool>> predicate);
         int Count();
         int Delete(Expression<Func<TEntity, bool>> criteria);
         Task<PagedList<TEntity, PSF>> GetResultAsync<PSF>(PSF psfInfo, IQueryable<TEntity> preQuery) where PSF : IPSFBase;
         Task<PagedList<TEntity, PSF>> GetResultAsync<PSF>(PSF psfInfo) where PSF : IPSFBase;
-        Task<List<TEntity>> GetResultAsync(Expression<Func<TEntity, bool>> predicate = null);
+        Task<List<TEntity>> GetResultAsync(Expression<Func<TEntity, bool>>? predicate);
         Task<int> AddIfNotExistsAsync(Expression<Func<TEntity, bool>> predicate, TEntity entity); 
         Task<int> AddRangeAsync(IEnumerable<TEntity> entities);
         Task<int> UpdateAsync(TEntity entity);
-        Task<TEntity> FindByAsync(Expression<Func<TEntity, bool>> predicate, bool enableLazyLoad = false,bool noTracking = false);
-        Task<TEntity> FindByAsync(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEntity>> include, bool enableLazyLoad = false,bool noTracking = false);
-        Task<TEntity> FindByAsync(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEnumerable<IEntity>>> include, bool enableLazyLoad = false,bool noTracking = false);
+        Task<TEntity?> FindByAsync(Expression<Func<TEntity, bool>> predicate, bool enableLazyLoad = false,bool noTracking = false);
+        Task<TEntity?> FindByAsync(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEntity>> include, bool enableLazyLoad = false,bool noTracking = false);
+        Task<TEntity?> FindByAsync(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, IEnumerable<IEntity>>> include, bool enableLazyLoad = false,bool noTracking = false);
         Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate);
         Task<int> CountAsync();
         Task<int> DeleteAsync(Expression<Func<TEntity, bool>> criteria);
