@@ -10,31 +10,31 @@ using System.Threading.Tasks;
 namespace Adverthouse.Common.Data
 {
 
-    public class EntityRepository<TEntity> : IRepository<TEntity> where TEntity : class, IEntity 
+    public class EntityRepository<TEntity> : IRepository<TEntity> where TEntity : class, IEntity
     {
         protected readonly DbContext _db;
 
-        public EntityRepository(DbContext db)  => _db = db; 
+        public EntityRepository(DbContext db) => _db = db;
 
         public IQueryable<TEntity> Queryable => _db.Set<TEntity>();
-        
-        public virtual IQueryable<TEntity> GetPagedListQueryable<PSF>(PSF psf) where PSF : IPSFBase 
-        {  
+
+        public virtual IQueryable<TEntity> GetPagedListQueryable<PSF>(PSF psf) where PSF : IPSFBase
+        {
             IQueryable<TEntity> filteredQuery = _db.Set<TEntity>();
             return filteredQuery.OrderBy(psf.SortExpression)
                              .Skip((psf.CurrentPage - 1) * psf.ItemPerPage)
                              .Take(psf.ItemPerPage).AsQueryable();
         }
-   
-        public virtual IQueryable<TEntity> GetPagedListQueryable<PSF>(PSF psf, IQueryable<TEntity> preQuery) where PSF : IPSFBase 
-        {  
+
+        public virtual IQueryable<TEntity> GetPagedListQueryable<PSF>(PSF psf, IQueryable<TEntity> preQuery) where PSF : IPSFBase
+        {
             return preQuery.OrderBy(psf.SortExpression)
                              .Skip((psf.CurrentPage - 1) * psf.ItemPerPage)
                              .Take(psf.ItemPerPage).AsQueryable();
         }
 
 
-        public virtual PagedList<TEntity, PSF> GetResult<PSF>(PSF psf, IQueryable<TEntity> preQuery) where PSF : IPSFBase 
+        public virtual PagedList<TEntity, PSF> GetResult<PSF>(PSF psf, IQueryable<TEntity> preQuery) where PSF : IPSFBase
         {
             PagedList<TEntity, PSF> opRes = new();
             IQueryable<TEntity> filteredQuery = preQuery;
@@ -43,7 +43,7 @@ namespace Adverthouse.Common.Data
             opRes.PSF = psf;
             if (psf.SetPageNumbers)
                 psf.TotalItemCount = filteredQuery.AsNoTracking().Count();
-            
+
 
             opRes.Data = filteredQuery.OrderBy(psf.SortExpression)
                              .Skip((psf.CurrentPage - 1) * psf.ItemPerPage)
@@ -56,11 +56,11 @@ namespace Adverthouse.Common.Data
         {
             PagedList<TEntity, PSF> opRes = new();
             IQueryable<TEntity> filteredQuery = preQuery;
- 
+
             opRes.PSF = psf;
-            if (psf.SetPageNumbers) 
+            if (psf.SetPageNumbers)
                 psf.TotalItemCount = await filteredQuery.AsNoTracking().CountAsync();
-       
+
             opRes.Data = await filteredQuery.OrderBy(psf.SortExpression)
                              .Skip((psf.CurrentPage - 1) * psf.ItemPerPage)
                              .Take(psf.ItemPerPage).AsNoTracking().ToListAsync();
@@ -82,19 +82,19 @@ namespace Adverthouse.Common.Data
         }
 
         public List<TEntity> GetResult(Expression<Func<TEntity, bool>>? predicate = null)
-        { 
-            IQueryable<TEntity> filteredQuery = _db.Set<TEntity>();
+        {
+            IQueryable<TEntity> filteredQuery = _db.Set<TEntity>().AsNoTracking();
             if (predicate != null)
                 filteredQuery = filteredQuery.Where(predicate);
-            return filteredQuery.AsNoTracking().ToList();
+            return filteredQuery.ToList();
         }
 
         public async Task<List<TEntity>> GetResultAsync(Expression<Func<TEntity, bool>>? predicate = null)
         {
-            IQueryable<TEntity> filteredQuery = _db.Set<TEntity>();
+            IQueryable<TEntity> filteredQuery = _db.Set<TEntity>().AsNoTracking();
             if (predicate != null)
                 filteredQuery = filteredQuery.Where(predicate);
-            return await filteredQuery.AsNoTracking().ToListAsync();
+            return await filteredQuery.ToListAsync();
         }
 
         public List<TVar> SelectIDs<TVar>(Expression<Func<TEntity, TVar>> selectExp)
@@ -168,12 +168,14 @@ namespace Adverthouse.Common.Data
         }
         public virtual int Update(TEntity entity)
         {
+            _db.ChangeTracker.Clear();
             _db.Entry(entity).State = EntityState.Modified;
             return _db.SaveChanges();
         }
 
         public virtual async Task<int> UpdateAsync(TEntity entity)
         {
+            _db.ChangeTracker.Clear();
             _db.Entry(entity).State = EntityState.Modified;
             return await _db.SaveChangesAsync();
         }
@@ -181,7 +183,7 @@ namespace Adverthouse.Common.Data
         public TEntity? FindBy(Expression<Func<TEntity, bool>> predicate, bool enableLazyLoad = false)
         {
             _db.ChangeTracker.LazyLoadingEnabled = enableLazyLoad;
-            return _db.Set<TEntity>().AsNoTracking().FirstOrDefault(predicate); 
+            return _db.Set<TEntity>().AsNoTracking().FirstOrDefault(predicate);
         }
 
         public async Task<TEntity?> FindByAsync(Expression<Func<TEntity, bool>> predicate, bool enableLazyLoad = false)
@@ -209,7 +211,7 @@ namespace Adverthouse.Common.Data
         {
             _db.ChangeTracker.LazyLoadingEnabled = enableLazyLoad;
             return await _db.Set<TEntity>().Include(include).Where(predicate).AsNoTracking().FirstOrDefaultAsync();
-        } 
+        }
 
         public bool Any(Expression<Func<TEntity, bool>> predicate)
         {
@@ -236,7 +238,7 @@ namespace Adverthouse.Common.Data
         {
             TEntity? entity = FindBy(criteria);
             if (entity is null) return -1;
-            
+
             _db.Entry(entity).State = EntityState.Deleted;
             return _db.SaveChanges();
         }
@@ -251,7 +253,7 @@ namespace Adverthouse.Common.Data
 
         public void Dispose()
         {
-            if (_db != null)  _db.Dispose();  
+            if (_db != null) _db.Dispose();
             GC.SuppressFinalize(this);
         }
     }
