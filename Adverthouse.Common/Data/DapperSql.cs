@@ -1,10 +1,10 @@
 ﻿
 using Adverthouse.Common.Interfaces;
 using Dapper;
+using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
 
 namespace Adverthouse.Common.Data
@@ -35,7 +35,7 @@ namespace Adverthouse.Common.Data
                 return db2.Query<T>(sqlCommand,commandTimeout: commandTimeout ?? _defaultConnectionTimeOut);
             }
         }
-        public IEnumerable<T> Query<T>(string sqlCommand, object param = null, int? commandTimeout = null)
+        public IEnumerable<T> Query<T>(string sqlCommand, object? param = null, int? commandTimeout = null)
         {
             using (IDbConnection db2 = SqlConnection())
             {
@@ -49,7 +49,7 @@ namespace Adverthouse.Common.Data
                 return await db2.QueryAsync<T>(sqlCommand, commandTimeout: commandTimeout ?? _defaultConnectionTimeOut);
             }
         }
-        public async Task<IEnumerable<T>> QueryAsync<T>(string sqlCommand, object param = null, int? commandTimeout = null)
+        public async Task<IEnumerable<T>> QueryAsync<T>(string sqlCommand, object? param = null, int? commandTimeout = null)
         {
             using (IDbConnection db2 = SqlConnection())
             {
@@ -64,7 +64,7 @@ namespace Adverthouse.Common.Data
                 return db2.Execute(sqlCommand, commandTimeout: commandTimeout ?? _defaultConnectionTimeOut);
             }
         }
-        public int Execute(string sqlCommand, object param = null, int? commandTimeout =null)
+        public int Execute(string sqlCommand, object? param = null, int? commandTimeout =null)
         {
             using (IDbConnection db2 = SqlConnection())
             {
@@ -79,7 +79,7 @@ namespace Adverthouse.Common.Data
                 return await db2.ExecuteAsync(sqlCommand, commandTimeout: commandTimeout ?? _defaultConnectionTimeOut);
             }
         }
-        public async Task<int> ExecuteAsync(string sqlCommand, object param = null, int? commandTimeout = null)
+        public async Task<int> ExecuteAsync(string sqlCommand, object? param = null, int? commandTimeout = null)
         {
             using (IDbConnection db2 = SqlConnection())
             {
@@ -95,7 +95,7 @@ namespace Adverthouse.Common.Data
             }
         }
 
-        public T ExecuteScalar<T>(string sqlCommand, object param = null, int? commandTimeout = null)
+        public T ExecuteScalar<T>(string sqlCommand, object? param = null, int? commandTimeout = null)
         {
             using (IDbConnection db2 = SqlConnection())
             {
@@ -110,7 +110,7 @@ namespace Adverthouse.Common.Data
             }
         }
 
-        public async Task<T> ExecuteScalarAsync<T>(string sqlCommand, object param = null, int? commandTimeout = null)
+        public async Task<T> ExecuteScalarAsync<T>(string sqlCommand, object? param = null, int? commandTimeout = null)
         {
             using (IDbConnection db2 = SqlConnection())
             {

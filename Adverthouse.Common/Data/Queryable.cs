@@ -6,7 +6,7 @@ namespace Adverthouse.Common.Data
 {
     public static class Queryable
     {
-        public static IQueryable<TSource> NotNullWhere<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, string exp)
+        public static IQueryable<TSource> NotNullWhere<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate, string? exp)
         {
             if (!String.IsNullOrWhiteSpace(exp)) return source.Where(predicate);
 
