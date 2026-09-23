@@ -4,6 +4,7 @@ using Adverthouse.Core.Security;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
@@ -126,11 +127,20 @@ namespace Test.WebUI.Controllers
 
         public IActionResult Index()
         {
-            string key = "a18da5868a4e4123bbc22ea2355a1012";
+            string key = "a18da5868a4e4133bbc22ea2355a1012";
+ 
 
             var result = SecurityUtility.Encrypt(key,"Merhaba yunus");
             var temop = SecurityUtility.Decrypt(key, result);
 
+            string innerBase64 = Base64UrlEncoder.Decode("TEh2bkp2ZlJDYTJVWlJWS3RvVmFmdz09");
+
+            var temp2 = SecurityUtility.Decrypt(key,innerBase64);
+
+            var pass = PBKDF2Hasher.HashPassword("Yunus872.");
+            pass = PBKDF2Hasher.HashPassword("Yunus872.");
+
+            bool isValid = PBKDF2Hasher.VerifyPassword("Yunus872.",pass);
 
             List<int> _get() => new List<int> { 1, 3, 4 };
 
