@@ -50,10 +50,10 @@ namespace Adverthouse.Common.Data.Caching
                 LastDateOfRefreshControl = DateTime.Now;
             }
         }
-
-        public T GetFreshData()
+        public T GetFreshData(bool enforce = false)
         {
-            if (NextDateOfRefreshControl > DateTime.Now) return Data;
+            if (!enforce)
+                if (NextDateOfRefreshControl > DateTime.Now) return Data;
 
             if (Interlocked.CompareExchange(ref LockCount, 1, 0) == 0)
             {
@@ -66,7 +66,7 @@ namespace Adverthouse.Common.Data.Caching
                     Interlocked.Decrement(ref LockCount);
                 }
             }
-            
+
             return Data;
         }
 
