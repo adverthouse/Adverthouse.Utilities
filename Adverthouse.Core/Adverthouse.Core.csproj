@@ -14,5 +14,6 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.12" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="System.Net.Sockets" Version="4.3.0" />
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.23.0" />
 	</ItemGroup>
 </Project>

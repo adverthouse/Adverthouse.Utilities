@@ -122,7 +122,7 @@ namespace Test.WebUI.Controllers
 
         private static string abc = "deneme";
 
-        
+    
         private static RefreshableStaticData<List<int>> rrs;
 
         public IActionResult Index()
@@ -130,12 +130,9 @@ namespace Test.WebUI.Controllers
             string key = "a18da5868a4e4133bbc22ea2355a1012";
  
 
-            var result = SecurityUtility.Encrypt(key,"Merhaba yunus");
-            var temop = SecurityUtility.Decrypt(key, result);
-
-            string innerBase64 = Base64UrlEncoder.Decode("TEh2bkp2ZlJDYTJVWlJWS3RvVmFmdz09");
-
-            var temp2 = SecurityUtility.Decrypt(key,innerBase64);
+            var result = SecureURL.Encrypt("Merhaba yunus",key);
+            var temop = SecureURL.Decrypt<string>(result,key);
+ 
 
             var pass = PBKDF2Hasher.HashPassword("Yunus872.");
             pass = PBKDF2Hasher.HashPassword("Yunus872.");
