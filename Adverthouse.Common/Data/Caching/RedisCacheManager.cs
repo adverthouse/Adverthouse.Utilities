@@ -13,7 +13,7 @@ namespace Adverthouse.Common.Data.Caching
         private ConnectionMultiplexer _connectionMultiplexer;
         private IDatabase _database;
         private int _currentDatabaseID = 0;
-        private Core.Configuration.RedisConfig _redisConfig;
+        private RedisConfig _redisConfig;
         public RedisCacheManager(AppSettings appSettings):base(appSettings)
         {
             _redisConfig = appSettings.RedisConfig;
@@ -78,7 +78,7 @@ namespace Adverthouse.Common.Data.Caching
             RedisValue resultExist = await _database.StringGetAsync(key.Key);
 
             if (resultExist.HasValue)
-                return JsonConvert.DeserializeObject<T2>(resultExist);
+                return JsonConvert.DeserializeObject<T2?>(resultExist);
 
             var result = await acquire();
 
