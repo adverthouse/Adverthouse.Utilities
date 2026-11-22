@@ -28,7 +28,7 @@ namespace Adverthouse.Common.Data
                     psf.TotalItemCount = filteredQuery.AsNoTracking().Count();
             }
 
-            opRes.Data = filteredQuery.OrderBy(psf.SortExpression)
+            opRes.Data = filteredQuery.OrderBy(psf!.SortExpression)
                              .Skip((psf.CurrentPage - 1) * psf.ItemPerPage)
                              .Take(psf.ItemPerPage).AsNoTracking().ToList();
 
@@ -47,7 +47,7 @@ namespace Adverthouse.Common.Data
                     psf.TotalItemCount = await filteredQuery.AsNoTracking().CountAsync();
             }
 
-            opRes.Data = await filteredQuery.OrderBy(psf.SortExpression)
+            opRes.Data = await filteredQuery.OrderBy(psf!.SortExpression)
                              .Skip((psf.CurrentPage - 1) * psf.ItemPerPage)
                              .Take(psf.ItemPerPage).AsNoTracking().ToListAsync();
 
@@ -122,34 +122,34 @@ namespace Adverthouse.Common.Data
                              .Take(psf.ItemPerPage).AsNoTracking().Select(selectExp).Distinct().Where(x => x != null).Cast<TVar>().ToListAsync();
         } 
 
-        public TViewModel FindBy(Expression<Func<TViewModel, bool>> predicate, bool enableLazyLoad = false)
+        public TViewModel? FindBy(Expression<Func<TViewModel, bool>> predicate, bool enableLazyLoad = false)
         {
             _db.ChangeTracker.LazyLoadingEnabled = enableLazyLoad;
             return _db.Set<TViewModel>().Where(predicate).FirstOrDefault(); 
         }
 
-        public async Task<TViewModel> FindByAsync(Expression<Func<TViewModel, bool>> predicate, bool enableLazyLoad = false)
+        public async Task<TViewModel?> FindByAsync(Expression<Func<TViewModel, bool>> predicate, bool enableLazyLoad = false)
         {
             _db.ChangeTracker.LazyLoadingEnabled = enableLazyLoad;
             return await _db.Set<TViewModel>().Where(predicate).FirstOrDefaultAsync();
         }
-        public TViewModel FindBy(Expression<Func<TViewModel, bool>> predicate, Expression<Func<TViewModel, IViewModel>> include, bool enableLazyLoad = false)
+        public TViewModel? FindBy(Expression<Func<TViewModel, bool>> predicate, Expression<Func<TViewModel, IViewModel>> include, bool enableLazyLoad = false)
         {
             _db.ChangeTracker.LazyLoadingEnabled = enableLazyLoad;
             return _db.Set<TViewModel>().Include(include).Where(predicate).FirstOrDefault();
         }
-        public async Task<TViewModel> FindByAsync(Expression<Func<TViewModel, bool>> predicate, Expression<Func<TViewModel, IViewModel>> include, bool enableLazyLoad = false)
+        public async Task<TViewModel?> FindByAsync(Expression<Func<TViewModel, bool>> predicate, Expression<Func<TViewModel, IViewModel>> include, bool enableLazyLoad = false)
         {
             _db.ChangeTracker.LazyLoadingEnabled = enableLazyLoad;
             return await _db.Set<TViewModel>().Include(include).Where(predicate).FirstOrDefaultAsync();
         }
-        public TViewModel FindBy(Expression<Func<TViewModel, bool>> predicate, Expression<Func<TViewModel, IEnumerable<IViewModel>>> include, bool enableLazyLoad = false)
+        public TViewModel? FindBy(Expression<Func<TViewModel, bool>> predicate, Expression<Func<TViewModel, IEnumerable<IViewModel>>> include, bool enableLazyLoad = false)
         {
             _db.ChangeTracker.LazyLoadingEnabled = enableLazyLoad;
             return _db.Set<TViewModel>().Include(include).Where(predicate).FirstOrDefault();
         }
 
-        public async Task<TViewModel> FindByAsync(Expression<Func<TViewModel, bool>> predicate, Expression<Func<TViewModel, IEnumerable<IViewModel>>> include, bool enableLazyLoad = false)
+        public async Task<TViewModel?> FindByAsync(Expression<Func<TViewModel, bool>> predicate, Expression<Func<TViewModel, IEnumerable<IViewModel>>> include, bool enableLazyLoad = false)
         {
             _db.ChangeTracker.LazyLoadingEnabled = enableLazyLoad;
             return await _db.Set<TViewModel>().Include(include).Where(predicate).FirstOrDefaultAsync();

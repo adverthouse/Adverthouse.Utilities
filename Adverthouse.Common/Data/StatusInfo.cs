@@ -7,8 +7,8 @@ namespace Adverthouse.Common.Data
     {
         public int StatusCode { get; set; } = StatusCodes.Status400BadRequest;
         public string StatusMessage { get; set; } = String.Empty;
-        public TId ID { get; set; }
-        public TData Data { get; set; }
+        public TId? ID { get; set; }
+        public TData? Data { get; set; }
         public StatusInfo(){ }
         
         public StatusInfo(int statusCode)

@@ -61,7 +61,7 @@ namespace Adverthouse.Common.Data.Caching
 
         public void SetValue<T2>(NoSQLKey key, T2 value)
         {
-            if ((key?.CacheTime.TotalSeconds ?? 0) <= 0 || value == null)
+            if (key.CacheTime.TotalSeconds  <= 0 || value == null)
                 return;
 
             _memoryCache.Set(key.Key, value, PrepareEntryOptions(key));
@@ -71,7 +71,7 @@ namespace Adverthouse.Common.Data.Caching
         {
             return Task.Run(() =>
             {
-                if ((key?.CacheTime.TotalSeconds ?? 0) <= 0 || value == null)
+                if (key.CacheTime.TotalSeconds <= 0 || value == null)
                     return;
 
                 _memoryCache.Set(key.Key, value, PrepareEntryOptions(key));
@@ -85,7 +85,7 @@ namespace Adverthouse.Common.Data.Caching
         
         public T2 GetOrCreate<T2>(NoSQLKey key, Func<T2> acquire)
         {
-            if ((key?.CacheTime.TotalSeconds ?? 0) <= 0)
+            if (key.CacheTime.TotalSeconds <= 0)
                 return acquire();
 
             var result = _memoryCache.GetOrCreate(key.Key, entry =>
@@ -102,7 +102,7 @@ namespace Adverthouse.Common.Data.Caching
         }
         public async Task<T2> GetOrCreateAsync<T2>(NoSQLKey key, Func<Task<T2>> acquire)
         {
-            if ((key?.CacheTime.TotalSeconds ?? 0) <= 0)
+            if (key.CacheTime.TotalSeconds  <= 0)
                 return await acquire();
 
             var result = await _memoryCache.GetOrCreateAsync(key.Key, async entry => {

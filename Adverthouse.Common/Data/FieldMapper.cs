@@ -15,7 +15,7 @@ namespace Adverthouse.Common.Data
                 if (p != null)
                 {
                     Type t = Nullable.GetUnderlyingType(p.PropertyType) ?? p.PropertyType;
-                    object safeValue = (o == null) ? null : Convert.ChangeType(o, t);
+                    object? safeValue = (o == null) ? null : Convert.ChangeType(o, t);
                     p.SetValue(dst, safeValue);
                 }
             }
@@ -32,7 +32,7 @@ namespace Adverthouse.Common.Data
                 if (p != null)
                 {
                     Type t = Nullable.GetUnderlyingType(p.PropertyType) ?? p.PropertyType;
-                    object safeValue = (o == null) ? null : Convert.ChangeType(o, t);
+                    object? safeValue = (o == null) ? null : Convert.ChangeType(o, t);
                     p.SetValue(dst, safeValue);
                 }
             }

@@ -52,9 +52,9 @@ namespace Adverthouse.Common.Data.Caching
             RedisValue resultExist = _database.StringGet(key.Key);
 
             if (resultExist.HasValue)
-                return JsonConvert.DeserializeObject<T2>(resultExist);
+                return JsonConvert.DeserializeObject<T2>(resultExist!)!;
 
-            return default;
+            return default!;
         }
 
 
@@ -63,7 +63,7 @@ namespace Adverthouse.Common.Data.Caching
             RedisValue resultExist = _database.StringGet(key.Key);
 
             if (resultExist.HasValue)
-                return JsonConvert.DeserializeObject<T2>(resultExist);
+                return JsonConvert.DeserializeObject<T2>(resultExist!)!;
 
             var result = acquire();
 
@@ -75,14 +75,16 @@ namespace Adverthouse.Common.Data.Caching
 
         public async Task<T2> GetOrCreateAsync<T2>(NoSQLKey key, Func<Task<T2>> acquire)
         {
-            RedisValue resultExist = await _database.StringGetAsync(key.Key);
+            var redisKey = key.Key;
+
+            RedisValue resultExist = await _database.StringGetAsync(redisKey);
 
             if (resultExist.HasValue)
-                return JsonConvert.DeserializeObject<T2>(resultExist);
+                return JsonConvert.DeserializeObject<T2>(resultExist!)!;
 
             var result = await acquire();
 
-            if (key.CacheTime.TotalMinutes > 0)
+            if (key.CacheTime > TimeSpan.Zero)
                 await SetValueAsync(key, result);
 
             return result;

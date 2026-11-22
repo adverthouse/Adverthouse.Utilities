@@ -4,6 +4,7 @@ using Nest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Adverthouse.Common.Data.ElasticSearch
 {
@@ -44,7 +45,7 @@ namespace Adverthouse.Common.Data.ElasticSearch
             return _elasticClient.Indices.Exists(new IndexExistsRequest(indexName));
         }
 
-        public CreateIndexResponse CreateIndex(string indexName, int numberOfReplica = 1, int numberOfShards = 5)
+        public CreateIndexResponse? CreateIndex(string indexName, int numberOfReplica = 1, int numberOfShards = 5)
         {
             if (!IsIndexExist(indexName).Exists)
             {
@@ -82,7 +83,7 @@ namespace Adverthouse.Common.Data.ElasticSearch
             return _elasticClient.Delete<T>(id, bc => bc.Index(index));
         }
 
-        public DeleteIndexResponse DeleteIndex(string indexName)
+        public DeleteIndexResponse? DeleteIndex(string indexName)
         {
 
             if (!IsIndexExist(indexName).Exists)
@@ -93,7 +94,7 @@ namespace Adverthouse.Common.Data.ElasticSearch
             else return null;
         }
 
-        public ISearchResponse<T> Search(ElasticSearchBuilder elasticSearchBuilder)
+        public async Task<ISearchResponse<T>> SearchAsync(ElasticSearchBuilder elasticSearchBuilder)
         {
            // Wrap your existing pre-filter queries in a BoolQuery with Filter
             QueryContainer optimizedQuery = new BoolQuery
@@ -131,7 +132,7 @@ namespace Adverthouse.Common.Data.ElasticSearch
             if (elasticSearchBuilder.TrackTotalHits == false)
                 searchRequest.TrackTotalHits = false;
 
-            return _elasticClient.Search<T>(searchRequest);
+            return await _elasticClient.SearchAsync<T>(searchRequest);
         }
     }
 }

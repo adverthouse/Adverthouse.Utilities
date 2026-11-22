@@ -87,7 +87,7 @@ namespace Adverthouse.Common.Data
             }
         }
 
-        public T ExecuteScalar<T>(string sqlCommand, int? commandTimeout)
+        public T? ExecuteScalar<T>(string sqlCommand, int? commandTimeout)
         {
             using (IDbConnection db2 = SqlConnection())
             {
@@ -95,14 +95,14 @@ namespace Adverthouse.Common.Data
             }
         }
 
-        public T ExecuteScalar<T>(string sqlCommand, object? param = null, int? commandTimeout = null)
+        public T? ExecuteScalar<T>(string sqlCommand, object? param = null, int? commandTimeout = null)
         {
             using (IDbConnection db2 = SqlConnection())
             {
                 return db2.ExecuteScalar<T>(sqlCommand, param, commandTimeout: commandTimeout ?? _defaultConnectionTimeOut);
             }
         }
-        public async Task<T> ExecuteScalarAsync<T>(string sqlCommand, int? commandTimeout)
+        public async Task<T?> ExecuteScalarAsync<T>(string sqlCommand, int? commandTimeout)
         {
             using (IDbConnection db2 = SqlConnection())
             {
@@ -110,7 +110,7 @@ namespace Adverthouse.Common.Data
             }
         }
 
-        public async Task<T> ExecuteScalarAsync<T>(string sqlCommand, object? param = null, int? commandTimeout = null)
+        public async Task<T?> ExecuteScalarAsync<T>(string sqlCommand, object? param = null, int? commandTimeout = null)
         {
             using (IDbConnection db2 = SqlConnection())
             {
